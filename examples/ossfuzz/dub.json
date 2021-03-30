@@ -1,0 +1,13 @@
+{
+	"name": "jansson-d-ossfuzz",
+	"description": "jansson ossfuzz written in D.",
+	"authors": ["dokutoku"],
+	"copyright": "Copyright © 2021, dokutoku",
+	"license": "MIT",
+	"dependencies":
+	{
+		"jansson-d": {"path": "../../"}
+	},
+	"targetType": "executable",
+	"targetPath": "bin"
+}

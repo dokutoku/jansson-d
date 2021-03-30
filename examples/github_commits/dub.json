@@ -1,0 +1,14 @@
+{
+	"name": "jansson-d-github-commit",
+	"description": "jansson github-commit written in D.",
+	"authors": ["dokutoku"],
+	"copyright": "Copyright © 2021, dokutoku",
+	"license": "MIT",
+	"dependencies":
+	{
+		"jansson-d": {"path": "../../"}
+	},
+	"libs": ["curl"],
+	"targetType": "executable",
+	"targetPath": "bin"
+}

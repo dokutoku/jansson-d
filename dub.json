@@ -1,0 +1,27 @@
+{
+	"name": "jansson-d",
+	"description": "jansson written in D.",
+	"homepage": "https://gitlab.com/dokutoku/jansson-d",
+	"authors": ["dokutoku"],
+	"copyright": "Copyright © 2021, dokutoku",
+	"license": "MIT",
+	"configurations":
+	[
+		{
+			"name": "library",
+			"targetType": "library",
+			"targetPath": "lib"
+		},
+		{
+			"name": "dynamicLibrary",
+			"targetType": "dynamicLibrary",
+			"targetPath": "lib",
+			"sourceFiles-windows": ["./jansson.def"],
+			"versions": ["JANSSON_D_DYNAMIC_LIBRARY"]
+		},
+		{
+			"name": "source",
+			"targetType": "sourceLibrary"
+		}
+	]
+}
