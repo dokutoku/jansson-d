@@ -94,9 +94,9 @@ private int seed_from_urandom(scope uint* seed)
 
 /* Windows Crypto API */
 version (Windows) {
-	alias CRYPTACQUIRECONTEXTA = nothrow @nogc @live core.sys.windows.windef.BOOL function(core.sys.windows.wincrypt.HCRYPTPROV* phProv, core.sys.windows.winnt.LPCSTR pszContainer, core.sys.windows.winnt.LPCSTR pszProvider, core.sys.windows.windef.DWORD dwProvType, core.sys.windows.windef.DWORD dwFlags);
-	alias CRYPTGENRANDOM = nothrow @nogc @live core.sys.windows.windef.BOOL function(core.sys.windows.wincrypt.HCRYPTPROV hProv, core.sys.windows.windef.DWORD dwLen, core.sys.windows.windef.BYTE* pbBuffer);
-	alias CRYPTRELEASECONTEXT = nothrow @nogc @live core.sys.windows.windef.BOOL function(core.sys.windows.wincrypt.HCRYPTPROV hProv, core.sys.windows.windef.DWORD dwFlags);
+	alias CRYPTACQUIRECONTEXTA = extern (Windows) nothrow @nogc @live core.sys.windows.windef.BOOL function(core.sys.windows.wincrypt.HCRYPTPROV* phProv, core.sys.windows.winnt.LPCSTR pszContainer, core.sys.windows.winnt.LPCSTR pszProvider, core.sys.windows.windef.DWORD dwProvType, core.sys.windows.windef.DWORD dwFlags);
+	alias CRYPTGENRANDOM = extern (Windows) nothrow @nogc @live core.sys.windows.windef.BOOL function(core.sys.windows.wincrypt.HCRYPTPROV hProv, core.sys.windows.windef.DWORD dwLen, core.sys.windows.windef.BYTE* pbBuffer);
+	alias CRYPTRELEASECONTEXT = extern (Windows) nothrow @nogc @live core.sys.windows.windef.BOOL function(core.sys.windows.wincrypt.HCRYPTPROV hProv, core.sys.windows.windef.DWORD dwFlags);
 
 	nothrow @nogc @live
 	private int seed_from_windows_cryptoapi(scope uint* seed)
