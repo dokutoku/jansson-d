@@ -88,7 +88,7 @@ int jsonp_loop_check(scope jansson_d.hashtable.hashtable_t* parents, scope const
 
 ///
 extern (C)
-nothrow @nogc @live
+nothrow @nogc
 public jansson_d.jansson.json_t* json_object()
 
 	do

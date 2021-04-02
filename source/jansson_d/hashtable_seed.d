@@ -99,7 +99,7 @@ version (Windows) {
 	alias CRYPTRELEASECONTEXT = extern (Windows) nothrow @nogc @live core.sys.windows.windef.BOOL function(core.sys.windows.wincrypt.HCRYPTPROV hProv, core.sys.windows.windef.DWORD dwFlags);
 
 	nothrow @nogc @live
-	private int seed_from_windows_cryptoapi(scope uint* seed)
+	private bool seed_from_windows_cryptoapi(scope uint* seed)
 
 		in
 		{
@@ -111,31 +111,31 @@ version (Windows) {
 			core.sys.windows.windef.HINSTANCE hAdvAPI32 = core.sys.windows.winbase.GetModuleHandleA("advapi32.dll");
 
 			if (hAdvAPI32 == null) {
-				return 1;
+				return false;
 			}
 
 			.CRYPTACQUIRECONTEXTA pCryptAcquireContext = cast(.CRYPTACQUIRECONTEXTA)(core.sys.windows.winbase.GetProcAddress(hAdvAPI32, "CryptAcquireContextA"));
 
 			if (pCryptAcquireContext == null) {
-				return 1;
+				return false;
 			}
 
 			.CRYPTGENRANDOM pCryptGenRandom = cast(.CRYPTGENRANDOM)(core.sys.windows.winbase.GetProcAddress(hAdvAPI32, "CryptGenRandom"));
 
 			if (pCryptGenRandom == null) {
-				return 1;
+				return false;
 			}
 
 			.CRYPTRELEASECONTEXT pCryptReleaseContext = cast(.CRYPTRELEASECONTEXT)(core.sys.windows.winbase.GetProcAddress(hAdvAPI32, "CryptReleaseContext"));
 
 			if (pCryptReleaseContext == null) {
-				return 1;
+				return false;
 			}
 
 			core.sys.windows.wincrypt.HCRYPTPROV hCryptProv = 0;
 
 			if (!pCryptAcquireContext(&hCryptProv, null, null, core.sys.windows.wincrypt.PROV_RSA_FULL, core.sys.windows.wincrypt.CRYPT_VERIFYCONTEXT)) {
-				return 1;
+				return false;
 			}
 
 			core.sys.windows.windef.BYTE[uint.sizeof] data = void;
@@ -143,12 +143,12 @@ version (Windows) {
 			pCryptReleaseContext(hCryptProv, 0);
 
 			if (!ok) {
-				return 1;
+				return false;
 			}
 
 			*seed = .buf_to_uint32(cast(char*)(&(data[0])));
 
-			return 0;
+			return true;
 		}
 }
 
@@ -192,7 +192,7 @@ private uint generate_seed()
 		bool done = false;
 
 		version (Windows) {
-			if (.seed_from_windows_cryptoapi(&seed) == 0) {
+			if (.seed_from_windows_cryptoapi(&seed)) {
 				done = true;
 			}
 		} else {
