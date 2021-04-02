@@ -17,7 +17,7 @@ private __gshared int free_called = 0;
 private __gshared size_t malloc_used = 0;
 
 /* helpers */
-nothrow @live
+nothrow @nogc @live
 private void create_and_free_complex_object()
 
 	do
