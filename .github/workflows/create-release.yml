@@ -123,7 +123,7 @@ jobs:
             mkdir '${{ steps.init-asset-name.outputs.asset_base_name }}\lib';
             robocopy /e /s 'include\' '${{ steps.init-asset-name.outputs.asset_base_name }}\include\';
             robocopy /e /s 'lib\' '${{ steps.init-asset-name.outputs.asset_base_name }}\lib\';
-            cp 'LICENSE.txt' '${{ steps.init-asset-name.outputs.asset_base_name }}\';
+            cp 'LICENSE' '${{ steps.init-asset-name.outputs.asset_base_name }}\';
             cp 'README.md' '${{ steps.init-asset-name.outputs.asset_base_name }}\';
             7z a '${{ steps.init-asset-name.outputs.asset_base_name }}.zip' ${{ steps.init-asset-name.outputs.asset_base_name }};
 
@@ -236,7 +236,7 @@ jobs:
             mkdir ${{ steps.init-asset-name.outputs.asset_base_name }}/lib;
             cp -r ./include/* '${{ steps.init-asset-name.outputs.asset_base_name }}/include/';
             cp -r ./lib/* '${{ steps.init-asset-name.outputs.asset_base_name }}/lib/';
-            cp './LICENSE.txt' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
+            cp './LICENSE' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
             cp './README.md' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
             tar zcvf '${{ steps.init-asset-name.outputs.asset_base_name }}.tar.gz' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
 
@@ -355,7 +355,7 @@ jobs:
             mkdir ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/lib;
             cp -r ./include/* '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/include/';
             cp -r ./lib/* '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/lib/';
-            cp './LICENSE.txt' '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/';
+            cp './LICENSE' '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/';
             cp './README.md' '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/';
             tar zcvf '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}.tar.gz' '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/';
 
