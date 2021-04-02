@@ -1095,7 +1095,7 @@ private jansson_d.jansson.json_t* parse_value(scope .lex_t* lex, size_t flags, s
 		jansson_d.jansson.json_t* json = null;
 
 		switch (lex.token) {
-			case .TOKEN_STRING: {
+			case .TOKEN_STRING:
 				const char* value = lex.value.string_.val;
 				size_t len = lex.value.string_.len;
 
@@ -1112,19 +1112,16 @@ private jansson_d.jansson.json_t* parse_value(scope .lex_t* lex, size_t flags, s
 				lex.value.string_.len = 0;
 
 				break;
-			}
 
-			case .TOKEN_INTEGER: {
+			case .TOKEN_INTEGER:
 				json = jansson_d.value.json_integer(lex.value.integer);
 
 				break;
-			}
 
-			case .TOKEN_REAL: {
+			case .TOKEN_REAL:
 				json = jansson_d.value.json_real(lex.value.real_);
 
 				break;
-			}
 
 			case .TOKEN_TRUE:
 				json = jansson_d.value.json_true();

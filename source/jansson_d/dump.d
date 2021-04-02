@@ -352,7 +352,7 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 			case jansson_d.jansson.json_type.JSON_FALSE:
 				return dump("false", 5, data);
 
-			case jansson_d.jansson.json_type.JSON_INTEGER: {
+			case jansson_d.jansson.json_type.JSON_INTEGER:
 				char[.MAX_INTEGER_STR_LENGTH] buffer = void;
 				int size = jansson_d.jansson_private.snprintf(&(buffer[0]), buffer.length, "%" ~ jansson_d.jansson.JSON_INTEGER_FORMAT, jansson_d.value.json_integer_value(json));
 
@@ -361,9 +361,8 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 				}
 
 				return dump(&(buffer[0]), size, data);
-			}
 
-			case jansson_d.jansson.json_type.JSON_REAL: {
+			case jansson_d.jansson.json_type.JSON_REAL:
 				char[.MAX_REAL_STR_LENGTH] buffer = void;
 				double value = jansson_d.value.json_real_value(json);
 				int size = jansson_d.jansson_private.jsonp_dtostr(&(buffer[0]), buffer.length, value, mixin (.FLAGS_TO_PRECISION!("flags")));
@@ -373,12 +372,11 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 				}
 
 				return dump(&(buffer[0]), size, data);
-			}
 
 			case jansson_d.jansson.json_type.JSON_STRING:
 				return .dump_string(jansson_d.value.json_string_value(json), jansson_d.value.json_string_length(json), dump, data, flags);
 
-			case jansson_d.jansson.json_type.JSON_ARRAY: {
+			case jansson_d.jansson.json_type.JSON_ARRAY:
 				/*
 				 * Space for "0x", double the sizeof a pointer for the hex and a
 				 * terminator.
@@ -426,9 +424,8 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 				jansson_d.hashtable.hashtable_del(parents, &(key[0]), key_len);
 
 				return (embed) ? (0) : (dump("]", 1, data));
-			}
 
-			case jansson_d.jansson.json_type.JSON_OBJECT: {
+			case jansson_d.jansson.json_type.JSON_OBJECT:
 				const (char)* separator = void;
 				int separator_length = void;
 
@@ -548,7 +545,6 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 				jansson_d.hashtable.hashtable_del(parents, &(loop_key[0]), loop_key_len);
 
 				return (embed) ? (0) : (dump("}", 1, data));
-			}
 
 			default:
 				/* not reached */
