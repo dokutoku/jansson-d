@@ -28,7 +28,7 @@ static if (jansson_d.jansson_config.JSON_HAVE_LOCALECONV) {
 	 */
 
 	nothrow @trusted @nogc
-	static void to_locale(scope jansson_d.strbuffer.strbuffer_t* strbuffer)
+	private void to_locale(scope jansson_d.strbuffer.strbuffer_t* strbuffer)
 
 		in
 		{
@@ -52,7 +52,7 @@ static if (jansson_d.jansson_config.JSON_HAVE_LOCALECONV) {
 		}
 
 	nothrow @trusted @nogc
-	static void from_locale(scope char* buffer)
+	private void from_locale(scope char* buffer)
 
 		in
 		{
