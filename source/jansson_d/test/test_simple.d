@@ -124,7 +124,7 @@ unittest
 
 	assert(!jansson_d.value.json_string_setn(value, "hi\0ho", 5), "json_string_set failed");
 
-	assert(!core.stdc.string.memcmp(jansson_d.value.json_string_value(value), &("hi\0ho\0"[0]), 6), "invalid string value");
+	assert(core.stdc.string.memcmp(jansson_d.value.json_string_value(value), &("hi\0ho\0"[0]), 6) == 0, "invalid string value");
 
 	assert(jansson_d.value.json_string_length(value) == 5, "invalid string length");
 
@@ -155,7 +155,7 @@ unittest
 
 	assert(!jansson_d.value.json_string_setn_nocheck(value, "hi\0ho", 5), "json_string_set failed");
 
-	assert(!core.stdc.string.memcmp(jansson_d.value.json_string_value(value), &("hi\0ho\0"[0]), 6), "invalid string value");
+	assert(core.stdc.string.memcmp(jansson_d.value.json_string_value(value), &("hi\0ho\0"[0]), 6) == 0, "invalid string value");
 
 	assert(jansson_d.value.json_string_length(value) == 5, "invalid string length");
 

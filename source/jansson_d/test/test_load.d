@@ -168,7 +168,7 @@ unittest
 
 	assert(jansson_d.value.json_string_length(json) == len, "decoder returned wrong string length");
 
-	assert(!core.stdc.string.memcmp(jansson_d.value.json_string_value(json), expected, len + 1), "decoder returned wrong string content");
+	assert(core.stdc.string.memcmp(jansson_d.value.json_string_value(json), expected, len + 1) == 0, "decoder returned wrong string content");
 
 	jansson_d.jansson.json_decref(json);
 }

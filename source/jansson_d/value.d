@@ -1282,7 +1282,7 @@ private int json_string_equal(scope const jansson_d.jansson.json_t* string1, sco
 		jansson_d.jansson_private.json_string_t* s1 = mixin (jansson_d.jansson_private.json_to_string!("string1"));
 		jansson_d.jansson_private.json_string_t* s2 = mixin (jansson_d.jansson_private.json_to_string!("string2"));
 
-		return (s1.length_ == s2.length_) && (!core.stdc.string.memcmp(s1.value, s2.value, s1.length_));
+		return (s1.length_ == s2.length_) && (core.stdc.string.memcmp(s1.value, s2.value, s1.length_) == 0);
 	}
 
 nothrow @trusted @nogc

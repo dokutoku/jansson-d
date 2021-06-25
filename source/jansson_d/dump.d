@@ -317,7 +317,7 @@ private int compare_keys(scope const void* key1, scope const void* key2)
 		const size_t min_size = (k1.len < k2.len) ? (k1.len) : (k2.len);
 		int res = core.stdc.string.memcmp(k1.key, k2.key, min_size);
 
-		if (res) {
+		if (res != 0) {
 			return res;
 		}
 

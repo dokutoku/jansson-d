@@ -205,7 +205,7 @@ unittest
 	jansson_d.jansson.json_t* json = jansson_d.value.json_stringn("nul byte \0 in string", 20);
 	char* result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
 
-	assert((result != null) && (!core.stdc.string.memcmp(result, &("\"nul byte \\u0000 in string\"\0"[0]), 27)), "json_dumps failed to dump an embedded NUL byte");
+	assert((result != null) && (core.stdc.string.memcmp(result, &("\"nul byte \\u0000 in string\"\0"[0]), 27) == 0), "json_dumps failed to dump an embedded NUL byte");
 
 	jansson_d.jansson_private.jsonp_free(result);
 	jansson_d.jansson.json_decref(json);
