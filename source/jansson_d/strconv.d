@@ -77,7 +77,7 @@ static if (jansson_d.jansson_config.JSON_HAVE_LOCALECONV) {
 }
 
 nothrow @trusted @nogc
-int jsonp_strtod(scope jansson_d.strbuffer.strbuffer_t* strbuffer, scope double* out_)
+bool jsonp_strtod(scope jansson_d.strbuffer.strbuffer_t* strbuffer, scope double* out_)
 
 	in
 	{
@@ -98,12 +98,12 @@ int jsonp_strtod(scope jansson_d.strbuffer.strbuffer_t* strbuffer, scope double*
 
 		if (((value == core.stdc.math.HUGE_VAL) || (value == -core.stdc.math.HUGE_VAL)) && (core.stdc.errno.errno == core.stdc.errno.ERANGE)) {
 			/* Overflow */
-			return -1;
+			return false;
 		}
 
 		*out_ = value;
 
-		return 0;
+		return true;
 	}
 
 nothrow @trusted @nogc

@@ -764,7 +764,7 @@ private int lex_scan_number(scope .lex_t* lex, int c, scope jansson_d.jansson.js
 
 		double doubleval = void;
 
-		if (jansson_d.jansson_private.jsonp_strtod(&lex.saved_text, &doubleval)) {
+		if (!jansson_d.jansson_private.jsonp_strtod(&lex.saved_text, &doubleval)) {
 			.error_set(error, lex, jansson_d.jansson.json_error_code_t.json_error_numeric_overflow, "real number overflow");
 
 			return -1;
