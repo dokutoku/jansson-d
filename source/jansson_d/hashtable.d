@@ -40,7 +40,7 @@ struct hashtable_pair
 	size_t key_len;
 
 	/* dynamic array */
-	char key;
+	char key = '\0';
 }
 
 struct hashtable_bucket

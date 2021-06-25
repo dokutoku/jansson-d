@@ -74,7 +74,7 @@ struct stream_t
 {
 	.get_func get;
 	void* data;
-	char[5] buffer;
+	char[5] buffer = '\0';
 	size_t buffer_pos;
 	int state;
 	int line;
@@ -1475,7 +1475,7 @@ enum MAX_BUF_LEN = 1024;
 
 struct callback_data_t
 {
-	char[.MAX_BUF_LEN] data;
+	char[.MAX_BUF_LEN] data = '\0';
 	size_t len;
 	size_t pos;
 	jansson_d.jansson.json_load_callback_t callback;

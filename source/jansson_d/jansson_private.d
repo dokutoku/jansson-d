@@ -76,7 +76,7 @@ struct json_string_t
 struct json_real_t
 {
 	jansson_d.jansson.json_t json;
-	double value;
+	double value = 0;
 }
 
 struct json_integer_t

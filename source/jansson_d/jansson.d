@@ -75,7 +75,7 @@ public enum json_type
 extern (C)
 public struct json_t
 {
-	json_type type;
+	json_type type = cast(.json_type)(0);
 
 	/* volatile */
 	size_t refcount;
@@ -308,8 +308,8 @@ public struct json_error_t
 	int line;
 	int column;
 	int position;
-	char[.JSON_ERROR_SOURCE_LENGTH] source;
-	char[.JSON_ERROR_TEXT_LENGTH] text;
+	char[.JSON_ERROR_SOURCE_LENGTH] source = '\0';
+	char[.JSON_ERROR_TEXT_LENGTH] text = '\0';
 }
 
 ///

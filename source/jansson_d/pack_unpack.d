@@ -28,7 +28,7 @@ struct token_t
 	int line;
 	int column;
 	size_t pos;
-	char token;
+	char token = '\0';
 }
 
 struct scanner_t
