@@ -71,6 +71,19 @@ public enum json_type
 	JSON_NULL,
 }
 
+//Declaration name in C language
+public enum
+{
+	JSON_OBJECT = .json_type.JSON_OBJECT,
+	JSON_ARRAY = .json_type.JSON_ARRAY,
+	JSON_STRING = .json_type.JSON_STRING,
+	JSON_INTEGER = .json_type.JSON_INTEGER,
+	JSON_REAL = .json_type.JSON_REAL,
+	JSON_TRUE = .json_type.JSON_TRUE,
+	JSON_FALSE = .json_type.JSON_FALSE,
+	JSON_NULL = .json_type.JSON_NULL,
+}
+
 ///
 extern (C)
 public struct json_t
@@ -333,6 +346,29 @@ public enum json_error_code_t
 	json_error_numeric_overflow,
 	json_error_item_not_found,
 	json_error_index_out_of_range,
+}
+
+//Declaration name in C language
+public enum
+{
+	json_error_unknown = .json_error_code_t.json_error_unknown,
+	json_error_out_of_memory = .json_error_code_t.json_error_out_of_memory,
+	json_error_stack_overflow = .json_error_code_t.json_error_stack_overflow,
+	json_error_cannot_open_file = .json_error_code_t.json_error_cannot_open_file,
+	json_error_invalid_argument = .json_error_code_t.json_error_invalid_argument,
+	json_error_invalid_utf8 = .json_error_code_t.json_error_invalid_utf8,
+	json_error_premature_end_of_input = .json_error_code_t.json_error_premature_end_of_input,
+	json_error_end_of_input_expected = .json_error_code_t.json_error_end_of_input_expected,
+	json_error_invalid_syntax = .json_error_code_t.json_error_invalid_syntax,
+	json_error_invalid_format = .json_error_code_t.json_error_invalid_format,
+	json_error_wrong_type = .json_error_code_t.json_error_wrong_type,
+	json_error_null_character = .json_error_code_t.json_error_null_character,
+	json_error_null_value = .json_error_code_t.json_error_null_value,
+	json_error_null_byte_in_key = .json_error_code_t.json_error_null_byte_in_key,
+	json_error_duplicate_key = .json_error_code_t.json_error_duplicate_key,
+	json_error_numeric_overflow = .json_error_code_t.json_error_numeric_overflow,
+	json_error_item_not_found = .json_error_code_t.json_error_item_not_found,
+	json_error_index_out_of_range = .json_error_code_t.json_error_index_out_of_range,
 }
 
 ///
