@@ -16,11 +16,13 @@ private static import jansson_d.dump;
 private static import jansson_d.jansson;
 private static import jansson_d.jansson_private;
 private static import jansson_d.pack_unpack;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 //test_clear
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* ten = jansson_d.value.json_integer(10);
 
@@ -43,6 +45,7 @@ unittest
 //test_update
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* other = jansson_d.value.json_object();
 
@@ -116,6 +119,7 @@ unittest
 {
 	static immutable char* keys = "abcdefghijklmnopqrstuvwxyz";
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.value.json_object();
 
 	assert(object != null, "unable to create object");
@@ -140,6 +144,7 @@ unittest
 //test_conditional_updates
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 	jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4);
 
@@ -200,6 +205,7 @@ unittest
 //test_recursive_updates
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* invalid = jansson_d.value.json_integer(42);
 
 	jansson_d.jansson.json_t* object = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
@@ -263,6 +269,7 @@ unittest
 //test_circular
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object1 = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* object2 = jansson_d.value.json_object();
 
@@ -288,6 +295,7 @@ unittest
 //test_set_nocheck
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* string_ = jansson_d.value.json_string("bar");
 
@@ -320,6 +328,7 @@ unittest
 //test_iterators
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	assert(jansson_d.value.json_object_iter(null) == null, "able to iterate over null");
 
 	assert(jansson_d.value.json_object_iter_next(null, null) == null, "able to increment an iterator on a null object");
@@ -388,6 +397,7 @@ unittest
 //test_misc
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* string_ = jansson_d.value.json_string("test");
 	jansson_d.jansson.json_t* other_string = jansson_d.value.json_string("other");
@@ -476,6 +486,7 @@ unittest
 {
 	static immutable char* expected = "{\"foobar\": 1, \"bazquux\": 6, \"lorem ipsum\": 3, \"sit amet\": 5, \"helicopter\": 7}";
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.value.json_object();
 
 	jansson_d.value.json_object_set_new(object, "foobar", jansson_d.value.json_integer(1));
@@ -507,6 +518,7 @@ unittest
 //test_object_foreach
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object1 = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2, &("baz\0"[0]), 3);
 	jansson_d.jansson.json_t* object2 = jansson_d.value.json_object();
 
@@ -527,6 +539,7 @@ unittest
 //test_object_foreach_safe
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2, &("baz\0"[0]), 3);
 
 	const (char)* key = void;
@@ -546,6 +559,7 @@ unittest
 //test_bad_args
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* num = jansson_d.value.json_integer(1);
 

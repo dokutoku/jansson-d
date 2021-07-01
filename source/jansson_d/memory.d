@@ -18,8 +18,11 @@ private static import core.stdc.string;
 private static import jansson_d.jansson;
 
 /* memory function pointers */
-private __gshared jansson_d.jansson.json_malloc_t do_malloc = &core.stdc.stdlib.malloc;
-private __gshared jansson_d.jansson.json_free_t do_free = &core.stdc.stdlib.free;
+//private
+__gshared jansson_d.jansson.json_malloc_t do_malloc = &core.stdc.stdlib.malloc;
+
+//private
+__gshared jansson_d.jansson.json_free_t do_free = &core.stdc.stdlib.free;
 
 nothrow @trusted @nogc //ToDo: @nodiscard
 package void* jsonp_malloc(size_t size)

@@ -13,7 +13,9 @@ module jansson_d.test.util;
 private static import core.stdc.stdio;
 private static import core.stdc.stdlib;
 private static import core.stdc.string;
+private static import jansson_d.hashtable_seed;
 private static import jansson_d.jansson;
+private static import jansson_d.memory;
 
 //#define failhdr core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "%s:%d: ", __FILE__, __LINE__)
 
@@ -83,4 +85,19 @@ package void check_error(scope const ref jansson_d.jansson.json_error_t error, j
 	do
 	{
 		.check_errors(error, code_, text_, 1, source_, line_, column_, position_);
+	}
+
+nothrow @nogc @live
+package void init_unittest()
+
+	do
+	{
+		jansson_d.hashtable_seed.hashtable_seed = 0;
+
+		static if (__traits(compiles, jansson_d.hashtable_seed.seed_initialized)) {
+			jansson_d.hashtable_seed.seed_initialized = 0;
+		}
+
+		jansson_d.memory.do_malloc = &core.stdc.stdlib.malloc;
+		jansson_d.memory.do_free = &core.stdc.stdlib.free;
 	}

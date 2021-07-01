@@ -13,10 +13,12 @@ module jansson_d.test.test_loadb;
 private static import core.stdc.string;
 private static import jansson_d.jansson;
 private static import jansson_d.load;
+private static import jansson_d.test.util;
 
 //run_tests
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	static immutable char[] str = "[\"A\", {\"B\": \"C\"}, 1, 2, 3]garbage\0";

@@ -24,6 +24,8 @@ unittest
 	 * Simple, valid json_pack cases
 	 */
 
+	jansson_d.test.util.init_unittest();
+
 	/* true */
 	int i1 = void;
 	int rv = jansson_d.pack_unpack.json_unpack(jansson_d.value.json_true(), "b", &i1);

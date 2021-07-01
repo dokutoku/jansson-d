@@ -12,6 +12,7 @@ module jansson_d.test.test_number;
 
 private static import core.stdc.math;
 private static import jansson_d.jansson;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 // This test triggers "warning C4756: overflow in constant arithmetic"
@@ -26,6 +27,7 @@ unittest
 {
 	static assert(__traits(compiles, core.stdc.math.INFINITY));
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(core.stdc.math.INFINITY);
 
 	assert(real_ == null, "could construct a real from Inf");
@@ -42,6 +44,7 @@ unittest
 //test_bad_args
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* txt = jansson_d.value.json_string("test");
 
 	assert(jansson_d.value.json_integer_value(null) == 0, "json_integer_value did not return 0 for non-integer");
@@ -72,6 +75,7 @@ unittest
 //run_tests
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* integer = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(100.1);
 

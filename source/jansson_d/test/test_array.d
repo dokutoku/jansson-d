@@ -13,11 +13,13 @@ module jansson_d.test.test_array;
 private static import jansson_d.dump;
 private static import jansson_d.jansson;
 private static import jansson_d.pack_unpack;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 //test_misc
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
@@ -104,6 +106,7 @@ unittest
 //test_insert
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
@@ -166,6 +169,7 @@ unittest
 //test_remove
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
@@ -216,6 +220,7 @@ unittest
 //test_clear
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
@@ -246,6 +251,7 @@ unittest
 //test_extend
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
@@ -286,6 +292,8 @@ unittest
 {
 	/* the simple cases are checked */
 
+	jansson_d.test.util.init_unittest();
+
 	jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
 
 	assert(array1 != null, "unable to create array");
@@ -321,6 +329,7 @@ unittest
 //test_array_foreach
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array1 = jansson_d.pack_unpack.json_pack("[sisisi]", &("foo"[0]), 1, &("bar"[0]), 2, &("baz\0"[0]), 3);
 	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 
@@ -341,6 +350,7 @@ unittest
 //test_bad_args
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* arr = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* num = jansson_d.value.json_integer(1);
 

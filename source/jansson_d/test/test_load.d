@@ -20,6 +20,7 @@ private static import jansson_d.value;
 //file_not_found
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	jansson_d.jansson.json_t* json = jansson_d.load.json_load_file("/path/to/nonexistent/file.json", 0, &error);
@@ -47,6 +48,7 @@ unittest
 //very_long_file_name
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	jansson_d.jansson.json_t* json = jansson_d.load.json_load_file("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 0, &error);
@@ -63,6 +65,7 @@ unittest
 //reject_duplicates
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	assert(jansson_d.load.json_loads("{\"foo\": 1, \"foo\": 2}", jansson_d.jansson.JSON_REJECT_DUPLICATES, &error) == null, "json_loads did not detect a duplicate key");
@@ -74,6 +77,7 @@ unittest
 unittest
 {
 	static immutable char* text = "{\"foo\": 1} garbage";
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	assert(jansson_d.load.json_loads(text, 0, &error) == null, "json_loads did not detect garbage after JSON text");
@@ -90,6 +94,7 @@ unittest
 //decode_any
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads("\"foo\"", jansson_d.jansson.JSON_DECODE_ANY, &error);
@@ -120,6 +125,7 @@ unittest
 //decode_int_as_real
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads("42", jansson_d.jansson.JSON_DECODE_INT_AS_REAL | jansson_d.jansson.JSON_DECODE_ANY, &error);
@@ -161,6 +167,7 @@ unittest
 {
 	static immutable char* text = "\"nul byte \\u0000 in string\"";
 	immutable char* expected = "nul byte \0 in string";
+	jansson_d.test.util.init_unittest();
 	size_t len = 20;
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads(text, jansson_d.jansson.JSON_ALLOW_NUL | jansson_d.jansson.JSON_DECODE_ANY, null);
 
@@ -176,6 +183,7 @@ unittest
 //load_wrong_args
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads(null, 0, &error);
@@ -202,6 +210,7 @@ unittest
 //position
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	size_t flags = jansson_d.jansson.JSON_DISABLE_EOF_CHECK;
 	jansson_d.jansson.json_error_t error = void;
 
@@ -221,6 +230,7 @@ unittest
 //error_code
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads("[123] garbage", 0, &error);

@@ -16,6 +16,7 @@ private static import core.stdc.string;
 private static import jansson_d.jansson;
 private static import jansson_d.pack_unpack;
 private static import jansson_d.test.util;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 // This test triggers "warning C4756: overflow in constant arithmetic"
@@ -30,6 +31,7 @@ unittest
 {
 	static assert(__traits(compiles, core.stdc.math.INFINITY));
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_error_t error = void;
 
 	assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "f", core.stdc.math.INFINITY) == null, "json_pack infinity incorrectly succeeded");
@@ -52,6 +54,7 @@ unittest
 	 * Simple, valid json_pack cases
 	 */
 	/* true */
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("b", 1);
 
 	assert(mixin (jansson_d.jansson.json_is_true!("value")), "json_pack boolean failed");

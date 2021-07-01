@@ -13,11 +13,13 @@ module jansson_d.test.test_copy;
 private static import core.stdc.string;
 private static import jansson_d.jansson;
 private static import jansson_d.load;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 //test_copy_simple
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	assert(!jansson_d.value.json_copy(null), "copying null doesn't return null");
 
 	/* true */
@@ -105,6 +107,7 @@ unittest
 //test_deep_copy_simple
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	assert(jansson_d.value.json_deep_copy(null) == null, "deep copying null doesn't return null");
 
 	/* true */
@@ -193,6 +196,7 @@ unittest
 unittest
 {
 	static immutable char* json_array_text = "[1, \"foo\", 3.141592, {\"foo\": \"bar\"}]";
+	jansson_d.test.util.init_unittest();
 
 	jansson_d.jansson.json_t* array = jansson_d.load.json_loads(json_array_text, 0, null);
 
@@ -218,6 +222,7 @@ unittest
 unittest
 {
 	static immutable char* json_array_text = "[1, \"foo\", 3.141592, {\"foo\": \"bar\"}]";
+	jansson_d.test.util.init_unittest();
 
 	jansson_d.jansson.json_t* array = jansson_d.load.json_loads(json_array_text, 0, null);
 
@@ -245,6 +250,8 @@ unittest
 	static immutable char* json_object_text = "{\"foo\": \"bar\", \"a\": 1, \"b\": 3.141592, \"c\": [1,2,3,4]}";
 
 	static immutable string[] keys = ["foo\0", "a\0", "b\0", "c\0"];
+
+	jansson_d.test.util.init_unittest();
 
 	jansson_d.jansson.json_t* object = jansson_d.load.json_loads(json_object_text, 0, null);
 
@@ -284,6 +291,8 @@ unittest
 	static immutable char* json_object_text = "{\"foo\": \"bar\", \"a\": 1, \"b\": 3.141592, \"c\": [1,2,3,4]}";
 
 	static immutable string[] keys = ["foo\0", "a\0", "b\0", "c\0"];
+
+	jansson_d.test.util.init_unittest();
 
 	jansson_d.jansson.json_t* object = jansson_d.load.json_loads(json_object_text, 0, null);
 
@@ -329,6 +338,7 @@ unittest
 	 * Deep copy it, remove the circular reference and deep copy again.
 	 */
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 	jansson_d.value.json_object_set_new(json, "a", jansson_d.value.json_object());
 	jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(json, "a"), "b", jansson_d.value.json_object());

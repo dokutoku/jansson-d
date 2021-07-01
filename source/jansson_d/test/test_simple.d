@@ -12,6 +12,7 @@ module jansson_d.test.test_simple;
 
 private static import core.stdc.string;
 private static import jansson_d.jansson;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 private void test_bad_args()
@@ -62,6 +63,7 @@ private void test_bad_args()
 /* Call the simple functions not covered by other tests of the public API */
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* value = mixin (jansson_d.jansson.json_boolean!("1"));
 
 	assert(mixin (jansson_d.jansson.json_is_true!("value")), "json_boolean(1) failed");

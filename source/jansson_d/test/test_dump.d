@@ -19,6 +19,7 @@ private static import jansson_d.jansson;
 private static import jansson_d.jansson_private;
 private static import jansson_d.load;
 private static import jansson_d.pack_unpack;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 //#if defined(__MINGW32__)
@@ -38,6 +39,7 @@ private int encode_null_callback(scope const char* buffer, size_t size, scope vo
 //encode_null
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	assert(jansson_d.dump.json_dumps(null, jansson_d.jansson.JSON_ENCODE_ANY) == null, "json_dumps didn't fail for null");
 
 	assert(jansson_d.dump.json_dumpb(null, null, 0, jansson_d.jansson.JSON_ENCODE_ANY) == 0, "json_dumpb didn't fail for null");
@@ -58,6 +60,7 @@ unittest
 {
 	/* Encode an empty object/array, add an item, encode again */
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 	char* result = jansson_d.dump.json_dumps(json, 0);
 
@@ -103,6 +106,7 @@ unittest
 	 * Encode it, remove the circular reference and encode again.
 	 */
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 	jansson_d.value.json_object_set_new(json, "a", jansson_d.value.json_object());
 	jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(json, "a"), "b", jansson_d.value.json_object());
@@ -146,6 +150,7 @@ unittest
 	 * succeed if the jansson_d.jansson.JSON_ENCODE_ANY flag is used
 	 */
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.value.json_string("foo");
 
 	assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded a string!");
@@ -182,6 +187,7 @@ unittest
 {
 	/* Test dump escaping slashes */
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 	jansson_d.value.json_object_set_new(json, "url", jansson_d.value.json_string("https://github.com/akheron/jansson"));
 
@@ -202,6 +208,7 @@ unittest
 //encode_nul_byte
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.value.json_stringn("nul byte \0 in string", 20);
 	char* result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
 
@@ -214,6 +221,7 @@ unittest
 //dump_file
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	int result = jansson_d.dump.json_dump_file(null, "\0", 0);
 
 	assert(result == -1, "json_dump_file succeeded with invalid args");
@@ -230,6 +238,7 @@ unittest
 //dumpb
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
 	char[2] buf = void;
@@ -250,6 +259,8 @@ unittest
 //dumpfd
 unittest
 {
+	jansson_d.test.util.init_unittest();
+
 	static if (__traits(compiles, core.sys.posix.unistd.pipe)) {
 		int[2] fds = [-1, -1];
 
@@ -278,6 +289,8 @@ unittest
 unittest
 {
 	static immutable string[] plains = ["{\"bar\":[],\"foo\":{}}\0", "[[],{}]\0", "{}\0", "[]\0"];
+
+	jansson_d.test.util.init_unittest();
 
 	for (size_t i = 0; i < plains.length; i++) {
 		immutable (char)* plain = &(plains[i][0]);

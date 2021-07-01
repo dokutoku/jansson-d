@@ -21,6 +21,7 @@ private static import jansson_d.jansson_private;
 private static import jansson_d.load;
 private static import jansson_d.memory;
 private static import jansson_d.pack_unpack;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 private __gshared int chaos_pos = 0;
@@ -119,6 +120,7 @@ private int dump_chaos_callback(scope const char* buffer, size_t size, scope voi
 //test_chaos
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = null;
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* arr1 = jansson_d.value.json_array();

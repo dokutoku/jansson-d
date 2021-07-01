@@ -227,7 +227,8 @@ static if ((__traits(compiles, __atomic_test_and_set)) && (__traits(compiles, __
 	}
 
 	/* volatile */
-	private __gshared char seed_initialized = 0;
+	//private
+	__gshared char seed_initialized = 0;
 
 	///
 	extern (C)

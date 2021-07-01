@@ -14,6 +14,7 @@ private static import core.memory;
 private static import core.stdc.string;
 private static import jansson_d.dump;
 private static import jansson_d.jansson;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 private void test_keylen_iterator(scope jansson_d.jansson.json_t* object)
@@ -49,6 +50,7 @@ unittest
 	static immutable char[] key3 = ['t', 'e', 's', '\0', 't'];
 	static immutable char[] key4 = ['t', 'e', 's', 't', '\0'];
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
 	assert(jansson_d.value.json_object_size(obj) == 0, "incorrect json");
@@ -121,6 +123,7 @@ unittest
 {
 	static immutable char[] key = ['t', 'e', 's', 't', '1'];
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
 	jansson_d.value.json_object_set_new_nocheck(obj, "test1", jansson_d.value.json_true());
@@ -143,6 +146,7 @@ unittest
 //test_binary_keys
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 	int key1 = 0;
 	int key2 = 1;
@@ -165,6 +169,7 @@ unittest
 	static immutable char[] expected_sorted_str = "{\"k\\u0000-1\": \"first\", \"k\\u0000-2\": \"second\"}\0";
 	static immutable char[] expected_nonsorted_str = "{\"k\\u0000-2\": \"second\", \"k\\u0000-1\": \"first\"}\0";
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
 	jansson_d.value.json_object_setn_new_nocheck(obj, &(key1[0]), key1.length, jansson_d.value.json_string("second"));

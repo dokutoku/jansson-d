@@ -16,6 +16,7 @@ private static import jansson_d.dump;
 private static import jansson_d.jansson;
 private static import jansson_d.jansson_private;
 private static import jansson_d.load;
+private static import jansson_d.test.util;
 
 private struct my_sink
 {
@@ -52,6 +53,7 @@ unittest
 {
 	static immutable char[] str = "[\"A\", {\"B\": \"C\", \"e\": false}, 1, null, \"foo\"]\0";
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads(&(str[0]), 0, null);
 
 	assert(json != null, "json_loads failed");

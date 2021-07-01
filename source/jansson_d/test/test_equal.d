@@ -12,11 +12,13 @@ module jansson_d.test.test_equal;
 
 private static import jansson_d.jansson;
 private static import jansson_d.load;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 //test_equal_simple
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	assert(!jansson_d.value.json_equal(null, null), "json_equal fails for two NULLs");
 
 	jansson_d.jansson.json_t* value1 = jansson_d.value.json_true();
@@ -97,6 +99,7 @@ unittest
 //test_equal_array
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 
@@ -128,6 +131,7 @@ unittest
 //test_equal_object
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object1 = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* object2 = jansson_d.value.json_object();
 
@@ -166,6 +170,7 @@ unittest
 {
 	static immutable char* complex_json = "{    \"integer\": 1,     \"real\": 3.141592,     \"string\": \"foobar\",     \"true\": true,     \"object\": {        \"array-in-object\": [1,true,\"foo\",{}],        \"object-in-object\": {\"foo\": \"bar\"}    },    \"array\": [\"foo\", false, null, 1.234]}";
 
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* value1 = jansson_d.load.json_loads(complex_json, 0, null);
 	jansson_d.jansson.json_t* value2 = jansson_d.load.json_loads(complex_json, 0, null);
 	jansson_d.jansson.json_t* value3 = jansson_d.load.json_loads(complex_json, 0, null);

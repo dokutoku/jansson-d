@@ -6,11 +6,13 @@ module jansson_d.test.test_sprintf;
 
 private static import core.stdc.string;
 private static import jansson_d.jansson;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 //test_sprintf
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* s = jansson_d.value.json_sprintf("foo bar %d", 42);
 
 	assert(s != null, "json_sprintf returned null");

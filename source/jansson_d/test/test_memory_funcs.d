@@ -10,6 +10,7 @@ private static import jansson_d.jansson;
 private static import jansson_d.jansson_private;
 private static import jansson_d.memory;
 private static import jansson_d.pack_unpack;
+private static import jansson_d.test.util;
 private static import jansson_d.value;
 
 private __gshared int malloc_called = 0;
@@ -68,6 +69,7 @@ private void my_free(scope void* ptr_)
 //test_simple
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_malloc_t mfunc = null;
 	jansson_d.jansson.json_free_t ffunc = null;
 
@@ -106,6 +108,7 @@ private void oom_free(scope void* ptr_)
 //test_oom
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	.free_called = 0;
 	jansson_d.memory.json_set_alloc_funcs(&.oom_malloc, &.oom_free);
 	.create_and_free_object_with_oom();
@@ -150,6 +153,7 @@ private void secure_free(scope void* ptr_)
 //test_secure_funcs
 unittest
 {
+	jansson_d.test.util.init_unittest();
 	jansson_d.memory.json_set_alloc_funcs(&.secure_malloc, &.secure_free);
 	.create_and_free_complex_object();
 }
@@ -158,5 +162,6 @@ unittest
 unittest
 {
 	/* The result of this test is not crashing. */
+	jansson_d.test.util.init_unittest();
 	jansson_d.memory.json_get_alloc_funcs(null, null);
 }

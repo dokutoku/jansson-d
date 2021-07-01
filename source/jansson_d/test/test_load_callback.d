@@ -13,6 +13,7 @@ module jansson_d.test.test_load_callback;
 private static import core.stdc.string;
 private static import jansson_d.jansson;
 private static import jansson_d.load;
+private static import jansson_d.test.util;
 
 private struct my_source
 {
@@ -48,6 +49,8 @@ private size_t greedy_reader(scope void* buf, size_t buflen, scope void* arg)
 //run_tests
 unittest
 {
+	jansson_d.test.util.init_unittest();
+
 	.my_source s =
 	{
 		off: 0,
