@@ -48,7 +48,7 @@ struct config
 	int precision;
 }
 
-__gshared .config conf = void;
+__gshared .config conf;
 
 template l_isspace(string c)
 {
