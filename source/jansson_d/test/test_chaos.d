@@ -10,8 +10,6 @@ module jansson_d.test.test_chaos;
  * https://github.com/dokutoku/jansson-d/actions/runs/700308033
  */
 
-version (none):
-
 private static import core.memory;
 private static import core.stdc.string;
 private static import core.stdcpp.xutility;
