@@ -222,6 +222,8 @@ package __gshared uint hashtable_seed = 0;
 
 //Posix
 static if ((__traits(compiles, __atomic_test_and_set)) && (__traits(compiles, __ATOMIC_RELAXED)) && (__traits(compiles, __atomic_store_n)) && (__traits(compiles, __ATOMIC_RELEASE)) && (__traits(compiles, __atomic_load_n)) && (__traits(compiles, __ATOMIC_ACQUIRE))) {
+	//If you modify the code in this Conditional Statement, please also modify the code in init_unittest().
+
 	version (Windows) {
 		static assert (false);
 	}
@@ -295,7 +297,8 @@ static if ((__traits(compiles, __atomic_test_and_set)) && (__traits(compiles, __
 			}
 		}
 } else version (Win32) {
-	private __gshared core.sys.windows.windef.LONG seed_initialized = 0;
+	//private
+	__gshared core.sys.windows.windef.LONG seed_initialized = 0;
 
 	///
 	extern (C)

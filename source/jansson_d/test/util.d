@@ -94,7 +94,9 @@ package void init_unittest()
 	{
 		jansson_d.hashtable_seed.hashtable_seed = 0;
 
-		static if (__traits(compiles, jansson_d.hashtable_seed.seed_initialized)) {
+		static if ((__traits(compiles, __atomic_test_and_set)) && (__traits(compiles, __ATOMIC_RELAXED)) && (__traits(compiles, __atomic_store_n)) && (__traits(compiles, __ATOMIC_RELEASE)) && (__traits(compiles, __atomic_load_n)) && (__traits(compiles, __ATOMIC_ACQUIRE))) {
+			jansson_d.hashtable_seed.seed_initialized = 0;
+		} else version (Win32) {
 			jansson_d.hashtable_seed.seed_initialized = 0;
 		}
 
