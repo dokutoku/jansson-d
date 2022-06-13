@@ -146,8 +146,9 @@ public size_t json_object_size(scope const jansson_d.jansson.json_t* json)
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc @live //ToDo: @nodiscard
+nothrow @trusted @nogc @live
 public jansson_d.jansson.json_t* json_object_get(scope const jansson_d.jansson.json_t* json, scope const char* key)
 
 	do
@@ -160,8 +161,9 @@ public jansson_d.jansson.json_t* json_object_get(scope const jansson_d.jansson.j
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc @live //ToDo: @nodiscard
+nothrow @trusted @nogc @live
 public jansson_d.jansson.json_t* json_object_getn(scope const jansson_d.jansson.json_t* json, scope const char* key, size_t key_len)
 
 	do
@@ -1302,8 +1304,9 @@ private jansson_d.jansson.json_t* json_string_copy(scope const jansson_d.jansson
 
 ///
 //JANSSON_ATTRS((warn_unused_result, format(printf, 1, 0)))
+//nodiscard
 extern (C)
-nothrow @nogc //ToDo: @nodiscard
+nothrow @nogc
 public jansson_d.jansson.json_t* json_vsprintf(scope const char* fmt, core.stdc.stdarg.va_list ap)
 
 	do
@@ -1349,8 +1352,9 @@ public jansson_d.jansson.json_t* json_vsprintf(scope const char* fmt, core.stdc.
 
 ///
 //JANSSON_ATTRS((warn_unused_result, format(printf, 1, 2)))
+//nodiscard
 extern (C)
-nothrow @nogc //ToDo: @nodiscard
+nothrow @nogc
 public jansson_d.jansson.json_t* json_sprintf(scope const char* fmt, ...)
 
 	do
@@ -1668,8 +1672,9 @@ public int json_equal(scope const jansson_d.jansson.json_t* json1, scope const j
 /* copying */
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc //ToDo: @nodiscard
+nothrow @trusted @nogc
 public jansson_d.jansson.json_t* json_copy(scope jansson_d.jansson.json_t* json)
 
 	do
@@ -1705,8 +1710,9 @@ public jansson_d.jansson.json_t* json_copy(scope jansson_d.jansson.json_t* json)
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc //ToDo: @nodiscard
+nothrow @trusted @nogc
 public jansson_d.jansson.json_t* json_deep_copy(scope const jansson_d.jansson.json_t* json)
 
 	do

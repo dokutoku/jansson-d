@@ -1245,8 +1245,9 @@ private int string_get(scope void* data)
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc //ToDo: @nodiscard
+nothrow @trusted @nogc
 public jansson_d.jansson.json_t* json_loads(scope const char* string_, size_t flags, scope jansson_d.jansson.json_error_t* error)
 
 	do
@@ -1309,8 +1310,9 @@ private int buffer_get(scope void* data)
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc //ToDo: @nodiscard
+nothrow @trusted @nogc
 public jansson_d.jansson.json_t* json_loadb(scope const char* buffer, size_t buflen, size_t flags, scope jansson_d.jansson.json_error_t* error)
 
 	do
@@ -1344,8 +1346,9 @@ public jansson_d.jansson.json_t* json_loadb(scope const char* buffer, size_t buf
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc //ToDo: @nodiscard
+nothrow @trusted @nogc
 public jansson_d.jansson.json_t* json_loadf(core.stdc.stdio.FILE* input, size_t flags, scope jansson_d.jansson.json_error_t* error)
 
 	do
@@ -1402,8 +1405,9 @@ private int fd_get_func(scope int* fd)
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @nogc @live //ToDo: @nodiscard
+nothrow @nogc @live
 public jansson_d.jansson.json_t* json_loadfd(int input, size_t flags, scope jansson_d.jansson.json_error_t* error)
 
 	do
@@ -1442,8 +1446,9 @@ public jansson_d.jansson.json_t* json_loadfd(int input, size_t flags, scope jans
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @nogc //ToDo: @nodiscard
+nothrow @nogc
 public jansson_d.jansson.json_t* json_load_file(scope const char* path, size_t flags, scope jansson_d.jansson.json_error_t* error)
 
 	do
@@ -1512,8 +1517,9 @@ private int callback_get(scope void* data)
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @nogc //ToDo: @nodiscard
+nothrow @nogc
 public jansson_d.jansson.json_t* json_load_callback(jansson_d.jansson.json_load_callback_t callback, scope void* arg, size_t flags, scope jansson_d.jansson.json_error_t* error)
 
 	do

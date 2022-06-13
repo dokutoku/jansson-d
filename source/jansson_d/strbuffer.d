@@ -34,7 +34,8 @@ private enum STRBUFFER_MIN_SIZE = 16;
 private enum STRBUFFER_FACTOR = 2;
 private enum size_t STRBUFFER_SIZE_MAX = size_t.max;
 
-nothrow @trusted @nogc //ToDo: @nodiscard
+//nodiscard
+nothrow @trusted @nogc
 int strbuffer_init(scope strbuffer_t* strbuff)
 
 	in

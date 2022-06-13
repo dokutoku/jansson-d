@@ -315,7 +315,8 @@ private int hashtable_do_rehash(scope .hashtable_t* hashtable_)
  *
  * Returns: 0 on success, -1 on error (out of memory).
  */
-nothrow @trusted @nogc //ToDo: @nodiscard
+//nodiscard
+nothrow @trusted @nogc
 int hashtable_init(scope .hashtable_t* hashtable_)
 
 	in

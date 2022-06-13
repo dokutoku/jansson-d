@@ -553,8 +553,9 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @trusted @nogc @live //ToDo: @nodiscard
+nothrow @trusted @nogc @live
 public char* json_dumps(scope const jansson_d.jansson.json_t* json, size_t flags)
 
 	do

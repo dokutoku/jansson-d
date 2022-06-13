@@ -24,7 +24,8 @@ __gshared jansson_d.jansson.json_malloc_t do_malloc = &core.stdc.stdlib.malloc;
 //private
 __gshared jansson_d.jansson.json_free_t do_free = &core.stdc.stdlib.free;
 
-nothrow @trusted @nogc //ToDo: @nodiscard
+//nodiscard
+nothrow @trusted @nogc
 package void* jsonp_malloc(size_t size)
 
 	do
@@ -48,7 +49,8 @@ package void jsonp_free(scope void* ptr_)
 		.do_free(ptr_);
 	}
 
-nothrow @trusted @nogc //ToDo: @nodiscard
+//nodiscard
+nothrow @trusted @nogc
 char* jsonp_strdup(scope const char* str)
 
 	do
@@ -56,7 +58,8 @@ char* jsonp_strdup(scope const char* str)
 		return .jsonp_strndup(str, core.stdc.string.strlen(str));
 	}
 
-nothrow @trusted @nogc //ToDo: @nodiscard
+//nodiscard
+nothrow @trusted @nogc
 char* jsonp_strndup(scope const char* str, size_t len)
 
 	do

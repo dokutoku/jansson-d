@@ -996,8 +996,9 @@ private int unpack(scope .scanner_t* s, scope jansson_d.jansson.json_t* root, sc
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @nogc //ToDo: @nodiscard
+nothrow @nogc
 public jansson_d.jansson.json_t* json_vpack_ex(scope jansson_d.jansson.json_error_t* error, size_t flags, scope const char* fmt, core.stdc.stdarg.va_list ap)
 
 	do
@@ -1038,8 +1039,9 @@ public jansson_d.jansson.json_t* json_vpack_ex(scope jansson_d.jansson.json_erro
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @nogc //ToDo: @nodiscard
+nothrow @nogc
 public jansson_d.jansson.json_t* json_pack_ex(scope jansson_d.jansson.json_error_t* error, size_t flags, scope const char* fmt, ...)
 
 	do
@@ -1053,8 +1055,9 @@ public jansson_d.jansson.json_t* json_pack_ex(scope jansson_d.jansson.json_error
 	}
 
 ///
+//nodiscard
 extern (C)
-nothrow @nogc //ToDo: @nodiscard
+nothrow @nogc
 public jansson_d.jansson.json_t* json_pack(scope const char* fmt, ...)
 
 	do
