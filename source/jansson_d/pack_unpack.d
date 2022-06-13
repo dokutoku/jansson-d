@@ -697,11 +697,10 @@ private int unpack_object(scope .scanner_t* s, scope jansson_d.jansson.json_t* r
 
 			if ((gotopt) || (jansson_d.value.json_object_size(root) != key_set.size)) {
 				const (char)* key = void;
+				size_t key_len = void;
 
-				//jansson_d.jansson.json_object_foreach(root, key, value)
-				for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(root)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(root, jansson_d.value.json_object_key_to_iter(key)))) {
-					size_t key_len = core.stdc.string.strlen(key);
-
+				//jansson_d.jansson.json_object_keylen_foreach(root, key, key_len, value)
+				for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(root)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(root, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
 					if (jansson_d.hashtable.hashtable_get(&key_set, key, key_len) == null) {
 						unpacked++;
 

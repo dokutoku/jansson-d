@@ -125,6 +125,7 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
+	jansson_d.jansson.json_t* empty_obj = jansson_d.value.json_object();
 
 	jansson_d.value.json_object_set_new_nocheck(obj, "test1", jansson_d.value.json_true());
 
@@ -140,7 +141,12 @@ unittest
 
 	assert(jansson_d.value.json_object_del(obj, null), "json_object_del with null failed");
 
+	assert(jansson_d.value.json_object_deln(empty_obj, &(key[0]), key.length), "json_object_deln with empty object failed");
+
+	assert(jansson_d.value.json_object_deln(obj, &(key[0]), key.length - 1), "json_object_deln with incomplete key failed");
+
 	jansson_d.jansson.json_decref(obj);
+	jansson_d.jansson.json_decref(empty_obj);
 }
 
 //test_binary_keys
@@ -157,6 +163,16 @@ unittest
 	assert(mixin (jansson_d.jansson.json_is_true!("jansson_d.value.json_object_getn(obj, cast(const char*)(&key1), key1.sizeof)")), "cannot get integer key1");
 
 	assert(mixin (jansson_d.jansson.json_is_true!("jansson_d.value.json_object_getn(obj, cast(const char*)(&key1), key2.sizeof)")), "cannot get integer key2");
+
+	assert(jansson_d.value.json_object_size(obj) == 2, "binary object size missmatch");
+
+	assert(!jansson_d.value.json_object_deln(obj, cast(const char*)(&key1), key1.sizeof), "cannot del integer key1");
+
+	assert(jansson_d.value.json_object_size(obj) == 1, "binary object size missmatch");
+
+	assert(!jansson_d.value.json_object_deln(obj, cast(const char*)(&key2), key2.sizeof), "cannot del integer key2");
+
+	assert(jansson_d.value.json_object_size(obj) == 0, "binary object size missmatch");
 
 	jansson_d.jansson.json_decref(obj);
 }
