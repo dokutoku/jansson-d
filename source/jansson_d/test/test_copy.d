@@ -23,85 +23,100 @@ unittest
 	assert(!jansson_d.value.json_copy(null), "copying null doesn't return null");
 
 	/* true */
-	jansson_d.jansson.json_t* value = jansson_d.value.json_true();
-	jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(value);
+	jansson_d.jansson.json_t* value = void;
+	jansson_d.jansson.json_t* copy = void;
 
-	assert(value == copy, "copying true failed");
+	{
+		value = jansson_d.value.json_true();
+		copy = jansson_d.value.json_copy(value);
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "copying true failed");
 
-	/* false */
-	value = jansson_d.value.json_false();
-	copy = jansson_d.value.json_copy(value);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value == copy, "copying false failed");
+	{
+		/* false */
+		value = jansson_d.value.json_false();
+		copy = jansson_d.value.json_copy(value);
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "copying false failed");
 
-	/* null */
-	value = jansson_d.value.json_null();
-	copy = jansson_d.value.json_copy(value);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value == copy, "copying null failed");
+	{
+		/* null */
+		value = jansson_d.value.json_null();
+		copy = jansson_d.value.json_copy(value);
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "copying null failed");
 
-	/* string */
-	value = jansson_d.value.json_string("foo");
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value != null, "unable to create a string");
+	{
+		/* string */
+		value = jansson_d.value.json_string("foo");
 
-	copy = jansson_d.value.json_copy(value);
+		assert(value != null, "unable to create a string");
 
-	assert(copy != null, "unable to copy a string");
+		copy = jansson_d.value.json_copy(value);
 
-	assert(copy != value, "copying a string doesn't copy");
+		assert(copy != null, "unable to copy a string");
 
-	assert(jansson_d.value.json_equal(copy, value), "copying a string produces an inequal copy");
+		assert(copy != value, "copying a string doesn't copy");
 
-	assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+		assert(jansson_d.value.json_equal(copy, value), "copying a string produces an inequal copy");
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
 
-	/* integer */
-	value = jansson_d.value.json_integer(543);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value != null, "unable to create an integer");
+	{
+		/* integer */
+		value = jansson_d.value.json_integer(543);
 
-	copy = jansson_d.value.json_copy(value);
+		assert(value != null, "unable to create an integer");
 
-	assert(copy != null, "unable to copy an integer");
+		copy = jansson_d.value.json_copy(value);
 
-	assert(copy != value, "copying an integer doesn't copy");
+		assert(copy != null, "unable to copy an integer");
 
-	assert(jansson_d.value.json_equal(copy, value), "copying an integer produces an inequal copy");
+		assert(copy != value, "copying an integer doesn't copy");
 
-	assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+		assert(jansson_d.value.json_equal(copy, value), "copying an integer produces an inequal copy");
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
 
-	/* real */
-	value = jansson_d.value.json_real(123e9);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value != null, "unable to create a real");
+	{
+		/* real */
+		value = jansson_d.value.json_real(123e9);
 
-	copy = jansson_d.value.json_copy(value);
+		assert(value != null, "unable to create a real");
 
-	assert(copy != null, "unable to copy a real");
+		copy = jansson_d.value.json_copy(value);
 
-	assert(copy != value, "copying a real doesn't copy");
+		assert(copy != null, "unable to copy a real");
 
-	assert(jansson_d.value.json_equal(copy, value), "copying a real produces an inequal copy");
+		assert(copy != value, "copying a real doesn't copy");
 
-	assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+		assert(jansson_d.value.json_equal(copy, value), "copying a real produces an inequal copy");
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 }
 
 //test_deep_copy_simple
@@ -111,85 +126,100 @@ unittest
 	assert(jansson_d.value.json_deep_copy(null) == null, "deep copying null doesn't return null");
 
 	/* true */
-	jansson_d.jansson.json_t* value = jansson_d.value.json_true();
-	jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(value);
+	jansson_d.jansson.json_t* value = void;
+	jansson_d.jansson.json_t* copy = void;
 
-	assert(value == copy, "deep copying true failed");
+	{
+		value = jansson_d.value.json_true();
+		copy = jansson_d.value.json_deep_copy(value);
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "deep copying true failed");
 
-	/* false */
-	value = jansson_d.value.json_false();
-	copy = jansson_d.value.json_deep_copy(value);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value == copy, "deep copying false failed");
+	{
+		/* false */
+		value = jansson_d.value.json_false();
+		copy = jansson_d.value.json_deep_copy(value);
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "deep copying false failed");
 
-	/* null */
-	value = jansson_d.value.json_null();
-	copy = jansson_d.value.json_deep_copy(value);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value == copy, "deep copying null failed");
+	{
+		/* null */
+		value = jansson_d.value.json_null();
+		copy = jansson_d.value.json_deep_copy(value);
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "deep copying null failed");
 
-	/* string */
-	value = jansson_d.value.json_string("foo");
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value != null, "unable to create a string");
+	{
+		/* string */
+		value = jansson_d.value.json_string("foo");
 
-	copy = jansson_d.value.json_deep_copy(value);
+		assert(value != null, "unable to create a string");
 
-	assert(copy != null, "unable to deep copy a string");
+		copy = jansson_d.value.json_deep_copy(value);
 
-	assert(copy != value, "deep copying a string doesn't copy");
+		assert(copy != null, "unable to deep copy a string");
 
-	assert(jansson_d.value.json_equal(copy, value), "deep copying a string produces an inequal copy");
+		assert(copy != value, "deep copying a string doesn't copy");
 
-	assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+		assert(jansson_d.value.json_equal(copy, value), "deep copying a string produces an inequal copy");
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
 
-	/* integer */
-	value = jansson_d.value.json_integer(543);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value != null, "unable to create an integer");
+	{
+		/* integer */
+		value = jansson_d.value.json_integer(543);
 
-	copy = jansson_d.value.json_deep_copy(value);
+		assert(value != null, "unable to create an integer");
 
-	assert(copy != null, "unable to deep copy an integer");
+		copy = jansson_d.value.json_deep_copy(value);
 
-	assert(copy != value, "deep copying an integer doesn't copy");
+		assert(copy != null, "unable to deep copy an integer");
 
-	assert(jansson_d.value.json_equal(copy, value), "deep copying an integer produces an inequal copy");
+		assert(copy != value, "deep copying an integer doesn't copy");
 
-	assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+		assert(jansson_d.value.json_equal(copy, value), "deep copying an integer produces an inequal copy");
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
 
-	/* real */
-	value = jansson_d.value.json_real(123e9);
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 
-	assert(value != null, "unable to create a real");
+	{
+		/* real */
+		value = jansson_d.value.json_real(123e9);
 
-	copy = jansson_d.value.json_deep_copy(value);
+		assert(value != null, "unable to create a real");
 
-	assert(copy != null, "unable to deep copy a real");
+		copy = jansson_d.value.json_deep_copy(value);
 
-	assert(copy != value, "deep copying a real doesn't copy");
+		assert(copy != null, "unable to deep copy a real");
 
-	assert(jansson_d.value.json_equal(copy, value), "deep copying a real produces an inequal copy");
+		assert(copy != value, "deep copying a real doesn't copy");
 
-	assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+		assert(jansson_d.value.json_equal(copy, value), "deep copying a real produces an inequal copy");
 
-	jansson_d.jansson.json_decref(value);
-	jansson_d.jansson.json_decref(copy);
+		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
+
+		jansson_d.jansson.json_decref(value);
+		jansson_d.jansson.json_decref(copy);
+	}
 }
 
 //test_copy_array
@@ -339,39 +369,55 @@ unittest
 	 */
 
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
-	jansson_d.value.json_object_set_new(json, "a", jansson_d.value.json_object());
-	jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(json, "a"), "b", jansson_d.value.json_object());
-	jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c", jansson_d.value.json_object_get(json, "a"));
 
-	jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(json);
+	jansson_d.jansson.json_t* json = void;
+	jansson_d.jansson.json_t* copy = void;
 
-	assert(copy == null, "json_deep_copy copied a circular reference!");
+	{
+		json = jansson_d.value.json_object();
+		jansson_d.value.json_object_set_new(json, "a", jansson_d.value.json_object());
+		jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(json, "a"), "b", jansson_d.value.json_object());
+		jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c", jansson_d.value.json_object_get(json, "a"));
 
-	jansson_d.value.json_object_del(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c");
+		{
+			copy = jansson_d.value.json_deep_copy(json);
 
-	copy = jansson_d.value.json_deep_copy(json);
+			assert(copy == null, "json_deep_copy copied a circular reference!");
+		}
 
-	assert(copy != null, "json_deep_copy failed!");
+		jansson_d.value.json_object_del(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c");
 
-	jansson_d.jansson.json_decref(copy);
-	jansson_d.jansson.json_decref(json);
+		{
+			copy = jansson_d.value.json_deep_copy(json);
 
-	json = jansson_d.value.json_array();
-	jansson_d.value.json_array_append_new(json, jansson_d.value.json_array());
-	jansson_d.value.json_array_append_new(jansson_d.value.json_array_get(json, 0), jansson_d.value.json_array());
-	jansson_d.jansson.json_array_append(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), jansson_d.value.json_array_get(json, 0));
+			assert(copy != null, "json_deep_copy failed!");
+			jansson_d.jansson.json_decref(copy);
+		}
 
-	copy = jansson_d.value.json_deep_copy(json);
+		jansson_d.jansson.json_decref(json);
+	}
 
-	assert(copy == null, "json_deep_copy copied a circular reference!");
+	{
+		json = jansson_d.value.json_array();
+		jansson_d.value.json_array_append_new(json, jansson_d.value.json_array());
+		jansson_d.value.json_array_append_new(jansson_d.value.json_array_get(json, 0), jansson_d.value.json_array());
+		jansson_d.jansson.json_array_append(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), jansson_d.value.json_array_get(json, 0));
 
-	jansson_d.value.json_array_remove(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), 0);
+		{
+			copy = jansson_d.value.json_deep_copy(json);
 
-	copy = jansson_d.value.json_deep_copy(json);
+			assert(copy == null, "json_deep_copy copied a circular reference!");
+		}
 
-	assert(copy != null, "json_deep_copy failed!");
+		jansson_d.value.json_array_remove(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), 0);
 
-	jansson_d.jansson.json_decref(copy);
-	jansson_d.jansson.json_decref(json);
+		{
+			copy = jansson_d.value.json_deep_copy(json);
+
+			assert(copy != null, "json_deep_copy failed!");
+		}
+
+		jansson_d.jansson.json_decref(copy);
+		jansson_d.jansson.json_decref(json);
+	}
 }

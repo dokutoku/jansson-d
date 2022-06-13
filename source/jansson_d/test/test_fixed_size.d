@@ -191,16 +191,23 @@ unittest
 	jansson_d.value.json_object_setn_new_nocheck(obj, &(key1[0]), key1.length, jansson_d.value.json_string("second"));
 	jansson_d.value.json_object_setn_new_nocheck(obj, &(key2[0]), key2.length, jansson_d.value.json_string("first"));
 
-	char* out_ = cast(char*)(core.memory.pureMalloc(512));
+	{
+		char* out_ = cast(char*)(core.memory.pureMalloc(512));
 
-	jansson_d.dump.json_dumpb(obj, out_, 512, 0);
+		{
+			jansson_d.dump.json_dumpb(obj, out_, 512, 0);
 
-	assert(core.stdc.string.memcmp(&(expected_nonsorted_str[0]), out_, expected_nonsorted_str.length - 1) == 0, "preserve order failed");
+			assert(core.stdc.string.memcmp(&(expected_nonsorted_str[0]), out_, expected_nonsorted_str.length - 1) == 0, "preserve order failed");
+		}
 
-	jansson_d.dump.json_dumpb(obj, out_, 512, jansson_d.jansson.JSON_SORT_KEYS);
+		{
+			jansson_d.dump.json_dumpb(obj, out_, 512, jansson_d.jansson.JSON_SORT_KEYS);
 
-	assert(core.stdc.string.memcmp(&(expected_sorted_str[0]), out_, expected_sorted_str.length - 1) == 0, "utf-8 sort failed");
+			assert(core.stdc.string.memcmp(&(expected_sorted_str[0]), out_, expected_sorted_str.length - 1) == 0, "utf-8 sort failed");
+		}
 
-	core.memory.pureFree(out_);
+		core.memory.pureFree(out_);
+	}
+
 	jansson_d.jansson.json_decref(obj);
 }

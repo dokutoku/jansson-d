@@ -76,38 +76,59 @@ unittest
 unittest
 {
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* integer = jansson_d.value.json_integer(5);
-	jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(100.1);
 
-	assert(integer != null, "unable to create integer");
-
-	assert(real_ != null, "unable to create real");
-
-	jansson_d.jansson.json_int_t i = jansson_d.value.json_integer_value(integer);
-
-	assert(i == 5, "wrong integer value");
-
-	double d = jansson_d.value.json_real_value(real_);
-
-	assert(d == 100.1, "wrong real value");
-
-	d = jansson_d.value.json_number_value(integer);
-
-	assert(d == 5.0, "wrong number value");
-
-	d = jansson_d.value.json_number_value(real_);
-
-	assert(d == 100.1, "wrong number value");
-
-	jansson_d.jansson.json_decref(integer);
-	jansson_d.jansson.json_decref(real_);
+	jansson_d.jansson.json_t* real_ = void;
 
 	{
-		static assert(__traits(compiles, core.stdc.math.NAN));
+		jansson_d.jansson.json_t* integer = jansson_d.value.json_integer(5);
+
+		{
+			real_ = jansson_d.value.json_real(100.1);
+
+			assert(integer != null, "unable to create integer");
+
+			assert(real_ != null, "unable to create real");
+		}
+
+		{
+			jansson_d.jansson.json_int_t i = jansson_d.value.json_integer_value(integer);
+
+			assert(i == 5, "wrong integer value");
+		}
+
+		double d = void;
+
+		{
+			d = jansson_d.value.json_real_value(real_);
+
+			assert(d == 100.1, "wrong real value");
+		}
+
+		{
+			d = jansson_d.value.json_number_value(integer);
+
+			assert(d == 5.0, "wrong number value");
+		}
+
+		{
+			d = jansson_d.value.json_number_value(real_);
+
+			assert(d == 100.1, "wrong number value");
+		}
+
+		jansson_d.jansson.json_decref(integer);
+		jansson_d.jansson.json_decref(real_);
+	}
+
+	static assert(__traits(compiles, core.stdc.math.NAN));
+
+	{
 		real_ = jansson_d.value.json_real(core.stdc.math.NAN);
 
 		assert(real_ == null, "could construct a real from NaN");
+	}
 
+	{
 		real_ = jansson_d.value.json_real(1.0);
 
 		assert(jansson_d.value.json_real_set(real_, core.stdc.math.NAN) == -1, "could set a real to NaN");

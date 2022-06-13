@@ -145,60 +145,72 @@ unittest
 unittest
 {
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+
+	jansson_d.jansson.json_t* object = void;
 	jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4);
 
-	assert(!jansson_d.value.json_object_update_existing(object, other), "json_object_update_existing failed");
+	{
+		object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
-	assert(jansson_d.value.json_object_size(object) == 2, "json_object_update_existing added new items");
+		assert(!jansson_d.value.json_object_update_existing(object, other), "json_object_update_existing failed");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 3, "json_object_update_existing failed to update existing key");
+		assert(jansson_d.value.json_object_size(object) == 2, "json_object_update_existing added new items");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_existing updated wrong key");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 3, "json_object_update_existing failed to update existing key");
 
-	jansson_d.jansson.json_decref(object);
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_existing updated wrong key");
 
-	/* json_object_update_existing_new check */
-	object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+		jansson_d.jansson.json_decref(object);
+	}
 
-	assert(!jansson_d.jansson.json_object_update_existing_new(object, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_existing_new failed");
+	{
+		/* json_object_update_existing_new check */
+		object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
-	assert(jansson_d.value.json_object_size(object) == 2, "json_object_update_existing_new added new items");
+		assert(!jansson_d.jansson.json_object_update_existing_new(object, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_existing_new failed");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 3, "json_object_update_existing_new failed to update existing key");
+		assert(jansson_d.value.json_object_size(object) == 2, "json_object_update_existing_new added new items");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_existing_new updated wrong key");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 3, "json_object_update_existing_new failed to update existing key");
 
-	jansson_d.jansson.json_decref(object);
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_existing_new updated wrong key");
 
-	object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+		jansson_d.jansson.json_decref(object);
+	}
 
-	assert(!jansson_d.value.json_object_update_missing(object, other), "json_object_update_missing failed");
+	{
+		object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
-	assert(jansson_d.value.json_object_size(object) == 3, "json_object_update_missing didn't add new items");
+		assert(!jansson_d.value.json_object_update_missing(object, other), "json_object_update_missing failed");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 1, "json_object_update_missing updated existing key");
+		assert(jansson_d.value.json_object_size(object) == 3, "json_object_update_missing didn't add new items");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_missing updated wrong key");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 1, "json_object_update_missing updated existing key");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "baz")) == 4, "json_object_update_missing didn't add new items");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_missing updated wrong key");
 
-	jansson_d.jansson.json_decref(object);
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "baz")) == 4, "json_object_update_missing didn't add new items");
 
-	/* json_object_update_missing_new check */
-	object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+		jansson_d.jansson.json_decref(object);
+	}
 
-	assert(!jansson_d.jansson.json_object_update_missing_new(object, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_missing_new failed");
+	{
+		/* json_object_update_missing_new check */
+		object = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
-	assert(jansson_d.value.json_object_size(object) == 3, "json_object_update_missing_new didn't add new items");
+		assert(!jansson_d.jansson.json_object_update_missing_new(object, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_missing_new failed");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 1, "json_object_update_missing_new updated existing key");
+		assert(jansson_d.value.json_object_size(object) == 3, "json_object_update_missing_new didn't add new items");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_missing_new updated wrong key");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 1, "json_object_update_missing_new updated existing key");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "baz")) == 4, "json_object_update_missing_new didn't add new items");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 2, "json_object_update_missing_new updated wrong key");
 
-	jansson_d.jansson.json_decref(object);
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "baz")) == 4, "json_object_update_missing_new didn't add new items");
+
+		jansson_d.jansson.json_decref(object);
+	}
+
 	jansson_d.jansson.json_decref(other);
 }
 
@@ -206,64 +218,73 @@ unittest
 unittest
 {
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* invalid = jansson_d.value.json_integer(42);
 
-	jansson_d.jansson.json_t* object = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
-	jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 3, &("bar\0"[0]), 4, &("baz\0"[0]), 5);
+	jansson_d.jansson.json_t* object = void;
+	jansson_d.jansson.json_t* other = void;
 
-	assert(jansson_d.value.json_object_update_recursive(invalid, other), "json_object_update_recursive accepted non-object argument");
+	{
+		jansson_d.jansson.json_t* invalid = jansson_d.value.json_integer(42);
+		object = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
+		other = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 3, &("bar\0"[0]), 4, &("baz\0"[0]), 5);
 
-	jansson_d.jansson.json_decref(invalid);
+		assert(jansson_d.value.json_object_update_recursive(invalid, other), "json_object_update_recursive accepted non-object argument");
 
-	assert(!jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive failed");
+		jansson_d.jansson.json_decref(invalid);
 
-	assert(jansson_d.value.json_object_size(object) == 3, "invalid size after update");
+		assert(!jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive failed");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 3, "json_object_update_recursive failed to update existing key");
+		assert(jansson_d.value.json_object_size(object) == 3, "invalid size after update");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 4, "json_object_update_recursive failed to overwrite object");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "foo")) == 3, "json_object_update_recursive failed to update existing key");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "baz")) == 5, "json_object_update_recursive didn't add new item");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "bar")) == 4, "json_object_update_recursive failed to overwrite object");
 
-	jansson_d.jansson.json_decref(object);
-	jansson_d.jansson.json_decref(other);
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object, "baz")) == 5, "json_object_update_recursive didn't add new item");
 
-	object = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
-	other = jansson_d.pack_unpack.json_pack("{s{si}}", &("bar\0"[0]), &("baz\0"[0]), 3);
-	jansson_d.jansson.json_t* barBefore = jansson_d.value.json_object_get(object, "bar");
+		jansson_d.jansson.json_decref(object);
+		jansson_d.jansson.json_decref(other);
+	}
 
-	assert(barBefore != null, "can't get bar object before json_object_update_recursive");
+	{
+		object = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
+		other = jansson_d.pack_unpack.json_pack("{s{si}}", &("bar\0"[0]), &("baz\0"[0]), 3);
+		jansson_d.jansson.json_t* barBefore = jansson_d.value.json_object_get(object, "bar");
 
-	assert(!jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive failed");
+		assert(barBefore != null, "can't get bar object before json_object_update_recursive");
 
-	assert(jansson_d.value.json_object_size(object) == 2, "invalid size after update");
+		assert(!jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive failed");
 
-	assert(jansson_d.value.json_object_get(object, "foo") != null, "json_object_update_recursive removed existing key");
+		assert(jansson_d.value.json_object_size(object) == 2, "invalid size after update");
 
-	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(jansson_d.value.json_object_get(object, "bar"), "baz")) == 3, "json_object_update_recursive failed to update nested value");
+		assert(jansson_d.value.json_object_get(object, "foo") != null, "json_object_update_recursive removed existing key");
 
-	jansson_d.jansson.json_t* barAfter = jansson_d.value.json_object_get(object, "bar");
+		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(jansson_d.value.json_object_get(object, "bar"), "baz")) == 3, "json_object_update_recursive failed to update nested value");
 
-	assert(barAfter != null, "can't get bar object after json_object_update_recursive");
+		jansson_d.jansson.json_t* barAfter = jansson_d.value.json_object_get(object, "bar");
 
-	assert(barBefore == barAfter, "bar object reference changed after json_object_update_recursive");
+		assert(barAfter != null, "can't get bar object after json_object_update_recursive");
 
-	jansson_d.jansson.json_decref(object);
-	jansson_d.jansson.json_decref(other);
+		assert(barBefore == barAfter, "bar object reference changed after json_object_update_recursive");
 
-	/* check circular reference */
-	object = jansson_d.pack_unpack.json_pack("{s{s{s{si}}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), &("xxx\0"[0]), 2);
-	other = jansson_d.pack_unpack.json_pack("{s{s{si}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), 2);
-	jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(other, "foo"), "bar"), "baz", jansson_d.value.json_object_get(other, "foo"));
+		jansson_d.jansson.json_decref(object);
+		jansson_d.jansson.json_decref(other);
+	}
 
-	assert(jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive update a circular reference!");
+	{
+		/* check circular reference */
+		object = jansson_d.pack_unpack.json_pack("{s{s{s{si}}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), &("xxx\0"[0]), 2);
+		other = jansson_d.pack_unpack.json_pack("{s{s{si}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), 2);
+		jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(other, "foo"), "bar"), "baz", jansson_d.value.json_object_get(other, "foo"));
 
-	jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(jansson_d.value.json_object_get(other, "foo"), "bar"), "baz", jansson_d.value.json_integer(1));
+		assert(jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive update a circular reference!");
 
-	assert(!jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive failed!");
+		jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(jansson_d.value.json_object_get(other, "foo"), "bar"), "baz", jansson_d.value.json_integer(1));
 
-	jansson_d.jansson.json_decref(object);
-	jansson_d.jansson.json_decref(other);
+		assert(!jansson_d.value.json_object_update_recursive(object, other), "json_object_update_recursive failed!");
+
+		jansson_d.jansson.json_decref(object);
+		jansson_d.jansson.json_decref(other);
+	}
 }
 
 //test_circular

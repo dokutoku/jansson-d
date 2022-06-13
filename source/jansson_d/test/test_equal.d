@@ -21,79 +21,95 @@ unittest
 	jansson_d.test.util.init_unittest();
 	assert(!jansson_d.value.json_equal(null, null), "json_equal fails for two NULLs");
 
-	jansson_d.jansson.json_t* value1 = jansson_d.value.json_true();
+	jansson_d.jansson.json_t* value1 = void;
+	jansson_d.jansson.json_t* value2 = void;
 
-	assert((!jansson_d.value.json_equal(value1, null)) && (!jansson_d.value.json_equal(null, value1)), "json_equal fails for null");
+	{
+		value1 = jansson_d.value.json_true();
 
-	/* this covers true, false and null as they are singletons */
-	assert(jansson_d.value.json_equal(value1, value1), "identical objects are not equal");
+		assert((!jansson_d.value.json_equal(value1, null)) && (!jansson_d.value.json_equal(null, value1)), "json_equal fails for null");
 
-	jansson_d.jansson.json_decref(value1);
+		/* this covers true, false and null as they are singletons */
+		assert(jansson_d.value.json_equal(value1, value1), "identical objects are not equal");
 
-	/* integer */
-	value1 = jansson_d.value.json_integer(1);
-	jansson_d.jansson.json_t* value2 = jansson_d.value.json_integer(1);
+		jansson_d.jansson.json_decref(value1);
+	}
 
-	assert((value1 != null) && (value2 != null), "unable to create integers");
+	{
+		/* integer */
+		value1 = jansson_d.value.json_integer(1);
 
-	assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal integers");
+		{
+			value2 = jansson_d.value.json_integer(1);
 
-	jansson_d.jansson.json_decref(value2);
+			assert((value1 != null) && (value2 != null), "unable to create integers");
 
-	value2 = jansson_d.value.json_integer(2);
+			assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal integers");
 
-	assert(value2 != null, "unable to create an integer");
+			jansson_d.jansson.json_decref(value2);
+		}
 
-	assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal integers");
+		value2 = jansson_d.value.json_integer(2);
 
-	jansson_d.jansson.json_decref(value1);
-	jansson_d.jansson.json_decref(value2);
+		assert(value2 != null, "unable to create an integer");
+
+		assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal integers");
+
+		jansson_d.jansson.json_decref(value1);
+		jansson_d.jansson.json_decref(value2);
+	}
 
 	/* real */
-	value1 = jansson_d.value.json_real(1.2);
-	value2 = jansson_d.value.json_real(1.2);
+	{
+		value1 = jansson_d.value.json_real(1.2);
+		value2 = jansson_d.value.json_real(1.2);
 
-	assert((value1 != null) && (value2 != null), "unable to create reals");
+		assert((value1 != null) && (value2 != null), "unable to create reals");
 
-	assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal reals");
+		assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal reals");
 
-	jansson_d.jansson.json_decref(value2);
+		jansson_d.jansson.json_decref(value2);
 
-	value2 = jansson_d.value.json_real(3.141592);
+		value2 = jansson_d.value.json_real(3.141592);
 
-	assert(value2 != null, "unable to create an real");
+		assert(value2 != null, "unable to create an real");
 
-	assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal reals");
+		assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal reals");
 
-	jansson_d.jansson.json_decref(value1);
-	jansson_d.jansson.json_decref(value2);
+		jansson_d.jansson.json_decref(value1);
+		jansson_d.jansson.json_decref(value2);
+	}
 
 	/* string */
-	value1 = jansson_d.value.json_string("foo");
-	value2 = jansson_d.value.json_string("foo");
+	{
+		value1 = jansson_d.value.json_string("foo");
+		value2 = jansson_d.value.json_string("foo");
 
-	assert((value1 != null) && (value2 != null), "unable to create strings");
+		assert((value1 != null) && (value2 != null), "unable to create strings");
 
-	assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal strings");
+		assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal strings");
 
-	jansson_d.jansson.json_decref(value2);
+		jansson_d.jansson.json_decref(value2);
 
-	value2 = jansson_d.value.json_string("bar");
+		{
+			value2 = jansson_d.value.json_string("bar");
 
-	assert(value2 != null, "unable to create an string");
+			assert(value2 != null, "unable to create an string");
 
-	assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal strings");
+			assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal strings");
 
-	jansson_d.jansson.json_decref(value2);
+			jansson_d.jansson.json_decref(value2);
+		}
 
-	value2 = jansson_d.value.json_string("bar2");
+		value2 = jansson_d.value.json_string("bar2");
 
-	assert(value2 != null, "unable to create an string");
+		assert(value2 != null, "unable to create an string");
 
-	assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal length strings");
+		assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal length strings");
 
-	jansson_d.jansson.json_decref(value1);
-	jansson_d.jansson.json_decref(value2);
+		jansson_d.jansson.json_decref(value1);
+		jansson_d.jansson.json_decref(value2);
+	}
 }
 
 //test_equal_array

@@ -24,17 +24,23 @@ unittest
 	static immutable char[] str = "[\"A\", {\"B\": \"C\"}, 1, 2, 3]garbage\0";
 	size_t len = core.stdc.string.strlen(&(str[0])) - "garbage".length;
 
-	jansson_d.jansson.json_t* json = jansson_d.load.json_loadb(&(str[0]), len, 0, &error);
+	jansson_d.jansson.json_t* json = void;
 
-	assert(json != null, "json_loadb failed on a valid JSON buffer");
+	{
+		json = jansson_d.load.json_loadb(&(str[0]), len, 0, &error);
 
-	jansson_d.jansson.json_decref(json);
+		assert(json != null, "json_loadb failed on a valid JSON buffer");
 
-	json = jansson_d.load.json_loadb(&(str[0]), len - 1, 0, &error);
-
-	if (json != null) {
 		jansson_d.jansson.json_decref(json);
-		assert(false, "json_loadb should have failed on an incomplete buffer, but it didn't");
+	}
+
+	{
+		json = jansson_d.load.json_loadb(&(str[0]), len - 1, 0, &error);
+
+		if (json != null) {
+			jansson_d.jansson.json_decref(json);
+			assert(false, "json_loadb should have failed on an incomplete buffer, but it didn't");
+		}
 	}
 
 	assert(error.line == 1, "json_loadb returned an invalid line number on fail");

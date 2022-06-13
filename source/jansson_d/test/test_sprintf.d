@@ -13,25 +13,32 @@ private static import jansson_d.value;
 unittest
 {
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* s = jansson_d.value.json_sprintf("foo bar %d", 42);
 
-	assert(s != null, "json_sprintf returned null");
+	jansson_d.jansson.json_t* s = void;
 
-	assert(mixin (jansson_d.jansson.json_is_string!("s")), "json_sprintf didn't return a JSON string");
+	{
+		s = jansson_d.value.json_sprintf("foo bar %d", 42);
 
-	assert(!core.stdc.string.strcmp(jansson_d.value.json_string_value(s), "foo bar 42"), "json_sprintf generated an unexpected string");
+		assert(s != null, "json_sprintf returned null");
 
-	jansson_d.jansson.json_decref(s);
+		assert(mixin (jansson_d.jansson.json_is_string!("s")), "json_sprintf didn't return a JSON string");
 
-	s = jansson_d.value.json_sprintf("%s", &("\0"[0]));
+		assert(!core.stdc.string.strcmp(jansson_d.value.json_string_value(s), "foo bar 42"), "json_sprintf generated an unexpected string");
 
-	assert(s != null, "json_sprintf returned null");
+		jansson_d.jansson.json_decref(s);
+	}
 
-	assert(mixin (jansson_d.jansson.json_is_string!("s")), "json_sprintf didn't return a JSON string");
+	{
+		s = jansson_d.value.json_sprintf("%s", &("\0"[0]));
 
-	assert(jansson_d.value.json_string_length(s) == 0, "string is not empty");
+		assert(s != null, "json_sprintf returned null");
 
-	jansson_d.jansson.json_decref(s);
+		assert(mixin (jansson_d.jansson.json_is_string!("s")), "json_sprintf didn't return a JSON string");
+
+		assert(jansson_d.value.json_string_length(s) == 0, "string is not empty");
+
+		jansson_d.jansson.json_decref(s);
+	}
 
 	assert(!jansson_d.value.json_sprintf("%s", &("\xff\xff\0"[0])), "json_sprintf unexpected success with invalid UTF");
 }

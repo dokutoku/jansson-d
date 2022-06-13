@@ -61,37 +61,45 @@ unittest
 	/* Encode an empty object/array, add an item, encode again */
 
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
-	char* result = jansson_d.dump.json_dumps(json, 0);
 
-	assert((result != null) && (!core.stdc.string.strcmp(result, "{}")), "json_dumps failed");
+	jansson_d.jansson.json_t* json = void;
+	char* result = void;
 
-	jansson_d.jansson_private.jsonp_free(result);
+	{
+		json = jansson_d.value.json_object();
+		result = jansson_d.dump.json_dumps(json, 0);
 
-	jansson_d.value.json_object_set_new(json, "foo", jansson_d.value.json_integer(5));
-	result = jansson_d.dump.json_dumps(json, 0);
+		assert((result != null) && (!core.stdc.string.strcmp(result, "{}")), "json_dumps failed");
 
-	assert((result != null) && (!core.stdc.string.strcmp(result, "{\"foo\": 5}")), "json_dumps failed");
+		jansson_d.jansson_private.jsonp_free(result);
 
-	jansson_d.jansson_private.jsonp_free(result);
+		jansson_d.value.json_object_set_new(json, "foo", jansson_d.value.json_integer(5));
+		result = jansson_d.dump.json_dumps(json, 0);
 
-	jansson_d.jansson.json_decref(json);
+		assert((result != null) && (!core.stdc.string.strcmp(result, "{\"foo\": 5}")), "json_dumps failed");
 
-	json = jansson_d.value.json_array();
-	result = jansson_d.dump.json_dumps(json, 0);
+		jansson_d.jansson_private.jsonp_free(result);
 
-	assert((result != null) && (!core.stdc.string.strcmp(result, "[]")), "json_dumps failed");
+		jansson_d.jansson.json_decref(json);
+	}
 
-	jansson_d.jansson_private.jsonp_free(result);
+	{
+		json = jansson_d.value.json_array();
+		result = jansson_d.dump.json_dumps(json, 0);
 
-	jansson_d.value.json_array_append_new(json, jansson_d.value.json_integer(5));
-	result = jansson_d.dump.json_dumps(json, 0);
+		assert((result != null) && (!core.stdc.string.strcmp(result, "[]")), "json_dumps failed");
 
-	assert((result != null) && (!core.stdc.string.strcmp(result, "[5]")), "json_dumps failed");
+		jansson_d.jansson_private.jsonp_free(result);
 
-	jansson_d.jansson_private.jsonp_free(result);
+		jansson_d.value.json_array_append_new(json, jansson_d.value.json_integer(5));
+		result = jansson_d.dump.json_dumps(json, 0);
 
-	jansson_d.jansson.json_decref(json);
+		assert((result != null) && (!core.stdc.string.strcmp(result, "[5]")), "json_dumps failed");
+
+		jansson_d.jansson_private.jsonp_free(result);
+
+		jansson_d.jansson.json_decref(json);
+	}
 }
 
 //circular_references
@@ -107,39 +115,47 @@ unittest
 	 */
 
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
-	jansson_d.value.json_object_set_new(json, "a", jansson_d.value.json_object());
-	jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(json, "a"), "b", jansson_d.value.json_object());
-	jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c", jansson_d.value.json_object_get(json, "a"));
 
-	assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded a circular reference!");
+	jansson_d.jansson.json_t* json = void;
+	char* result = void;
 
-	jansson_d.value.json_object_del(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c");
+	{
+		json = jansson_d.value.json_object();
+		jansson_d.value.json_object_set_new(json, "a", jansson_d.value.json_object());
+		jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(json, "a"), "b", jansson_d.value.json_object());
+		jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c", jansson_d.value.json_object_get(json, "a"));
 
-	char* result = jansson_d.dump.json_dumps(json, 0);
+		assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded a circular reference!");
 
-	assert((result != null) && (!core.stdc.string.strcmp(result, "{\"a\": {\"b\": {}}}")), "json_dumps failed!");
+		jansson_d.value.json_object_del(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c");
 
-	jansson_d.jansson_private.jsonp_free(result);
+		result = jansson_d.dump.json_dumps(json, 0);
 
-	jansson_d.jansson.json_decref(json);
+		assert((result != null) && (!core.stdc.string.strcmp(result, "{\"a\": {\"b\": {}}}")), "json_dumps failed!");
 
-	json = jansson_d.value.json_array();
-	jansson_d.value.json_array_append_new(json, jansson_d.value.json_array());
-	jansson_d.value.json_array_append_new(jansson_d.value.json_array_get(json, 0), jansson_d.value.json_array());
-	jansson_d.jansson.json_array_append(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), jansson_d.value.json_array_get(json, 0));
+		jansson_d.jansson_private.jsonp_free(result);
 
-	assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded a circular reference!");
+		jansson_d.jansson.json_decref(json);
+	}
 
-	jansson_d.value.json_array_remove(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), 0);
+	{
+		json = jansson_d.value.json_array();
+		jansson_d.value.json_array_append_new(json, jansson_d.value.json_array());
+		jansson_d.value.json_array_append_new(jansson_d.value.json_array_get(json, 0), jansson_d.value.json_array());
+		jansson_d.jansson.json_array_append(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), jansson_d.value.json_array_get(json, 0));
 
-	result = jansson_d.dump.json_dumps(json, 0);
+		assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded a circular reference!");
 
-	assert((result != null) && (!core.stdc.string.strcmp(result, "[[[]]]")), "json_dumps failed!");
+		jansson_d.value.json_array_remove(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), 0);
 
-	jansson_d.jansson_private.jsonp_free(result);
+		result = jansson_d.dump.json_dumps(json, 0);
 
-	jansson_d.jansson.json_decref(json);
+		assert((result != null) && (!core.stdc.string.strcmp(result, "[[[]]]")), "json_dumps failed!");
+
+		jansson_d.jansson_private.jsonp_free(result);
+
+		jansson_d.jansson.json_decref(json);
+	}
 }
 
 //encode_other_than_array_or_object
@@ -151,35 +167,43 @@ unittest
 	 */
 
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* json = jansson_d.value.json_string("foo");
 
-	assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded a string!");
+	jansson_d.jansson.json_t* json = void;
+	char* result = void;
 
-	assert(jansson_d.dump.json_dumpf(json, null, 0) != 0, "json_dumpf encoded a string!");
+	{
+		json = jansson_d.value.json_string("foo");
 
-	assert(jansson_d.dump.json_dumpfd(json, -1, 0) != 0, "json_dumpfd encoded a string!");
+		assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded a string!");
 
-	char* result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
+		assert(jansson_d.dump.json_dumpf(json, null, 0) != 0, "json_dumpf encoded a string!");
 
-	assert((result != null) && (core.stdc.string.strcmp(result, "\"foo\"") == 0), "json_dumps failed to encode a string with JSON_ENCODE_ANY");
+		assert(jansson_d.dump.json_dumpfd(json, -1, 0) != 0, "json_dumpfd encoded a string!");
 
-	jansson_d.jansson_private.jsonp_free(result);
-	jansson_d.jansson.json_decref(json);
+		result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
 
-	json = jansson_d.value.json_integer(42);
+		assert((result != null) && (core.stdc.string.strcmp(result, "\"foo\"") == 0), "json_dumps failed to encode a string with JSON_ENCODE_ANY");
 
-	assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded an integer!");
+		jansson_d.jansson_private.jsonp_free(result);
+		jansson_d.jansson.json_decref(json);
+	}
 
-	assert(jansson_d.dump.json_dumpf(json, null, 0) != 0, "json_dumpf encoded an integer!");
+	{
+		json = jansson_d.value.json_integer(42);
 
-	assert(jansson_d.dump.json_dumpfd(json, -1, 0) != 0, "json_dumpfd encoded an integer!");
+		assert(jansson_d.dump.json_dumps(json, 0) == null, "json_dumps encoded an integer!");
 
-	result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
+		assert(jansson_d.dump.json_dumpf(json, null, 0) != 0, "json_dumpf encoded an integer!");
 
-	assert((result != null) && (core.stdc.string.strcmp(result, "42") == 0), "json_dumps failed to encode an integer with JSON_ENCODE_ANY");
+		assert(jansson_d.dump.json_dumpfd(json, -1, 0) != 0, "json_dumpfd encoded an integer!");
 
-	jansson_d.jansson_private.jsonp_free(result);
-	jansson_d.jansson.json_decref(json);
+		result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
+
+		assert((result != null) && (core.stdc.string.strcmp(result, "42") == 0), "json_dumps failed to encode an integer with JSON_ENCODE_ANY");
+
+		jansson_d.jansson_private.jsonp_free(result);
+		jansson_d.jansson.json_decref(json);
+	}
 }
 
 //escape_slashes

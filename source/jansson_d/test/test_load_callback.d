@@ -60,33 +60,41 @@ unittest
 
 	jansson_d.jansson.json_error_t error = void;
 
-	jansson_d.jansson.json_t* json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
+	jansson_d.jansson.json_t* json = void;
 
-	assert(json != null, "json_load_callback failed on a valid callback");
+	{
+		json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
 
-	jansson_d.jansson.json_decref(json);
+		assert(json != null, "json_load_callback failed on a valid callback");
+
+		jansson_d.jansson.json_decref(json);
+	}
 
 	s.off = 0;
 	s.cap = core.stdc.string.strlen(&(.my_str[0])) - 1;
 	s.buf = &(.my_str[0]);
 
-	json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
+	{
+		json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
 
-	if (json != null) {
-		jansson_d.jansson.json_decref(json);
-		assert(false, "json_load_callback should have failed on an incomplete stream, but it didn't");
+		if (json != null) {
+			jansson_d.jansson.json_decref(json);
+			assert(false, "json_load_callback should have failed on an incomplete stream, but it didn't");
+		}
+
+		assert(core.stdc.string.strcmp(&(error.source[0]), "<callback>") == 0, "json_load_callback returned an invalid error source");
+
+		assert(core.stdc.string.strcmp(&(error.text[0]), "']' expected near end of file") == 0, "json_load_callback returned an invalid error message for an unclosed top-level array");
 	}
 
-	assert(core.stdc.string.strcmp(&(error.source[0]), "<callback>") == 0, "json_load_callback returned an invalid error source");
+	{
+		json = jansson_d.load.json_load_callback(null, null, 0, &error);
 
-	assert(core.stdc.string.strcmp(&(error.text[0]), "']' expected near end of file") == 0, "json_load_callback returned an invalid error message for an unclosed top-level array");
+		if (json != null) {
+			jansson_d.jansson.json_decref(json);
+			assert(false, "json_load_callback should have failed on null load callback, but it didn't");
+		}
 
-	json = jansson_d.load.json_load_callback(null, null, 0, &error);
-
-	if (json != null) {
-		jansson_d.jansson.json_decref(json);
-		assert(false, "json_load_callback should have failed on null load callback, but it didn't");
+		assert(core.stdc.string.strcmp(&(error.text[0]), "wrong arguments") == 0, "json_load_callback returned an invalid error message for a null load callback");
 	}
-
-	assert(core.stdc.string.strcmp(&(error.text[0]), "wrong arguments") == 0, "json_load_callback returned an invalid error message for a null load callback");
 }
