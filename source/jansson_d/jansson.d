@@ -414,9 +414,10 @@ public void json_decref(scope .json_t* json)
 	}
 
 //#if (defined(__GNUC__)) || (defined(__clang__))
-	/*
+version (all) {
 	pragma(inline, true)
-	static void json_decrefp(.json_t** json)
+	nothrow @trusted @nogc
+	void json_decrefp(scope .json_t** json)
 
 		do
 		{
@@ -425,10 +426,16 @@ public void json_decref(scope .json_t* json)
 				*json = null;
 			}
 		}
-	*/
 
-	//#define json_auto_t .json_t __attribute__((cleanup(.json_decrefp)))
-//#endif
+	version (none) {
+		alias json_auto_t = .json_t;
+	}
+
+	template json_auto_t_exit(string json)
+	{
+		enum json_auto_t_exit = "scope (exit) { jansson_d.jansson.json_decrefp(" ~ json ~ "); }";
+	}
+}
 
 /* error reporting */
 
