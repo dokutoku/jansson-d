@@ -125,74 +125,188 @@ version (all) {
 }
 
 ///
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public .json_type json_typeof(scope const .json_t* json)
+
+	in
+	{
+		assert(json != null);
+	}
+
+	do
+	{
+		return mixin (.json_typeof!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_object(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_object!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_array(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_array!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_string(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_string!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_integer(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_integer!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_real(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_real!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_number(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_number!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_true(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_true!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_false(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_false!("json"));
+	}
+
+///Ditto
+public alias json_boolean_value = .json_is_true;
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_boolean(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_boolean!("json"));
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public bool json_is_null(scope const .json_t* json)
+
+	do
+	{
+		return mixin (.json_is_null!("json"));
+	}
+
+///Ditto
 public template json_typeof(string json)
 {
 	enum json_typeof = "((" ~ json ~ ").type)";
 }
 
-///
+///Ditto
 public template json_is_object(string json)
 {
 	enum json_is_object = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_OBJECT))";
 }
 
-///
+///Ditto
 public template json_is_array(string json)
 {
 	enum json_is_array = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_ARRAY))";
 }
 
-///
+///Ditto
 public template json_is_string(string json)
 {
 	enum json_is_string = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_STRING))";
 }
 
-///
+///Ditto
 public template json_is_integer(string json)
 {
 	enum json_is_integer = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_INTEGER))";
 }
 
-///
+///Ditto
 public template json_is_real(string json)
 {
 	enum json_is_real = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_REAL))";
 }
 
-///
+///Ditto
 public template json_is_number(string json)
 {
 	enum json_is_number = "((mixin (jansson_d.jansson.json_is_integer!(\"" ~ json ~ "\"))) || (mixin (jansson_d.jansson.json_is_real!(\"" ~ json ~ "\"))))";
 }
 
-///
+///Ditto
 public template json_is_true(string json)
 {
 	enum json_is_true = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_TRUE))";
 }
 
-///
+///Ditto
 public template json_is_false(string json)
 {
 	enum json_is_false = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_FALSE))";
 }
 
-///
-public alias json_boolean_value = .json_is_true;
-
-///
+///Ditto
 public template json_is_boolean(string json)
 {
 	enum json_is_boolean = "((mixin (jansson_d.jansson.json_is_true!(\"" ~ json ~ "\"))) || (mixin (jansson_d.jansson.json_is_false!(\"" ~ json ~ "\"))))";
 }
 
-///
+///Ditto
 public template json_is_null(string json)
 {
 	enum json_is_null = "((" ~ json ~ " != null) && (mixin (jansson_d.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson_d.jansson.json_type.JSON_NULL))";
 }
-
 
 /* construction, destruction, reference counting */
 
@@ -227,6 +341,16 @@ public alias json_true = jansson_d.value.json_true;
 public alias json_false = jansson_d.value.json_false;
 
 ///
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public .json_t* json_boolean(VAL)(VAL val)
+
+	do
+	{
+		return mixin (.json_boolean!("val"));
+	}
+
+///Ditto
 public template json_boolean(string val)
 {
 	enum json_boolean = "((" ~ val ~ ") ? (jansson_d.value.json_true()) : (jansson_d.value.json_false()))";
