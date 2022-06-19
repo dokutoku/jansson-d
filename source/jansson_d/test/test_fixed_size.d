@@ -21,12 +21,14 @@ private void test_keylen_iterator(scope jansson_d.jansson.json_t* object)
 
 	do
 	{
-		static immutable char[] key1 = ['t', 'e', 's', 't', '1'];
-		static immutable char[] key2 = ['t', 'e', 's', 't'];
-		static immutable char[] key3 = ['t', 'e', 's', '\0', 't'];
-		static immutable char[] key4 = ['t', 'e', 's', 't', '\0'];
-		immutable char*[] reference_keys = [&(key1[0]), &(key2[0]), &(key3[0]), &(key4[0])];
-		static immutable size_t[] reference_keys_len = [key1.length, key2.length, key3.length, key4.length];
+		static immutable char[][] reference_keys =
+		[
+			['t', 'e', 's', 't', '1'],
+			['t', 'e', 's', 't'],
+			['t', 'e', 's', '\0', 't'],
+			['t', 'e', 's', 't', '\0'],
+		];
+
 		size_t index = 0;
 		jansson_d.jansson.json_t* value = void;
 		const (char)* key = void;
@@ -34,9 +36,9 @@ private void test_keylen_iterator(scope jansson_d.jansson.json_t* object)
 
 		//jansson_d.jansson.json_object_keylen_foreach(object, key, keylen, value)
 		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object)), keylen = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key))), keylen = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			assert(keylen == reference_keys_len[index], "invalid key len in iterator");
+			assert(keylen == reference_keys[index].length, "invalid key len in iterator");
 
-			assert(core.stdc.string.memcmp(key, reference_keys[index], reference_keys_len[index]) == 0, "invalid key in iterator");
+			assert(core.stdc.string.memcmp(key, &(reference_keys[index][0]), reference_keys[index].length) == 0, "invalid key in iterator");
 
 			index++;
 		}
