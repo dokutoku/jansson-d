@@ -927,16 +927,16 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 
 	do
 	{
-		jansson_d.jansson.json_t* object = jansson_d.value.json_object();
+		jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
 
-		if (object == null) {
+		if (object_ == null) {
 			return null;
 		}
 
 		.lex_scan(lex, error);
 
 		if (lex.token == '}') {
-			return object;
+			return object_;
 		}
 
 		while (true) {
@@ -961,7 +961,7 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 			}
 
 			if (flags & jansson_d.jansson.JSON_REJECT_DUPLICATES) {
-				if (jansson_d.value.json_object_getn(object, key, len)) {
+				if (jansson_d.value.json_object_getn(object_, key, len)) {
 					jansson_d.jansson_private.jsonp_free(key);
 					.error_set(error, lex, jansson_d.jansson.json_error_code_t.json_error_duplicate_key, "duplicate object key");
 
@@ -987,7 +987,7 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 				goto error_;
 			}
 
-			if (jansson_d.value.json_object_setn_new_nocheck(object, key, len, value)) {
+			if (jansson_d.value.json_object_setn_new_nocheck(object_, key, len, value)) {
 				jansson_d.jansson_private.jsonp_free(key);
 
 				goto error_;
@@ -1010,10 +1010,10 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 			goto error_;
 		}
 
-		return object;
+		return object_;
 
 	error_:
-		jansson_d.jansson.json_decref(object);
+		jansson_d.jansson.json_decref(object_);
 
 		return null;
 	}

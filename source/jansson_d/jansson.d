@@ -588,74 +588,74 @@ public alias json_object_iter_value = jansson_d.value.json_object_iter_value;
 ///
 public alias json_object_iter_set_new = jansson_d.value.json_object_iter_set_new;
 
-//#define json_object_foreach(object, key, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key))))
+//#define json_object_foreach(object_, key, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))))
 
-//#define json_object_keylen_foreach(object, key, key_len, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)))
+//#define json_object_keylen_foreach(object_, key, key_len, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)))
 
-//#define json_object_foreach_safe(object, n, key, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object)), n = jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(n), n = jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key)))
+//#define json_object_foreach_safe(object_, n, key, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(n), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)))
 
-//#define json_object_keylen_foreach_safe(object, n, key, key_len, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object)), n = jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(n), key_len = jansson_d.value.json_object_iter_key_len(n), n = jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key)))
+//#define json_object_keylen_foreach_safe(object_, n, key, key_len, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(n), key_len = jansson_d.value.json_object_iter_key_len(n), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)))
 
 //#define json_array_foreach(array, index, value) for (index = 0; (index < jansson_d.value.json_array_size(array)) && (value = jansson_d.value.json_array_get(array, index)); index++)
 
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_set(scope .json_t* object, scope const char* key, scope .json_t* value)
+public int json_object_set(scope .json_t* object_, scope const char* key, scope .json_t* value)
 
 	do
 	{
-		return jansson_d.value.json_object_set_new(object, key, .json_incref(value));
+		return jansson_d.value.json_object_set_new(object_, key, .json_incref(value));
 	}
 
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_setn(scope .json_t* object, scope const char* key, size_t key_len, scope .json_t* value)
+public int json_object_setn(scope .json_t* object_, scope const char* key, size_t key_len, scope .json_t* value)
 
 	do
 	{
-		return jansson_d.value.json_object_setn_new(object, key, key_len, .json_incref(value));
+		return jansson_d.value.json_object_setn_new(object_, key, key_len, .json_incref(value));
 	}
 
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_set_nocheck(scope .json_t* object, scope const char* key, scope .json_t* value)
+public int json_object_set_nocheck(scope .json_t* object_, scope const char* key, scope .json_t* value)
 
 	do
 	{
-		return jansson_d.value.json_object_set_new_nocheck(object, key, .json_incref(value));
+		return jansson_d.value.json_object_set_new_nocheck(object_, key, .json_incref(value));
 	}
 
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_setn_nocheck(scope .json_t* object, scope const char* key, size_t key_len, scope .json_t* value)
+public int json_object_setn_nocheck(scope .json_t* object_, scope const char* key, size_t key_len, scope .json_t* value)
 
 	do
 	{
-		return jansson_d.value.json_object_setn_new_nocheck(object, key, key_len, .json_incref(value));
+		return jansson_d.value.json_object_setn_new_nocheck(object_, key, key_len, .json_incref(value));
 	}
 
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_iter_set(scope .json_t* object, scope void* iter, scope .json_t* value)
+public int json_object_iter_set(scope .json_t* object_, scope void* iter, scope .json_t* value)
 
 	do
 	{
-		return jansson_d.value.json_object_iter_set_new(object, iter, .json_incref(value));
+		return jansson_d.value.json_object_iter_set_new(object_, iter, .json_incref(value));
 	}
 
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_update_new(scope .json_t* object, scope .json_t* other)
+public int json_object_update_new(scope .json_t* object_, scope .json_t* other)
 
 	do
 	{
-		int ret = jansson_d.value.json_object_update(object, other);
+		int ret = jansson_d.value.json_object_update(object_, other);
 		.json_decref(other);
 
 		return ret;
@@ -664,11 +664,11 @@ public int json_object_update_new(scope .json_t* object, scope .json_t* other)
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_update_existing_new(scope .json_t* object, scope .json_t* other)
+public int json_object_update_existing_new(scope .json_t* object_, scope .json_t* other)
 
 	do
 	{
-		int ret = jansson_d.value.json_object_update_existing(object, other);
+		int ret = jansson_d.value.json_object_update_existing(object_, other);
 		.json_decref(other);
 
 		return ret;
@@ -677,11 +677,11 @@ public int json_object_update_existing_new(scope .json_t* object, scope .json_t*
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_object_update_missing_new(scope .json_t* object, scope .json_t* other)
+public int json_object_update_missing_new(scope .json_t* object_, scope .json_t* other)
 
 	do
 	{
-		int ret = jansson_d.value.json_object_update_missing(object, other);
+		int ret = jansson_d.value.json_object_update_missing(object_, other);
 		.json_decref(other);
 
 		return ret;

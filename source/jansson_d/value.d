@@ -93,9 +93,9 @@ public jansson_d.jansson.json_t* json_object()
 
 	do
 	{
-		jansson_d.jansson_private.json_object_t* object = cast(jansson_d.jansson_private.json_object_t*)(jansson_d.jansson_private.jsonp_malloc(jansson_d.jansson_private.json_object_t.sizeof));
+		jansson_d.jansson_private.json_object_t* object_ = cast(jansson_d.jansson_private.json_object_t*)(jansson_d.jansson_private.jsonp_malloc(jansson_d.jansson_private.json_object_t.sizeof));
 
-		if (object == null) {
+		if (object_ == null) {
 			return null;
 		}
 
@@ -104,29 +104,29 @@ public jansson_d.jansson.json_t* json_object()
 			jansson_d.hashtable_seed.json_object_seed(0);
 		}
 
-		.json_init(&object.json, jansson_d.jansson.json_type.JSON_OBJECT);
+		.json_init(&object_.json, jansson_d.jansson.json_type.JSON_OBJECT);
 
-		if (jansson_d.hashtable.hashtable_init(&object.hashtable)) {
-			jansson_d.jansson_private.jsonp_free(object);
+		if (jansson_d.hashtable.hashtable_init(&object_.hashtable)) {
+			jansson_d.jansson_private.jsonp_free(object_);
 
 			return null;
 		}
 
-		return &object.json;
+		return &object_.json;
 	}
 
 nothrow @trusted @nogc
-private void json_delete_object(scope jansson_d.jansson_private.json_object_t* object)
+private void json_delete_object(scope jansson_d.jansson_private.json_object_t* object_)
 
 	in
 	{
-		assert(object != null);
+		assert(object_ != null);
 	}
 
 	do
 	{
-		jansson_d.hashtable.hashtable_close(&object.hashtable);
-		jansson_d.jansson_private.jsonp_free(object);
+		jansson_d.hashtable.hashtable_close(&object_.hashtable);
+		jansson_d.jansson_private.jsonp_free(object_);
 	}
 
 ///
@@ -140,9 +140,9 @@ public size_t json_object_size(scope const jansson_d.jansson.json_t* json)
 			return 0;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
 
-		return object.hashtable.size;
+		return object_.hashtable.size;
 	}
 
 ///
@@ -172,9 +172,9 @@ public jansson_d.jansson.json_t* json_object_getn(scope const jansson_d.jansson.
 			return null;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
 
-		return cast(jansson_d.jansson.json_t*)(jansson_d.hashtable.hashtable_get(&object.hashtable, key, key_len));
+		return cast(jansson_d.jansson.json_t*)(jansson_d.hashtable.hashtable_get(&object_.hashtable, key, key_len));
 	}
 
 ///
@@ -210,9 +210,9 @@ public int json_object_setn_new_nocheck(scope jansson_d.jansson.json_t* json, sc
 			return -1;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
 
-		if (jansson_d.hashtable.hashtable_set(&object.hashtable, key, key_len, value)) {
+		if (jansson_d.hashtable.hashtable_set(&object_.hashtable, key, key_len, value)) {
 			jansson_d.jansson.json_decref(value);
 
 			return -1;
@@ -278,9 +278,9 @@ public int json_object_deln(scope jansson_d.jansson.json_t* json, scope const ch
 			return -1;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
 
-		return jansson_d.hashtable.hashtable_del(&object.hashtable, key, key_len);
+		return jansson_d.hashtable.hashtable_del(&object_.hashtable, key, key_len);
 	}
 
 ///
@@ -294,8 +294,8 @@ public int json_object_clear(scope jansson_d.jansson.json_t* json)
 			return -1;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
-		jansson_d.hashtable.hashtable_clear(&object.hashtable);
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.hashtable.hashtable_clear(&object_.hashtable);
 
 		return 0;
 	}
@@ -303,11 +303,11 @@ public int json_object_clear(scope jansson_d.jansson.json_t* json)
 ///
 extern (C)
 nothrow @trusted @nogc
-public int json_object_update(scope jansson_d.jansson.json_t* object, scope jansson_d.jansson.json_t* other)
+public int json_object_update(scope jansson_d.jansson.json_t* object_, scope jansson_d.jansson.json_t* other)
 
 	do
 	{
-		if ((!mixin (jansson_d.jansson.json_is_object!("object"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
+		if ((!mixin (jansson_d.jansson.json_is_object!("object_"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
 			return -1;
 		}
 
@@ -317,7 +317,7 @@ public int json_object_update(scope jansson_d.jansson.json_t* object, scope jans
 
 		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
 		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			if (jansson_d.jansson.json_object_setn_nocheck(object, key, key_len, value)) {
+			if (jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value)) {
 				return -1;
 			}
 		}
@@ -328,11 +328,11 @@ public int json_object_update(scope jansson_d.jansson.json_t* object, scope jans
 ///
 extern (C)
 nothrow @trusted @nogc
-public int json_object_update_existing(scope jansson_d.jansson.json_t* object, scope jansson_d.jansson.json_t* other)
+public int json_object_update_existing(scope jansson_d.jansson.json_t* object_, scope jansson_d.jansson.json_t* other)
 
 	do
 	{
-		if ((!mixin (jansson_d.jansson.json_is_object!("object"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
+		if ((!mixin (jansson_d.jansson.json_is_object!("object_"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
 			return -1;
 		}
 
@@ -342,8 +342,8 @@ public int json_object_update_existing(scope jansson_d.jansson.json_t* object, s
 
 		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
 		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			if (.json_object_getn(object, key, key_len)) {
-				jansson_d.jansson.json_object_setn_nocheck(object, key, key_len, value);
+			if (.json_object_getn(object_, key, key_len)) {
+				jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value);
 			}
 		}
 
@@ -353,11 +353,11 @@ public int json_object_update_existing(scope jansson_d.jansson.json_t* object, s
 ///
 extern (C)
 nothrow @trusted @nogc
-public int json_object_update_missing(scope jansson_d.jansson.json_t* object, scope jansson_d.jansson.json_t* other)
+public int json_object_update_missing(scope jansson_d.jansson.json_t* object_, scope jansson_d.jansson.json_t* other)
 
 	do
 	{
-		if ((!mixin (jansson_d.jansson.json_is_object!("object"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
+		if ((!mixin (jansson_d.jansson.json_is_object!("object_"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
 			return -1;
 		}
 
@@ -367,8 +367,8 @@ public int json_object_update_missing(scope jansson_d.jansson.json_t* object, sc
 
 		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
 		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			if (!.json_object_getn(object, key, key_len)) {
-				jansson_d.jansson.json_object_setn_nocheck(object, key, key_len, value);
+			if (!.json_object_getn(object_, key, key_len)) {
+				jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value);
 			}
 		}
 
@@ -376,11 +376,11 @@ public int json_object_update_missing(scope jansson_d.jansson.json_t* object, sc
 	}
 
 nothrow @trusted @nogc
-int do_object_update_recursive(scope jansson_d.jansson.json_t* object, scope jansson_d.jansson.json_t* other, scope jansson_d.hashtable.hashtable_t* parents)
+int do_object_update_recursive(scope jansson_d.jansson.json_t* object_, scope jansson_d.jansson.json_t* other, scope jansson_d.hashtable.hashtable_t* parents)
 
 	do
 	{
-		if ((!mixin (jansson_d.jansson.json_is_object!("object"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
+		if ((!mixin (jansson_d.jansson.json_is_object!("object_"))) || (!mixin (jansson_d.jansson.json_is_object!("other")))) {
 			return -1;
 		}
 
@@ -398,7 +398,7 @@ int do_object_update_recursive(scope jansson_d.jansson.json_t* object, scope jan
 
 		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
 		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			jansson_d.jansson.json_t* v = .json_object_getn(object, key, key_len);
+			jansson_d.jansson.json_t* v = .json_object_getn(object_, key, key_len);
 
 			if ((mixin (jansson_d.jansson.json_is_object!("v"))) && (mixin (jansson_d.jansson.json_is_object!("value")))) {
 				if (.do_object_update_recursive(v, value, parents)) {
@@ -407,7 +407,7 @@ int do_object_update_recursive(scope jansson_d.jansson.json_t* object, scope jan
 					break;
 				}
 			} else {
-				if (jansson_d.jansson.json_object_setn_nocheck(object, key, key_len, value)) {
+				if (jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value)) {
 					res = -1;
 
 					break;
@@ -423,7 +423,7 @@ int do_object_update_recursive(scope jansson_d.jansson.json_t* object, scope jan
 ///
 extern (C)
 nothrow @trusted @nogc
-public int json_object_update_recursive(scope jansson_d.jansson.json_t* object, scope jansson_d.jansson.json_t* other)
+public int json_object_update_recursive(scope jansson_d.jansson.json_t* object_, scope jansson_d.jansson.json_t* other)
 
 	do
 	{
@@ -433,7 +433,7 @@ public int json_object_update_recursive(scope jansson_d.jansson.json_t* object, 
 			return -1;
 		}
 
-		int res = .do_object_update_recursive(object, other, &parents_set);
+		int res = .do_object_update_recursive(object_, other, &parents_set);
 		jansson_d.hashtable.hashtable_close(&parents_set);
 
 		return res;
@@ -450,9 +450,9 @@ public void* json_object_iter(scope jansson_d.jansson.json_t* json)
 			return null;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
 
-		return jansson_d.hashtable.hashtable_iter(&object.hashtable);
+		return jansson_d.hashtable.hashtable_iter(&object_.hashtable);
 	}
 
 ///
@@ -466,9 +466,9 @@ public void* json_object_iter_at(scope jansson_d.jansson.json_t* json, scope con
 			return null;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
 
-		return jansson_d.hashtable.hashtable_iter_at(&object.hashtable, key, core.stdc.string.strlen(key));
+		return jansson_d.hashtable.hashtable_iter_at(&object_.hashtable, key, core.stdc.string.strlen(key));
 	}
 
 ///
@@ -482,9 +482,9 @@ public void* json_object_iter_next(scope jansson_d.jansson.json_t* json, scope v
 			return null;
 		}
 
-		jansson_d.jansson_private.json_object_t* object = mixin (jansson_d.jansson_private.json_to_object!("json"));
+		jansson_d.jansson_private.json_object_t* object_ = mixin (jansson_d.jansson_private.json_to_object!("json"));
 
-		return jansson_d.hashtable.hashtable_iter_next(&object.hashtable, iter);
+		return jansson_d.hashtable.hashtable_iter_next(&object_.hashtable, iter);
 	}
 
 ///
@@ -588,7 +588,7 @@ private int json_object_equal(scope const jansson_d.jansson.json_t* object1, sco
 	}
 
 nothrow @trusted @nogc
-private jansson_d.jansson.json_t* json_object_copy(scope jansson_d.jansson.json_t* object)
+private jansson_d.jansson.json_t* json_object_copy(scope jansson_d.jansson.json_t* object_)
 
 	do
 	{
@@ -602,8 +602,8 @@ private jansson_d.jansson.json_t* json_object_copy(scope jansson_d.jansson.json_
 		size_t key_len = void;
 		jansson_d.jansson.json_t* value = void;
 
-		//jansson_d.jansson.json_object_keylen_foreach(object, key, key_len, value)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
+		//jansson_d.jansson.json_object_keylen_foreach(object_, key, key_len, value)
+		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
 			jansson_d.jansson.json_object_setn_nocheck(result, key, key_len, value);
 		}
 
@@ -611,7 +611,7 @@ private jansson_d.jansson.json_t* json_object_copy(scope jansson_d.jansson.json_
 	}
 
 nothrow @trusted @nogc
-private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.jansson.json_t* object, scope jansson_d.hashtable.hashtable_t* parents)
+private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.jansson.json_t* object_, scope jansson_d.hashtable.hashtable_t* parents)
 
 	do
 	{
@@ -619,7 +619,7 @@ private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.ja
 		size_t loop_key_len = void;
 		void* iter = void;
 
-		if (.jsonp_loop_check(parents, object, &(loop_key[0]), loop_key.length, &loop_key_len)) {
+		if (.jsonp_loop_check(parents, object_, &(loop_key[0]), loop_key.length, &loop_key_len)) {
 			return null;
 		}
 
@@ -633,7 +633,7 @@ private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.ja
 		 * Cannot use jansson_d.jansson.json_object_foreach because object has to be cast
 		 * non-const
 		 */
-		iter = .json_object_iter(cast(jansson_d.jansson.json_t*)(object));
+		iter = .json_object_iter(cast(jansson_d.jansson.json_t*)(object_));
 
 		while (iter != null) {
 			const char* key = .json_object_iter_key(iter);
@@ -647,7 +647,7 @@ private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.ja
 				break;
 			}
 
-			iter = .json_object_iter_next(cast(jansson_d.jansson.json_t*)(object), iter);
+			iter = .json_object_iter_next(cast(jansson_d.jansson.json_t*)(object_), iter);
 		}
 
 	out_:

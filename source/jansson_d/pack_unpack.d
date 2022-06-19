@@ -289,7 +289,7 @@ private jansson_d.jansson.json_t* pack_object(scope .scanner_t* s, scope core.st
 
 	do
 	{
-		jansson_d.jansson.json_t* object = jansson_d.value.json_object();
+		jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
 		.next_token(s);
 
 		while (mixin (.token!("s")) != '}') {
@@ -336,7 +336,7 @@ private jansson_d.jansson.json_t* pack_object(scope .scanner_t* s, scope core.st
 				jansson_d.jansson.json_decref(value);
 			}
 
-			if ((!s.has_error) && (jansson_d.value.json_object_set_new_nocheck(object, key, value))) {
+			if ((!s.has_error) && (jansson_d.value.json_object_set_new_nocheck(object_, key, value))) {
 				.set_error(s, "<internal>", jansson_d.jansson.json_error_code_t.json_error_out_of_memory, "Unable to add key \"%s\"", key);
 				s.has_error = 1;
 			}
@@ -349,11 +349,11 @@ private jansson_d.jansson.json_t* pack_object(scope .scanner_t* s, scope core.st
 		}
 
 		if (!s.has_error) {
-			return object;
+			return object_;
 		}
 
 	error_:
-		jansson_d.jansson.json_decref(object);
+		jansson_d.jansson.json_decref(object_);
 
 		return null;
 	}

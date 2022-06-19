@@ -283,20 +283,20 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* object = jansson_d.load.json_loads(json_object_text, 0, null);
+	jansson_d.jansson.json_t* object_ = jansson_d.load.json_loads(json_object_text, 0, null);
 
-	assert(object != null, "unable to parse an object");
+	assert(object_ != null, "unable to parse an object");
 
-	jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(object);
+	jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(object_);
 
 	assert(copy != null, "unable to copy an object");
 
-	assert(copy != object, "copying an object doesn't copy");
+	assert(copy != object_, "copying an object doesn't copy");
 
-	assert(jansson_d.value.json_equal(copy, object), "copying an object produces an inequal copy");
+	assert(jansson_d.value.json_equal(copy, object_), "copying an object produces an inequal copy");
 
 	int i = 0;
-	void* iter = jansson_d.value.json_object_iter(object);
+	void* iter = jansson_d.value.json_object_iter(object_);
 
 	while (iter != null) {
 		const char* key = jansson_d.value.json_object_iter_key(iter);
@@ -307,11 +307,11 @@ unittest
 
 		assert(core.stdc.string.strcmp(key, &(keys[i][0])) == 0, "copying an object doesn't preserve key order");
 
-		iter = jansson_d.value.json_object_iter_next(object, iter);
+		iter = jansson_d.value.json_object_iter_next(object_, iter);
 		i++;
 	}
 
-	jansson_d.jansson.json_decref(object);
+	jansson_d.jansson.json_decref(object_);
 	jansson_d.jansson.json_decref(copy);
 }
 
@@ -324,20 +324,20 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* object = jansson_d.load.json_loads(json_object_text, 0, null);
+	jansson_d.jansson.json_t* object_ = jansson_d.load.json_loads(json_object_text, 0, null);
 
-	assert(object != null, "unable to parse an object");
+	assert(object_ != null, "unable to parse an object");
 
-	jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(object);
+	jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(object_);
 
 	assert(copy != null, "unable to deep copy an object");
 
-	assert(copy != object, "deep copying an object doesn't copy");
+	assert(copy != object_, "deep copying an object doesn't copy");
 
-	assert(jansson_d.value.json_equal(copy, object), "deep copying an object produces an inequal copy");
+	assert(jansson_d.value.json_equal(copy, object_), "deep copying an object produces an inequal copy");
 
 	int i = 0;
-	void* iter = jansson_d.value.json_object_iter(object);
+	void* iter = jansson_d.value.json_object_iter(object_);
 
 	while (iter != null) {
 		const char* key = jansson_d.value.json_object_iter_key(iter);
@@ -348,11 +348,11 @@ unittest
 
 		assert(core.stdc.string.strcmp(key, &(keys[i][0])) == 0, "deep copying an object doesn't preserve key order");
 
-		iter = jansson_d.value.json_object_iter_next(object, iter);
+		iter = jansson_d.value.json_object_iter_next(object_, iter);
 		i++;
 	}
 
-	jansson_d.jansson.json_decref(object);
+	jansson_d.jansson.json_decref(object_);
 	jansson_d.jansson.json_decref(copy);
 }
 
