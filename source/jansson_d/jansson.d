@@ -88,7 +88,7 @@ public enum
 extern (C)
 public struct json_t
 {
-	json_type type = cast(.json_type)(0);
+	.json_type type = cast(.json_type)(0);
 
 	/* volatile */
 	size_t refcount;
@@ -714,7 +714,7 @@ public alias json_array_extend = jansson_d.value.json_array_extend;
 ///
 pragma(inline, true)
 nothrow @trusted @nogc
-public int json_array_set(scope jansson_d.jansson.json_t* array, size_t ind, scope jansson_d.jansson.json_t* value)
+public int json_array_set(scope .json_t* array, size_t ind, scope .json_t* value)
 
 	do
 	{
