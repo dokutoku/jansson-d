@@ -472,10 +472,10 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 					size_t i = 0;
 
 					while (iter != null) {
-						.key_len_* keylen = &keys[i];
+						.key_len_* key_len = &keys[i];
 
-						keylen.key = jansson_d.value.json_object_iter_key(iter);
-						keylen.len = cast(int)(jansson_d.value.json_object_iter_key_len(iter));
+						key_len.key = jansson_d.value.json_object_iter_key(iter);
+						key_len.len = cast(int)(jansson_d.value.json_object_iter_key_len(iter));
 
 						iter = jansson_d.value.json_object_iter_next(cast(jansson_d.jansson.json_t*)(json), iter);
 						i++;

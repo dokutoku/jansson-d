@@ -32,11 +32,11 @@ private void test_keylen_iterator(scope jansson_d.jansson.json_t* object_)
 		size_t index = 0;
 		jansson_d.jansson.json_t* value = void;
 		const (char)* key = void;
-		size_t keylen = void;
+		size_t key_len = void;
 
-		//jansson_d.jansson.json_object_keylen_foreach(object_, key, keylen, value)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), keylen = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))), keylen = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			assert(keylen == reference_keys[index].length, "invalid key len in iterator");
+		//jansson_d.jansson.json_object_keylen_foreach(object_, key, key_len, value)
+		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
+			assert(key_len == reference_keys[index].length, "invalid key len in iterator");
 
 			assert(core.stdc.string.memcmp(key, &(reference_keys[index][0]), reference_keys[index].length) == 0, "invalid key in iterator");
 
