@@ -409,7 +409,6 @@ private .pair_t* init_pair(scope jansson_d.jansson.json_t* value, scope const ch
  *      hashtable_ = The hashtable object
  *      key = The key
  *      key_len = The length of key
- *      serial = For addition order of keys
  *      value = The value
  *
  * If a value with the given key already exists, its value is replaced
@@ -418,6 +417,10 @@ private .pair_t* init_pair(scope jansson_d.jansson.json_t* value, scope const ch
  * value is no longer needed.
  *
  * Returns: 0 on success, -1 on failure (out of memory).
+ */
+/*
+ * Params:
+ *      serial = For addition order of keys
  */
 nothrow @trusted @nogc
 int hashtable_set(scope .hashtable_t* hashtable_, scope const char* key, size_t key_len, scope jansson_d.jansson.json_t* value)
