@@ -868,6 +868,16 @@ public alias json_load_callback = jansson_d.load.json_load_callback;
 public enum JSON_MAX_INDENT = 0x1F;
 
 ///
+pragma(inline, true)
+pure nothrow @safe @nogc @live
+public N JSON_INDENT(N)(N n)
+
+	do
+	{
+		return mixin (.JSON_INDENT!("n"));
+	}
+
+///Ditto
 public template JSON_INDENT(string n)
 {
 	enum JSON_INDENT = "((" ~ n ~ ") & jansson_d.jansson.JSON_MAX_INDENT)";
@@ -892,6 +902,17 @@ public enum JSON_ENCODE_ANY = 0x0200;
 public enum JSON_ESCAPE_SLASH = 0x0400;
 
 ///
+pragma(inline, true)
+pure nothrow @safe @nogc @live
+public N JSON_INDENT(N)(N n)
+	if (N.max > 0xF800)
+
+	do
+	{
+		return mixin (.JSON_REAL_PRECISION!("n"));
+	}
+
+///Ditto
 public template JSON_REAL_PRECISION(string n)
 {
 	enum JSON_REAL_PRECISION = "(((" ~ n ~ ") & 0x1F) << 11)";
