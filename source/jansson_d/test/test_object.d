@@ -543,12 +543,8 @@ unittest
 	jansson_d.jansson.json_t* object1 = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2, &("baz\0"[0]), 3);
 	jansson_d.jansson.json_t* object2 = jansson_d.value.json_object();
 
-	const (char)* key = void;
-	jansson_d.jansson.json_t* value = void;
-
-	//jansson_d.jansson.json_object_foreach(object1, key, value)
-	for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object1)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object1, jansson_d.value.json_object_key_to_iter(key)))) {
-		jansson_d.jansson.json_object_set(object2, key, value);
+	foreach (child_obj; jansson_d.jansson.json_object_foreach(object1)) {
+		jansson_d.jansson.json_object_set(object2, child_obj.key, child_obj.value);
 	}
 
 	assert(jansson_d.value.json_equal(object1, object2), "json_object_foreach failed to iterate all key-value pairs");
@@ -563,13 +559,8 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2, &("baz\0"[0]), 3);
 
-	const (char)* key = void;
-	void* tmp = void;
-	jansson_d.jansson.json_t* value = void;
-
-	//jansson_d.jansson.json_object_foreach_safe(object_, tmp, key, value)
-	for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), tmp = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(tmp), tmp = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))) {
-		jansson_d.value.json_object_del(object_, key);
+	foreach (child_obj; jansson_d.jansson.json_object_foreach_safe(object_)) {
+		jansson_d.value.json_object_del(object_, child_obj.key);
 	}
 
 	assert(jansson_d.value.json_object_size(object_) == 0, "json_object_foreach_safe failed to iterate all key-value pairs");

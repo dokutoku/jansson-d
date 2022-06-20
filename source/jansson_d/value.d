@@ -311,13 +311,8 @@ public int json_object_update(scope jansson_d.jansson.json_t* object_, scope jan
 			return -1;
 		}
 
-		const (char)* key = void;
-		size_t key_len = void;
-		jansson_d.jansson.json_t* value = void;
-
-		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			if (jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value)) {
+		foreach (child_obj; jansson_d.jansson.json_object_keylen_foreach(other)) {
+			if (jansson_d.jansson.json_object_setn_nocheck(object_, child_obj.key, child_obj.key_len, child_obj.value)) {
 				return -1;
 			}
 		}
@@ -336,14 +331,9 @@ public int json_object_update_existing(scope jansson_d.jansson.json_t* object_, 
 			return -1;
 		}
 
-		const (char)* key = void;
-		size_t key_len = void;
-		jansson_d.jansson.json_t* value = void;
-
-		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			if (.json_object_getn(object_, key, key_len)) {
-				jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value);
+		foreach (child_obj; jansson_d.jansson.json_object_keylen_foreach(other)) {
+			if (.json_object_getn(object_, child_obj.key, child_obj.key_len)) {
+				jansson_d.jansson.json_object_setn_nocheck(object_, child_obj.key, child_obj.key_len, child_obj.value);
 			}
 		}
 
@@ -361,14 +351,9 @@ public int json_object_update_missing(scope jansson_d.jansson.json_t* object_, s
 			return -1;
 		}
 
-		const (char)* key = void;
-		size_t key_len = void;
-		jansson_d.jansson.json_t* value = void;
-
-		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			if (!.json_object_getn(object_, key, key_len)) {
-				jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value);
+		foreach (child_obj; jansson_d.jansson.json_object_keylen_foreach(other)) {
+			if (!.json_object_getn(object_, child_obj.key, child_obj.key_len)) {
+				jansson_d.jansson.json_object_setn_nocheck(object_, child_obj.key, child_obj.key_len, child_obj.value);
 			}
 		}
 
@@ -391,23 +376,19 @@ int do_object_update_recursive(scope jansson_d.jansson.json_t* object_, scope ja
 			return -1;
 		}
 
-		const (char)* key = void;
-		size_t key_len = void;
-		jansson_d.jansson.json_t* value = void;
 		int res = 0;
 
-		//jansson_d.jansson.json_object_keylen_foreach(other, key, key_len, value)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(other)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(other, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			jansson_d.jansson.json_t* v = .json_object_getn(object_, key, key_len);
+		foreach (child_obj; jansson_d.jansson.json_object_keylen_foreach(other)) {
+			jansson_d.jansson.json_t* v = .json_object_getn(object_, child_obj.key, child_obj.key_len);
 
-			if ((mixin (jansson_d.jansson.json_is_object!("v"))) && (mixin (jansson_d.jansson.json_is_object!("value")))) {
-				if (.do_object_update_recursive(v, value, parents)) {
+			if ((mixin (jansson_d.jansson.json_is_object!("v"))) && (jansson_d.jansson.json_is_object(child_obj.value))) {
+				if (.do_object_update_recursive(v, child_obj.value, parents)) {
 					res = -1;
 
 					break;
 				}
 			} else {
-				if (jansson_d.jansson.json_object_setn_nocheck(object_, key, key_len, value)) {
+				if (jansson_d.jansson.json_object_setn_nocheck(object_, child_obj.key, child_obj.key_len, child_obj.value)) {
 					res = -1;
 
 					break;
@@ -570,16 +551,10 @@ private int json_object_equal(scope const jansson_d.jansson.json_t* object1, sco
 			return 0;
 		}
 
-		const (char)* key = void;
-		size_t key_len = void;
-		const (jansson_d.jansson.json_t)* value1 = void;
-		const (jansson_d.jansson.json_t)* value2 = void;
+		foreach (child_obj1; jansson_d.jansson.json_object_keylen_foreach(cast(jansson_d.jansson.json_t*)(object1))) {
+			const (jansson_d.jansson.json_t)* value2 = .json_object_getn(object2, child_obj1.key, child_obj1.key_len);
 
-		//jansson_d.jansson.json_object_keylen_foreach(cast(jansson_d.jansson.json_t*)(object1), key, key_len, value1)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(cast(jansson_d.jansson.json_t*)(object1))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value1 = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(cast(jansson_d.jansson.json_t*)(object1), jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			value2 = .json_object_getn(object2, key, key_len);
-
-			if (!.json_equal(value1, value2)) {
+			if (!.json_equal(child_obj1.value, value2)) {
 				return 0;
 			}
 		}
@@ -598,13 +573,8 @@ private jansson_d.jansson.json_t* json_object_copy(scope jansson_d.jansson.json_
 			return null;
 		}
 
-		const (char)* key = void;
-		size_t key_len = void;
-		jansson_d.jansson.json_t* value = void;
-
-		//jansson_d.jansson.json_object_keylen_foreach(object_, key, key_len, value)
-		for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-			jansson_d.jansson.json_object_setn_nocheck(result, key, key_len, value);
+		foreach (child_obj; jansson_d.jansson.json_object_keylen_foreach(object_)) {
+			jansson_d.jansson.json_object_setn_nocheck(result, child_obj.key, child_obj.key_len, child_obj.value);
 		}
 
 		return result;

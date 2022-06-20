@@ -692,16 +692,11 @@ private int unpack_object(scope .scanner_t* s, scope jansson_d.jansson.json_t* r
 			int keys_res = 1;
 
 			jansson_d.strbuffer.strbuffer_t unrecognized_keys = void;
-			jansson_d.jansson.json_t* value = void;
 			core.stdc.config.c_long unpacked = 0;
 
 			if ((gotopt) || (jansson_d.value.json_object_size(root) != key_set.size)) {
-				const (char)* key = void;
-				size_t key_len = void;
-
-				//jansson_d.jansson.json_object_keylen_foreach(root, key, key_len, value)
-				for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(root)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(root, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
-					if (jansson_d.hashtable.hashtable_get(&key_set, key, key_len) == null) {
+				foreach (child_obj; jansson_d.jansson.json_object_keylen_foreach(root)) {
+					if (jansson_d.hashtable.hashtable_get(&key_set, child_obj.key, child_obj.key_len) == null) {
 						unpacked++;
 
 						/* Save unrecognized keys for the error message */
@@ -712,7 +707,7 @@ private int unpack_object(scope .scanner_t* s, scope jansson_d.jansson.json_t* r
 						}
 
 						if (!keys_res) {
-							keys_res = jansson_d.strbuffer.strbuffer_append_bytes(&unrecognized_keys, key, key_len);
+							keys_res = jansson_d.strbuffer.strbuffer_append_bytes(&unrecognized_keys, child_obj.key, child_obj.key_len);
 						}
 					}
 				}

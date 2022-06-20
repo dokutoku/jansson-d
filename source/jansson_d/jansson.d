@@ -20,6 +20,7 @@ private static import jansson_d.memory;
 private static import jansson_d.pack_unpack;
 private static import jansson_d.value;
 private static import jansson_d.version_;
+private static import std.typecons;
 
 /* version */
 
@@ -92,6 +93,171 @@ public struct json_t
 
 	/* volatile */
 	size_t refcount;
+
+private:
+	extern (D)
+	int json_object_foreach(int delegate (ref const (char)* key, ref .json_t* value) operations, .json_t* object_)
+
+		do
+		{
+			int result = 0;
+
+			const (char)* key = void;
+			.json_t* value = void;
+
+			for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)))) {
+				result = operations(key, value);
+
+				if (result) {
+					break;
+				}
+			}
+
+			return result;
+		}
+
+	extern (D)
+	int json_object_keylen_foreach(int delegate (ref const (char)* key, ref size_t key_len, ref .json_t* value) operations, .json_t* object_)
+
+		do
+		{
+			int result = 0;
+
+			const (char)* key = void;
+			size_t key_len = void;
+			.json_t* value = void;
+
+			for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key))) {
+				result = operations(key, key_len, value);
+
+				if (result) {
+					break;
+				}
+			}
+
+			return result;
+		}
+
+	extern (D)
+	int json_object_foreach_safe(int delegate (ref void* n, ref const (char)* key, ref .json_t* value) operations, .json_t* object_)
+
+		do
+		{
+			int result = 0;
+
+			void* n = void;
+			const (char)* key = void;
+			.json_t* value = void;
+
+			for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(n), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))) {
+				result = operations(n, key, value);
+
+				if (result) {
+					break;
+				}
+			}
+
+			return result;
+		}
+
+	extern (D)
+	int json_object_keylen_foreach_safe(int delegate (ref void* n, ref const (char)* key, ref size_t key_len, ref .json_t* value) operations, .json_t* object_)
+
+		do
+		{
+			int result = 0;
+
+			void* n = void;
+			const (char)* key = void;
+			size_t key_len = void;
+			.json_t* value = void;
+
+			for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key != null) && ((value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))) != null); key = jansson_d.value.json_object_iter_key(n), key_len = jansson_d.value.json_object_iter_key_len(n), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))) {
+				result = operations(n, key, key_len, value);
+
+				if (result) {
+					break;
+				}
+			}
+
+			return result;
+		}
+
+	extern (D)
+	int json_array_foreach(int delegate (ref size_t index, ref .json_t* value) operations, .json_t* object_)
+
+		in
+		{
+			assert(.json_is_array(object_));
+		}
+
+		do
+		{
+			int result = 0;
+
+			.json_t* value = void;
+
+			for (size_t index = 0; (index < jansson_d.value.json_array_size(object_)) && ((value = jansson_d.value.json_array_get(object_, index)) != null); index++) {
+				result = operations(index, value);
+
+				if (result) {
+					break;
+				}
+			}
+
+			return result;
+		}
+
+public:
+	extern (D)
+	int opApply(int delegate (ref const (char)* key, ref .json_t* value) operations)
+
+		do
+		{
+			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
+
+			return this.json_object_foreach(operations, object_);
+		}
+
+	extern (D)
+	int opApply(int delegate (ref const (char)* key, ref size_t key_len, ref .json_t* value) operations)
+
+		do
+		{
+			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
+
+			return this.json_object_keylen_foreach(operations, object_);
+		}
+
+	extern (D)
+	int opApply(int delegate (ref void* n, ref const (char)* key, ref .json_t* value) operations)
+
+		do
+		{
+			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
+
+			return this.json_object_foreach_safe(operations, object_);
+		}
+
+	extern (D)
+	int opApply(int delegate (ref void* n, ref const (char)* key, ref size_t key_len, ref .json_t* value) operations)
+
+		do
+		{
+			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
+
+			return this.json_object_keylen_foreach_safe(operations, object_);
+		}
+
+	extern (D)
+	int opApply(int delegate (ref size_t index, ref .json_t* value) operations)
+
+		do
+		{
+			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
+
+			return this.json_array_foreach(operations, object_);
+		}
 }
 
 /* disabled if using cmake */
@@ -588,15 +754,608 @@ public alias json_object_iter_value = jansson_d.value.json_object_iter_value;
 ///
 public alias json_object_iter_set_new = jansson_d.value.json_object_iter_set_new;
 
-//#define json_object_foreach(object_, key, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))))
 
-//#define json_object_keylen_foreach(object_, key, key_len, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key))), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)))
+alias json_object_return = std.typecons.Tuple!(const (char)*, "key", .json_t*, "value");
+alias json_object_keylen_return = std.typecons.Tuple!(const (char)*, "key", size_t, "key_len", .json_t*, "value");
+alias json_object_foreach_safe_return = std.typecons.Tuple!(void*, "n", const (char)*, "key", .json_t*, "value");
+alias json_object_keylen_foreach_safe_return = std.typecons.Tuple!(void*, "n", const (char)*, "key", size_t, "key_len", .json_t*, "value");
+alias json_array_return = std.typecons.Tuple!(size_t, "index", .json_t*, "value");
 
-//#define json_object_foreach_safe(object_, n, key, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(n), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)))
+private struct json_object_foreach_internal1
+{
+private:
+	.json_t** object_ = void;
+	const (char)** key = void;
+	.json_t** value = void;
 
-//#define json_object_keylen_foreach_safe(object_, n, key, key_len, value) for (key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_)), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)), key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key)); (key) && (value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(key))); key = jansson_d.value.json_object_iter_key(n), key_len = jansson_d.value.json_object_iter_key_len(n), n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key)))
+public:
+	pure nothrow @trusted @nogc @live
+	this(ref .json_t* object_, ref const (char)* key, ref .json_t* value)
 
-//#define json_array_foreach(array, index, value) for (index = 0; (index < jansson_d.value.json_array_size(array)) && (value = jansson_d.value.json_array_get(array, index)); index++)
+		do
+		{
+			key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+			this.object_ = &object_;
+			this.key = &key;
+			this.value = &value;
+		}
+
+	pure nothrow @safe @nogc @live
+	int front() scope
+
+		do
+		{
+			//dummy
+			return 0;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			*(this.key) = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(*(this.object_), jansson_d.value.json_object_key_to_iter(*(this.key))));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (*(this.key) == null) || ((*(this.value) = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(*(this.key)))) == null);
+		}
+}
+
+private struct json_object_foreach_internal2
+{
+private:
+	.json_t* object_ = void;
+	const (char)* key = void;
+	.json_t* value = void;
+
+public:
+	pure nothrow @safe @nogc @live
+	this(.json_t* object_)
+
+		do
+		{
+			this.object_ = object_;
+			this.key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+		}
+
+	pure nothrow @safe @nogc @live
+	.json_object_return front() scope
+
+		do
+		{
+			.json_object_return result;
+
+			result.key = this.key;
+			result.value = this.value;
+
+			return result;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			this.key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(this.object_, jansson_d.value.json_object_key_to_iter(this.key)));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (this.key == null) || ((this.value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(this.key))) == null);
+		}
+}
+
+private struct json_object_keylen_foreach_internal1
+{
+private:
+	.json_t** object_ = void;
+	const (char)** key = void;
+	size_t* key_len;
+	.json_t** value = void;
+
+public:
+	pure nothrow @trusted @nogc @live
+	this(ref .json_t* object_, ref const (char)* key, ref size_t key_len, ref .json_t* value)
+
+		do
+		{
+			key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+			key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key));
+			this.object_ = &object_;
+			this.key = &key;
+			this.key_len = &key_len;
+			this.value = &value;
+		}
+
+	pure nothrow @safe @nogc @live
+	int front() scope
+
+		do
+		{
+			//dummy
+			return 0;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			*(this.key) = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(*(this.object_), jansson_d.value.json_object_key_to_iter(*(this.key))));
+			*(this.key_len) = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(*(this.key)));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (*(this.key) == null) || ((*(this.value) = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(*(this.key)))) == null);
+		}
+}
+
+private struct json_object_keylen_foreach_internal2
+{
+private:
+	.json_t* object_ = void;
+	const (char)* key = void;
+	size_t key_len;
+	.json_t* value = void;
+
+public:
+	pure nothrow @safe @nogc @live
+	this(.json_t* object_)
+
+		do
+		{
+			this.object_ = object_;
+			this.key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+			this.key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(this.key));
+		}
+
+	pure nothrow @safe @nogc @live
+	.json_object_keylen_return front() scope
+
+		do
+		{
+			.json_object_keylen_return result;
+
+			result.key = this.key;
+			result.key_len = this.key_len;
+			result.value = this.value;
+
+			return result;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			this.key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter_next(this.object_, jansson_d.value.json_object_key_to_iter(this.key)));
+			this.key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(this.key));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (this.key == null) || ((this.value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(this.key))) == null);
+		}
+}
+
+private struct json_object_foreach_safe_internal1
+{
+private:
+	.json_t** object_ = void;
+	void** n = void;
+	const (char)** key = void;
+	.json_t** value = void;
+
+public:
+	pure nothrow @trusted @nogc @live
+	this(ref .json_t* object_, ref void* n, ref const (char)* key, ref .json_t* value)
+
+		do
+		{
+			key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+			n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key));
+			this.object_ = &object_;
+			this.n = &n;
+			this.key = &key;
+			this.value = &value;
+		}
+
+	pure nothrow @safe @nogc @live
+	int front() scope
+
+		do
+		{
+			//dummy
+			return 0;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			*(this.key) = jansson_d.value.json_object_iter_key(*(this.n));
+			*(this.n) = jansson_d.value.json_object_iter_next(*(this.object_), jansson_d.value.json_object_key_to_iter(*(this.key)));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (*(this.key) == null) || ((*(this.value) = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(*(this.key)))) == null);
+		}
+}
+
+private struct json_object_foreach_safe_internal2
+{
+private:
+	.json_t* object_ = void;
+	void* n = void;
+	const (char)* key = void;
+	.json_t* value = void;
+
+public:
+	pure nothrow @safe @nogc @live
+	this(.json_t* object_)
+
+		do
+		{
+			this.object_ = object_;
+			this.key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+			this.n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(this.key));
+		}
+
+	pure nothrow @safe @nogc @live
+	.json_object_foreach_safe_return front() scope
+
+		do
+		{
+			.json_object_foreach_safe_return result;
+
+			result.n = this.n;
+			result.key = this.key;
+			result.value = this.value;
+
+			return result;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			this.key = jansson_d.value.json_object_iter_key(this.n);
+			this.n = jansson_d.value.json_object_iter_next(this.object_, jansson_d.value.json_object_key_to_iter(this.key));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (this.key == null) || ((this.value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(this.key))) == null);
+		}
+}
+
+private struct json_object_keylen_foreach_safe_internal1
+{
+private:
+	.json_t** object_ = void;
+	void** n = void;
+	const (char)** key = void;
+	size_t* key_len;
+	.json_t** value = void;
+
+public:
+	pure nothrow @trusted @nogc @live
+	this(ref .json_t* object_, ref void* n, ref const (char)* key, ref size_t key_len, ref .json_t* value)
+
+		do
+		{
+			key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+			n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(key));
+			key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(key));
+			this.object_ = &object_;
+			this.n = &n;
+			this.key = &key;
+			this.key_len = &key_len;
+			this.value = &value;
+		}
+
+	pure nothrow @safe @nogc @live
+	int front() scope
+
+		do
+		{
+			//dummy
+			return 0;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			*(this.key) = jansson_d.value.json_object_iter_key(*(this.n));
+			*(this.key_len) = jansson_d.value.json_object_iter_key_len(*(this.n));
+			*(this.n) = jansson_d.value.json_object_iter_next(*(this.object_), jansson_d.value.json_object_key_to_iter(*(this.key)));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (*(this.key) == null) || ((*(this.value) = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(*(this.key)))) == null);
+		}
+}
+
+private struct json_object_keylen_foreach_safe_internal2
+{
+private:
+	.json_t* object_ = void;
+	void* n = void;
+	const (char)* key = void;
+	size_t key_len;
+	.json_t* value = void;
+
+public:
+	pure nothrow @safe @nogc @live
+	this(.json_t* object_)
+
+		do
+		{
+			this.object_ = object_;
+			this.key = jansson_d.value.json_object_iter_key(jansson_d.value.json_object_iter(object_));
+			this.n = jansson_d.value.json_object_iter_next(object_, jansson_d.value.json_object_key_to_iter(this.key));
+			this.key_len = jansson_d.value.json_object_iter_key_len(jansson_d.value.json_object_key_to_iter(this.key));
+		}
+
+	pure nothrow @safe @nogc @live
+	.json_object_keylen_foreach_safe_return front() scope
+
+		do
+		{
+			.json_object_keylen_foreach_safe_return result;
+
+			result.n = this.n;
+			result.key = this.key;
+			result.key_len = this.key_len;
+			result.value = this.value;
+
+			return result;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			this.key = jansson_d.value.json_object_iter_key(this.n);
+			this.key_len = jansson_d.value.json_object_iter_key_len(this.n);
+			this.n = jansson_d.value.json_object_iter_next(this.object_, jansson_d.value.json_object_key_to_iter(this.key));
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (this.key == null) || ((this.value = jansson_d.value.json_object_iter_value(jansson_d.value.json_object_key_to_iter(this.key))) == null);
+		}
+}
+
+private struct json_array_foreach_internal1
+{
+private:
+	const .json_t** array = void;
+	size_t* index = void;
+	.json_t** value = void;
+
+public:
+	pure nothrow @trusted @nogc @live
+	this(const ref .json_t* array, ref size_t index, ref .json_t* value)
+
+		do
+		{
+			this.array = &array;
+			this.index = &index;
+			*(this.index) = 0;
+			this.value = &value;
+		}
+
+	pure nothrow @safe @nogc @live
+	int front() scope
+
+		do
+		{
+			//dummy
+			return 0;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			*(this.index) += 1;
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (*(this.index) >= jansson_d.value.json_array_size(*(this.array))) || ((*(this.value) = jansson_d.value.json_array_get(*(this.array), *(this.index))) == null);
+		}
+}
+
+private struct json_array_foreach_internal2
+{
+private:
+	const .json_t* array = void;
+	size_t index = void;
+	.json_t* value = void;
+
+public:
+	pure nothrow @safe @nogc @live
+	this(const .json_t* array)
+
+		do
+		{
+			this.array = array;
+			this.index = 0;
+		}
+
+	pure nothrow @safe @nogc @live
+	.json_array_return front() scope
+
+		do
+		{
+			.json_array_return result;
+
+			result.index = this.index;
+			result.value = this.value;
+
+			return result;
+		}
+
+	pure nothrow @safe @nogc @live
+	void popFront()
+
+		do
+		{
+			++this.index;
+		}
+
+	pure nothrow @safe @nogc @live
+	bool empty()
+
+		do
+		{
+			return (this.index >= jansson_d.value.json_array_size(this.array)) || ((this.value = jansson_d.value.json_array_get(this.array, this.index)) == null);
+		}
+}
+
+/**
+ * foreach function
+ */
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_foreach(.json_t* object_)
+
+	do
+	{
+		return .json_object_foreach_internal2(object_);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_keylen_foreach(.json_t* object_)
+
+	do
+	{
+		return .json_object_keylen_foreach_internal2(object_);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_foreach_safe(.json_t* object_)
+
+	do
+	{
+		return .json_object_foreach_safe_internal2(object_);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_keylen_foreach_safe(.json_t* object_)
+
+	do
+	{
+		return .json_object_keylen_foreach_safe_internal2(object_);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_array_foreach(const .json_t* array)
+
+	do
+	{
+		return .json_array_foreach_internal2(array);
+	}
+
+/**
+ * foreach function compatible with the original macro
+ */
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_foreach(ref .json_t* object_, ref const (char)* key, ref .json_t* value)
+
+	do
+	{
+		return .json_object_foreach_internal1(object_, key, value);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_keylen_foreach(ref .json_t* object_, ref const (char)* key, ref size_t key_len, ref .json_t* value)
+
+	do
+	{
+		return .json_object_keylen_foreach_internal1(object_, key, key_len, value);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_foreach_safe(ref .json_t* object_, ref void* n, ref const (char)* key, ref .json_t* value)
+
+	do
+	{
+		return .json_object_foreach_safe_internal1(object_, n, key, value);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_object_keylen_foreach_safe(ref .json_t* object_, ref void* n, ref const (char)* key, ref size_t key_len, ref .json_t* value)
+
+	do
+	{
+		return .json_object_keylen_foreach_safe_internal1(object_, n, key, key_len, value);
+	}
+
+///Ditto
+pragma(inline, true)
+pure nothrow @trusted @nogc @live
+public auto json_array_foreach(const ref .json_t* array, ref size_t index, ref .json_t* value)
+
+	do
+	{
+		return .json_array_foreach_internal1(array, index, value);
+	}
 
 ///
 pragma(inline, true)

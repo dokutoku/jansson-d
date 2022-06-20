@@ -120,14 +120,10 @@ void print_json_object(scope jansson_d.jansson.json_t* element, size_t indent)
 
 		core.stdc.stdio.printf("JSON Object of %zd pair%s:\n", size, .json_plural(size));
 
-		const (char)* key = void;
-		jansson_d.jansson.json_t* value = void;
-
-		//jansson_d.jansson.json_object_foreach(element, key, value)
-		for (key = jansson_d.jansson.json_object_iter_key(jansson_d.jansson.json_object_iter(element)); (key != null) && ((value = jansson_d.jansson.json_object_iter_value(jansson_d.jansson.json_object_key_to_iter(key))) != null); key = jansson_d.jansson.json_object_iter_key(jansson_d.jansson.json_object_iter_next(element, jansson_d.jansson.json_object_key_to_iter(key)))) {
+		foreach (child_obj; jansson_d.jansson.json_object_foreach(element)) {
 			.print_json_indent(indent + 2);
-			core.stdc.stdio.printf("JSON Key: \"%s\"\n", key);
-			.print_json_aux(value, indent + 2);
+			core.stdc.stdio.printf("JSON Key: \"%s\"\n", child_obj.key);
+			.print_json_aux(child_obj.value, indent + 2);
 		}
 	}
 

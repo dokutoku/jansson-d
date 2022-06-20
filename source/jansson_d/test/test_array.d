@@ -333,12 +333,8 @@ unittest
 	jansson_d.jansson.json_t* array1 = jansson_d.pack_unpack.json_pack("[sisisi]", &("foo"[0]), 1, &("bar"[0]), 2, &("baz\0"[0]), 3);
 	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 
-	size_t index = void;
-	jansson_d.jansson.json_t* value = void;
-
-	//jansson_d.jansson.json_array_foreach(array1, index, value)
-	for (index = 0; (index < jansson_d.value.json_array_size(array1)) && ((value = jansson_d.value.json_array_get(array1, index)) != null); index++) {
-		jansson_d.jansson.json_array_append(array2, value);
+	foreach (child_array1; jansson_d.jansson.json_array_foreach(array1)) {
+		jansson_d.jansson.json_array_append(array2, child_array1.value);
 	}
 
 	assert(jansson_d.value.json_equal(array1, array2), "json_array_foreach failed to iterate all elements");
