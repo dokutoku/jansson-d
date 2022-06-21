@@ -596,11 +596,6 @@ version (all) {
 	version (none) {
 		alias json_auto_t = .json_t;
 	}
-
-	template json_auto_t_exit(string json)
-	{
-		enum json_auto_t_exit = "scope (exit) { jansson_d.jansson.json_decrefp(" ~ json ~ "); }";
-	}
 }
 
 /* error reporting */
