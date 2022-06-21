@@ -174,7 +174,7 @@ jobs:
 
         strategy:
             matrix:
-                build-type: [debug, unittest, release-nobounds]
+                build-type: [debug, unittest, release-nobounds, docs]
 
         steps:
         - name: Start Time
