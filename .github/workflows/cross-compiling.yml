@@ -13,8 +13,10 @@ jobs:
 
         strategy:
             matrix:
+                compiler: [dmd, ldc2]
                 dub-arch: [x86, x86_64]
                 build-type: [debug, unittest, release-nobounds, docs]
+                config: [library]
 
         steps:
         - name: Start Time
@@ -91,21 +93,25 @@ jobs:
                 windows-dlang-${{ steps.dlang-versions.outputs.dlang_versions }}
 
         - name: Install dmd
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             cd ~/;
             Powershell -ExecutionPolicy Bypass -File get-dlang/template/powershell/install-dmd.ps1;
 
         - name: Show dmd versions
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             C:\D\dmd2\windows\bin\dmd.exe --version
             C:\D\dmd2\windows\bin\dub.exe --version
 
         - name: Install ldc2
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             cd ~/;
             Powershell -ExecutionPolicy Bypass -File get-dlang/template/powershell/install-ldc2.ps1;
 
         - name: Show ldc2 versions
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             C:\ldc2\bin\ldc2.exe --version
             C:\ldc2\bin\dub.exe --version
@@ -126,39 +132,40 @@ jobs:
             echo call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" > vc_init.bat
 
         - name: dmd x86 build
-          if: ${{ (matrix.dub-arch == 'x86') || (matrix.dub-arch == 'x86_mscoff') }}
+          if: ${{ (matrix.compiler == 'dmd') && (matrix.dub-arch == 'x86') || (matrix.dub-arch == 'x86_mscoff') }}
           shell: cmd
           run: |
-            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=x86_mscoff --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
+            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=x86_mscoff --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
 
         - name: dmd x86 unittest
-          if: ${{ ((matrix.dub-arch == 'x86') || (matrix.dub-arch == 'x86_mscoff')) && (matrix.build-type == 'unittest') }}
+          if: ${{ (matrix.compiler == 'dmd') && ((matrix.dub-arch == 'x86') || (matrix.dub-arch == 'x86_mscoff')) && (matrix.build-type == 'unittest') }}
           shell: cmd
           run: |
-            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe test --force --combined --build-mode=allAtOnce --config=library --arch=x86_mscoff --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
+            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=x86_mscoff --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
 
-        - name: dmd build
-          if: ${{ (matrix.dub-arch != 'x86') && (matrix.dub-arch != 'x86_mscoff') }}
+        - name: dmd x86_64 build
+          if: ${{ (matrix.compiler == 'dmd') && (matrix.dub-arch != 'x86') && (matrix.dub-arch != 'x86_mscoff') }}
           shell: cmd
           run: |
-            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
+            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
 
-        - name: dmd unittest
-          if: ${{ ((matrix.dub-arch != 'x86') && (matrix.dub-arch != 'x86_mscoff')) && (matrix.build-type == 'unittest') }}
+        - name: dmd x86_64 unittest
+          if: ${{ (matrix.compiler == 'dmd') && ((matrix.dub-arch != 'x86') && (matrix.dub-arch != 'x86_mscoff')) && (matrix.build-type == 'unittest') }}
           shell: cmd
           run: |
-            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe test --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
+            call vc_init.bat && C:\D\dmd2\windows\bin\dub.exe test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\D\dmd2\windows\bin\dmd.exe
 
         - name: ldc2 build
+          if: ${{ (matrix.compiler == 'ldc2') }}
           shell: cmd
           run: |
-            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
+            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
 
         - name: ldc2 unittest
-          if: ${{ matrix.build-type == 'unittest' }}
+          if: ${{ (matrix.compiler == 'ldc2') && (matrix.build-type == 'unittest') }}
           shell: cmd
           run: |
-            call vc_init.bat && C:\ldc2\bin\dub.exe test --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
+            call vc_init.bat && C:\ldc2\bin\dub.exe test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
 
         - name: Upload artifact
           uses: actions/upload-artifact@v2
@@ -174,7 +181,10 @@ jobs:
 
         strategy:
             matrix:
-                build-type: [debug, unittest, release-nobounds, docs]
+                compiler: [dmd, ldc2]
+                dub-arch: [x86_64]
+                build-type: [debug, unittest, release-nobounds]
+                config: [library]
 
         steps:
         - name: Start Time
@@ -249,21 +259,25 @@ jobs:
                 osx-dlang-${{ steps.dlang-versions.outputs.dlang_versions }}
 
         - name: Install dmd
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/install-dmd/install-dmd-osx-x86_64.sh;
 
-        - name: Show dmd version
+        - name: Show dmd versions
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             dmd --version;
             dub --version;
 
-        - name: Download ldc2
+        - name: Install ldc2
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-osx-x86_64.sh;
 
-        - name: Show ldc2 version
+        - name: Show ldc2 versions
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             /Users/runner/ldc2/bin/ldc2 --version;
             /Users/runner/ldc2/bin/dub --version;
@@ -272,22 +286,24 @@ jobs:
           uses: actions/checkout@v2
 
         - name: dmd build
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
-            dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --build=${{ matrix.build-type }};
+            dub build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }};
 
         - name: dmd unittest
-          if: ${{ matrix.build-type == 'unittest' }}
+          if: ${{ (matrix.compiler == 'dmd') && (matrix.build-type == 'unittest') }}
           run: |
-            dub test --force --combined --build-mode=allAtOnce --config=library --build=${{ matrix.build-type }};
+            dub test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }};
 
         - name: ldc2 build
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
-            /Users/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=x86_64 --build=${{ matrix.build-type }} --compiler=/Users/runner/ldc2/bin/ldc2;
+            /Users/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/Users/runner/ldc2/bin/ldc2;
 
         - name: ldc2 unittest
-          if: ${{ matrix.build-type == 'unittest' }}
+          if: ${{ (matrix.compiler == 'ldc2') && (matrix.build-type == 'unittest') }}
           run: |
-            /Users/runner/ldc2/bin/dub test --force --combined --build-mode=allAtOnce --config=library --arch=x86_64 --build=${{ matrix.build-type }} --compiler=/Users/runner/ldc2/bin/ldc2;
+            /Users/runner/ldc2/bin/dub test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/Users/runner/ldc2/bin/ldc2;
 
         - name: Upload artifact
           uses: actions/upload-artifact@v2
@@ -303,8 +319,10 @@ jobs:
 
         strategy:
             matrix:
+                compiler: [dmd, ldc2]
                 dub-arch: [x86_64]
                 build-type: [debug, unittest, release-nobounds, docs]
+                config: [library]
 
         steps:
         - name: Start Time
@@ -384,25 +402,30 @@ jobs:
                 other-platforms-dlang-${{ steps.dlang-versions.outputs.dlang_versions }}
 
         - name: Install dmd
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/install-dmd/install-dmd-ubuntu-x86_64.sh;
 
-        - name: Show dmd version
+        - name: Show dmd versions
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             dmd --version;
             dub --version;
 
-        - name: Download ldc2
+        - name: Install ldc2
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-linux-x86_64.sh;
 
         - name: copy ldc2.conf
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             cp ~/get-dlang/template/ldc2-conf/ldc2-linux-x86_64.conf ~/ldc2/etc/ldc2.conf;
 
         - name: Show ldc2 version
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             /home/runner/ldc2/bin/ldc2 --version;
             /home/runner/ldc2/bin/dub --version;
@@ -411,22 +434,24 @@ jobs:
           uses: actions/checkout@v2
 
         - name: dmd build
+          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
-            dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }};
+            dub build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }};
 
         - name: dmd unittest
-          if: ${{ matrix.build-type == 'unittest' }}
+          if: ${{ (matrix.compiler == 'dmd') && (matrix.build-type == 'unittest') }}
           run: |
-            dub test --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }};
+            dub test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }};
 
         - name: ldc2 build
+          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
-            /home/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/home/runner/ldc2/bin/ldc2;
+            /home/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/home/runner/ldc2/bin/ldc2;
 
         - name: ldc2 unittest
-          if: ${{ matrix.build-type == 'unittest' }}
+          if: ${{ (matrix.compiler == 'ldc2') && (matrix.build-type == 'unittest') }}
           run: |
-            /home/runner/ldc2/bin/dub test --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/home/runner/ldc2/bin/ldc2;
+            /home/runner/ldc2/bin/dub test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/home/runner/ldc2/bin/ldc2;
 
         - name: Upload artifact
           uses: actions/upload-artifact@v2

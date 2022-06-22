@@ -111,11 +111,15 @@ jobs:
           run: |
             echo call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" > vc_init.bat
 
-        - name: ldc2 build
+        - name: ldc2 build library
           shell: cmd
           run: |
-            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
-            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=docs --compiler=C:\ldc2\bin\ldc2.exe
+            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
+
+        - name: ldc2 build doc
+          shell: cmd
+          run: |
+            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=docs --compiler=C:\ldc2\bin\ldc2.exe
 
         - name: Create Windows archive
           run: |
@@ -145,6 +149,7 @@ jobs:
 
         strategy:
             matrix:
+                dub-arch: [x86_64]
                 build-type: [release-nobounds]
 
         steps:
@@ -158,7 +163,7 @@ jobs:
         - name: set-asset_base_name
           id: init-asset-name
           run: |
-            echo "::set-output name=asset_base_name::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-osx-x86_64";
+            echo "::set-output name=asset_base_name::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-osx-${{ matrix.dub-arch }}";
             echo "::set-output name=asset_base_name-x86_64::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-osx-x86_64";
 
         - name: Init get-dlang
@@ -174,9 +179,9 @@ jobs:
           run: |
             cd ~/get-dlang;
             echo '/ldc2-version.txt' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-osx-x86_64.sh' >> .git/info/sparse-checkout;
+            echo '/template/shell/get-ldc2/get-ldc2-osx-${{ matrix.dub-arch }}.sh' >> .git/info/sparse-checkout;
             echo '/ldc2-version.txt.sig' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-osx-x86_64.sh.sig' >> .git/info/sparse-checkout;
+            echo '/template/shell/get-ldc2/get-ldc2-osx-${{ matrix.dub-arch }}.sh.sig' >> .git/info/sparse-checkout;
             git fetch --depth=1 origin master;
 
         - name: Reset get-dlang
@@ -218,7 +223,7 @@ jobs:
         - name: Download ldc2
           run: |
             cd ~/;
-            sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-osx-x86_64.sh;
+            sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-osx-${{ matrix.dub-arch }}.sh;
 
         - name: Show ldc2 version
           run: |
@@ -228,10 +233,13 @@ jobs:
         - name: checkout
           uses: actions/checkout@v2
 
-        - name: ldc2 build
+        - name: ldc2 build library
           run: |
-            /Users/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=x86_64 --build=${{ matrix.build-type }} --compiler=/Users/runner/ldc2/bin/ldc2;
-            /Users/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=x86_64 --build=docs --compiler=/Users/runner/ldc2/bin/ldc2;
+            /Users/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/Users/runner/ldc2/bin/ldc2;
+
+        - name: ldc2 build doc
+          run: |
+            /Users/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=docs --compiler=/Users/runner/ldc2/bin/ldc2;
 
         - name: Create OSX archive
           run: |
@@ -274,6 +282,7 @@ jobs:
         - name: set-asset_base_name
           id: init-asset-name
           run: |
+            echo "::set-output name=asset_base_name::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-linux-${{ matrix.dub-arch }}";
             echo "::set-output name=asset_base_name-x86_64::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-linux-x86_64";
 
         - name: Init get-dlang
@@ -289,11 +298,11 @@ jobs:
           run: |
             cd ~/get-dlang;
             echo '/ldc2-version.txt' >> .git/info/sparse-checkout;
-            echo '/template/ldc2-conf/ldc2-linux-x86_64.conf' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-linux-x86_64.sh' >> .git/info/sparse-checkout;
+            echo '/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf' >> .git/info/sparse-checkout;
+            echo '/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh' >> .git/info/sparse-checkout;
             echo '/ldc2-version.txt.sig' >> .git/info/sparse-checkout;
-            echo '/template/ldc2-conf/ldc2-linux-x86_64.conf.sig' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-linux-x86_64.sh.sig' >> .git/info/sparse-checkout;
+            echo '/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf.sig' >> .git/info/sparse-checkout;
+            echo '/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh.sig' >> .git/info/sparse-checkout;
             git fetch --depth=1 origin master;
 
         - name: Reset get-dlang
@@ -335,11 +344,11 @@ jobs:
         - name: Download ldc2
           run: |
             cd ~/;
-            sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-linux-x86_64.sh;
+            sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh;
 
         - name: copy ldc2.conf
           run: |
-            cp ~/get-dlang/template/ldc2-conf/ldc2-linux-x86_64.conf ~/ldc2/etc/ldc2.conf;
+            cp ~/get-dlang/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf ~/ldc2/etc/ldc2.conf;
 
         - name: Show ldc2 version
           run: |
@@ -349,31 +358,33 @@ jobs:
         - name: checkout
           uses: actions/checkout@v2
 
-        - name: ldc2 build
+        - name: ldc2 build library
           run: |
-            /home/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/home/runner/ldc2/bin/ldc2;
-            /home/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=dynamicLibrary --arch=${{ matrix.dub-arch }} --build=docs --compiler=/home/runner/ldc2/bin/ldc2;
+            /home/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=/home/runner/ldc2/bin/ldc2;
 
-        - name: Create Linux x86_64 archive
-          if: ${{ (matrix.dub-arch == 'x86_64') }}
+        - name: ldc2 build doc
           run: |
-            mkdir ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }};
-            mkdir ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/docs;
-            mkdir ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/include;
-            mkdir ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/lib;
-            cp -r ./docs/* '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/docs/';
-            cp -r ./include/* '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/include/';
-            cp -r ./lib/* '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/lib/';
-            cp './LICENSE' '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/';
-            cp './README.md' '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/';
-            tar zcvf '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}.tar.gz' '${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}/';
+            /home/runner/ldc2/bin/dub build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=docs --compiler=/home/runner/ldc2/bin/ldc2;
+
+        - name: Create Linux archive
+          run: |
+            mkdir ${{ steps.init-asset-name.outputs.asset_base_name }};
+            mkdir ${{ steps.init-asset-name.outputs.asset_base_name }}/docs;
+            mkdir ${{ steps.init-asset-name.outputs.asset_base_name }}/include;
+            mkdir ${{ steps.init-asset-name.outputs.asset_base_name }}/lib;
+            cp -r ./docs/* '${{ steps.init-asset-name.outputs.asset_base_name }}/docs/';
+            cp -r ./include/* '${{ steps.init-asset-name.outputs.asset_base_name }}/include/';
+            cp -r ./lib/* '${{ steps.init-asset-name.outputs.asset_base_name }}/lib/';
+            cp './LICENSE' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
+            cp './README.md' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
+            tar zcvf '${{ steps.init-asset-name.outputs.asset_base_name }}.tar.gz' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
 
         - name: Upload artifact
           if: ${{ (matrix.dub-arch == 'x86_64') }}
           uses: actions/upload-artifact@v2
           with:
               path: |
-                ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}.tar.gz
+                ${{ steps.init-asset-name.outputs.asset_base_name }}.tar.gz
 
         outputs:
             asset_name-x86_64: ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}.tar.gz
