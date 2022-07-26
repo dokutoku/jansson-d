@@ -8,7 +8,7 @@ on:
 
 jobs:
     Windows:
-        runs-on: windows-2019
+        runs-on: windows-latest
 
         strategy:
             matrix:
@@ -145,7 +145,7 @@ jobs:
             asset_name-x86_64: ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}.zip
 
     MacOS:
-        runs-on: macos-10.15
+        runs-on: macos-latest
 
         strategy:
             matrix:
@@ -264,7 +264,7 @@ jobs:
             asset_name-x86_64: ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}.tar.gz
 
     Other_Platforms:
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
 
         strategy:
             matrix:
@@ -393,7 +393,7 @@ jobs:
         needs: [Windows, MacOS, Other_Platforms]
         name: Create Release
 
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
 
         steps:
         - name: Start Time
