@@ -26,6 +26,11 @@ unittest
 	jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* ten = jansson_d.value.json_integer(10);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(ten);
+		jansson_d.jansson.json_decref(object_);
+	}
+
 	assert(object_ != null, "unable to create object");
 
 	assert(ten != null, "unable to create integer");
@@ -37,9 +42,6 @@ unittest
 	jansson_d.value.json_object_clear(object_);
 
 	assert(jansson_d.value.json_object_size(object_) == 0, "invalid size after clear");
-
-	jansson_d.jansson.json_decref(ten);
-	jansson_d.jansson.json_decref(object_);
 }
 
 //test_update
@@ -51,6 +53,13 @@ unittest
 
 	jansson_d.jansson.json_t* nine = jansson_d.value.json_integer(9);
 	jansson_d.jansson.json_t* ten = jansson_d.value.json_integer(10);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(nine);
+		jansson_d.jansson.json_decref(ten);
+		jansson_d.jansson.json_decref(other);
+		jansson_d.jansson.json_decref(object_);
+	}
 
 	assert((object_ != null) && (other != null), "unable to create object");
 
@@ -107,11 +116,6 @@ unittest
 	assert(jansson_d.value.json_object_size(object_) == 7, "invalid size after update_new");
 
 	assert((jansson_d.value.json_object_get(object_, "a") == ten) && (jansson_d.value.json_object_get(object_, "b") == nine) && (jansson_d.value.json_object_get(object_, "c") == ten) && (jansson_d.value.json_object_get(object_, "d") == ten) && (jansson_d.value.json_object_get(object_, "e") == ten) && (jansson_d.value.json_object_get(object_, "f") == nine) && (jansson_d.value.json_object_get(object_, "g") == nine), "update_new works incorrectly");
-
-	jansson_d.jansson.json_decref(nine);
-	jansson_d.jansson.json_decref(ten);
-	jansson_d.jansson.json_decref(other);
-	jansson_d.jansson.json_decref(object_);
 }
 
 //test_set_many_keys
@@ -121,11 +125,14 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
-
-	assert(object_ != null, "unable to create object");
-
 	jansson_d.jansson.json_t* value = jansson_d.value.json_string("a");
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(object_);
+		jansson_d.jansson.json_decref(value);
+	}
+
+	assert(object_ != null, "unable to create object");
 	assert(value != null, "unable to create string");
 
 	char[2] buf = void;
@@ -136,9 +143,6 @@ unittest
 
 		assert(!jansson_d.jansson.json_object_set(object_, &(buf[0]), value), "unable to set object key");
 	}
-
-	jansson_d.jansson.json_decref(object_);
-	jansson_d.jansson.json_decref(value);
 }
 
 //test_conditional_updates
@@ -149,8 +153,16 @@ unittest
 	jansson_d.jansson.json_t* object_ = void;
 	jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(other);
+	}
+
 	{
 		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(object_);
+		}
 
 		assert(!jansson_d.value.json_object_update_existing(object_, other), "json_object_update_existing failed");
 
@@ -159,13 +171,15 @@ unittest
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 3, "json_object_update_existing failed to update existing key");
 
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_existing updated wrong key");
-
-		jansson_d.jansson.json_decref(object_);
 	}
 
 	{
 		/* json_object_update_existing_new check */
 		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(object_);
+		}
 
 		assert(!jansson_d.jansson.json_object_update_existing_new(object_, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_existing_new failed");
 
@@ -174,12 +188,14 @@ unittest
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 3, "json_object_update_existing_new failed to update existing key");
 
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_existing_new updated wrong key");
-
-		jansson_d.jansson.json_decref(object_);
 	}
 
 	{
 		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(object_);
+		}
 
 		assert(!jansson_d.value.json_object_update_missing(object_, other), "json_object_update_missing failed");
 
@@ -190,13 +206,15 @@ unittest
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_missing updated wrong key");
 
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "baz")) == 4, "json_object_update_missing didn't add new items");
-
-		jansson_d.jansson.json_decref(object_);
 	}
 
 	{
 		/* json_object_update_missing_new check */
 		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(object_);
+		}
 
 		assert(!jansson_d.jansson.json_object_update_missing_new(object_, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_missing_new failed");
 
@@ -207,11 +225,7 @@ unittest
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_missing_new updated wrong key");
 
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "baz")) == 4, "json_object_update_missing_new didn't add new items");
-
-		jansson_d.jansson.json_decref(object_);
 	}
-
-	jansson_d.jansson.json_decref(other);
 }
 
 //test_recursive_updates
@@ -227,9 +241,13 @@ unittest
 		object_ = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
 		other = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 3, &("bar\0"[0]), 4, &("baz\0"[0]), 5);
 
-		assert(jansson_d.value.json_object_update_recursive(invalid, other), "json_object_update_recursive accepted non-object argument");
+		scope (exit) {
+			jansson_d.jansson.json_decref(invalid);
+			jansson_d.jansson.json_decref(object_);
+			jansson_d.jansson.json_decref(other);
+		}
 
-		jansson_d.jansson.json_decref(invalid);
+		assert(jansson_d.value.json_object_update_recursive(invalid, other), "json_object_update_recursive accepted non-object argument");
 
 		assert(!jansson_d.value.json_object_update_recursive(object_, other), "json_object_update_recursive failed");
 
@@ -240,15 +258,17 @@ unittest
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 4, "json_object_update_recursive failed to overwrite object");
 
 		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "baz")) == 5, "json_object_update_recursive didn't add new item");
-
-		jansson_d.jansson.json_decref(object_);
-		jansson_d.jansson.json_decref(other);
 	}
 
 	{
 		object_ = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
 		other = jansson_d.pack_unpack.json_pack("{s{si}}", &("bar\0"[0]), &("baz\0"[0]), 3);
 		jansson_d.jansson.json_t* barBefore = jansson_d.value.json_object_get(object_, "bar");
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(object_);
+			jansson_d.jansson.json_decref(other);
+		}
 
 		assert(barBefore != null, "can't get bar object before json_object_update_recursive");
 
@@ -265,15 +285,18 @@ unittest
 		assert(barAfter != null, "can't get bar object after json_object_update_recursive");
 
 		assert(barBefore == barAfter, "bar object reference changed after json_object_update_recursive");
-
-		jansson_d.jansson.json_decref(object_);
-		jansson_d.jansson.json_decref(other);
 	}
 
 	{
 		/* check circular reference */
 		object_ = jansson_d.pack_unpack.json_pack("{s{s{s{si}}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), &("xxx\0"[0]), 2);
 		other = jansson_d.pack_unpack.json_pack("{s{s{si}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), 2);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(object_);
+			jansson_d.jansson.json_decref(other);
+		}
+
 		jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(other, "foo"), "bar"), "baz", jansson_d.value.json_object_get(other, "foo"));
 
 		assert(jansson_d.value.json_object_update_recursive(object_, other), "json_object_update_recursive update a circular reference!");
@@ -281,9 +304,6 @@ unittest
 		jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(jansson_d.value.json_object_get(other, "foo"), "bar"), "baz", jansson_d.value.json_integer(1));
 
 		assert(!jansson_d.value.json_object_update_recursive(object_, other), "json_object_update_recursive failed!");
-
-		jansson_d.jansson.json_decref(object_);
-		jansson_d.jansson.json_decref(other);
 	}
 }
 
@@ -293,6 +313,13 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object1 = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* object2 = jansson_d.value.json_object();
+
+	scope (exit) {
+		/* decref twice to deal with the circular references */
+			jansson_d.jansson.json_decref(object1);
+			jansson_d.jansson.json_decref(object2);
+			jansson_d.jansson.json_decref(object1);
+	}
 
 	assert((object1 != null) && (object2 != null), "unable to create object");
 
@@ -306,11 +333,6 @@ unittest
 
 	/* circularity is detected when dumping */
 	assert(jansson_d.dump.json_dumps(object1, 0) == null, "able to dump circulars");
-
-	/* decref twice to deal with the circular references */
-	jansson_d.jansson.json_decref(object1);
-	jansson_d.jansson.json_decref(object2);
-	jansson_d.jansson.json_decref(object1);
 }
 
 //test_set_nocheck
@@ -319,6 +341,11 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* string_ = jansson_d.value.json_string("bar");
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(string_);
+		jansson_d.jansson.json_decref(object_);
+	}
 
 	assert(object_ != null, "unable to create object");
 
@@ -341,9 +368,6 @@ unittest
 	assert(!jansson_d.value.json_object_set_new_nocheck(object_, "asdf\xfe", jansson_d.value.json_integer(321)), "json_object_set_new_nocheck failed for invalid UTF-8");
 
 	assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "asdf\xfe")) == 321, "json_object_get after json_object_set_new_nocheck failed");
-
-	jansson_d.jansson.json_decref(string_);
-	jansson_d.jansson.json_decref(object_);
 }
 
 //test_iterators
@@ -358,6 +382,13 @@ unittest
 	jansson_d.jansson.json_t* foo = jansson_d.value.json_string("foo");
 	jansson_d.jansson.json_t* bar = jansson_d.value.json_string("bar");
 	jansson_d.jansson.json_t* baz = jansson_d.value.json_string("baz");
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(object_);
+		jansson_d.jansson.json_decref(foo);
+		jansson_d.jansson.json_decref(bar);
+		jansson_d.jansson.json_decref(baz);
+	}
 
 	assert((object_ != null) && (foo != null) && (bar != null) && (baz != null), "unable to create values");
 
@@ -408,11 +439,6 @@ unittest
 	assert(jansson_d.value.json_object_iter_value(iter) == baz, "json_object_iter_value() fails after json_object_iter_set()");
 
 	assert(jansson_d.value.json_object_get(object_, "b") == baz, "json_object_get() fails after json_object_iter_set()");
-
-	jansson_d.jansson.json_decref(object_);
-	jansson_d.jansson.json_decref(foo);
-	jansson_d.jansson.json_decref(bar);
-	jansson_d.jansson.json_decref(baz);
 }
 
 //test_misc
@@ -422,6 +448,12 @@ unittest
 	jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* string_ = jansson_d.value.json_string("test");
 	jansson_d.jansson.json_t* other_string = jansson_d.value.json_string("other");
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(string_);
+		jansson_d.jansson.json_decref(other_string);
+		jansson_d.jansson.json_decref(object_);
+	}
 
 	assert(object_ != null, "unable to create object");
 
@@ -496,10 +528,6 @@ unittest
 	assert(jansson_d.value.json_object_set_new(object_, null, jansson_d.value.json_integer(432)), "able to set_new null key");
 
 	assert(jansson_d.value.json_object_set_new(object_, "foo", null), "able to set_new null value");
-
-	jansson_d.jansson.json_decref(string_);
-	jansson_d.jansson.json_decref(other_string);
-	jansson_d.jansson.json_decref(object_);
 }
 
 //test_preserve_order
@@ -509,6 +537,10 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(object_);
+	}
 
 	jansson_d.value.json_object_set_new(object_, "foobar", jansson_d.value.json_integer(1));
 	jansson_d.value.json_object_set_new(object_, "bazquux", jansson_d.value.json_integer(2));
@@ -527,13 +559,14 @@ unittest
 
 	char* result = jansson_d.dump.json_dumps(object_, jansson_d.jansson.JSON_PRESERVE_ORDER);
 
+	scope (exit) {
+		jansson_d.jansson_private.jsonp_free(result);
+	}
+
 	if (core.stdc.string.strcmp(expected, result) != 0) {
 		core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "%s != %s", expected, result);
 		assert(false, "JSON_PRESERVE_ORDER doesn't work");
 	}
-
-	jansson_d.jansson_private.jsonp_free(result);
-	jansson_d.jansson.json_decref(object_);
 }
 
 //test_object_foreach
@@ -543,14 +576,16 @@ unittest
 	jansson_d.jansson.json_t* object1 = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2, &("baz\0"[0]), 3);
 	jansson_d.jansson.json_t* object2 = jansson_d.value.json_object();
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(object1);
+		jansson_d.jansson.json_decref(object2);
+	}
+
 	foreach (child_obj; jansson_d.jansson.json_object_foreach(object1)) {
 		jansson_d.jansson.json_object_set(object2, child_obj.key, child_obj.value);
 	}
 
 	assert(jansson_d.value.json_equal(object1, object2), "json_object_foreach failed to iterate all key-value pairs");
-
-	jansson_d.jansson.json_decref(object1);
-	jansson_d.jansson.json_decref(object2);
 }
 
 //test_object_foreach_safe
@@ -559,13 +594,15 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2, &("baz\0"[0]), 3);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(object_);
+	}
+
 	foreach (child_obj; jansson_d.jansson.json_object_foreach_safe(object_)) {
 		jansson_d.value.json_object_del(object_, child_obj.key);
 	}
 
 	assert(jansson_d.value.json_object_size(object_) == 0, "json_object_foreach_safe failed to iterate all key-value pairs");
-
-	jansson_d.jansson.json_decref(object_);
 }
 
 //test_bad_args
@@ -574,6 +611,11 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* num = jansson_d.value.json_integer(1);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(obj);
+		jansson_d.jansson.json_decref(num);
+	}
 
 	assert((obj != null) && (num != null), "failed to allocate test objects");
 
@@ -666,7 +708,4 @@ unittest
 	assert(obj.refcount == 1, "unexpected reference count for obj");
 
 	assert(num.refcount == 1, "unexpected reference count for num");
-
-	jansson_d.jansson.json_decref(obj);
-	jansson_d.jansson.json_decref(num);
 }

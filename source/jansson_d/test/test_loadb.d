@@ -29,18 +29,23 @@ unittest
 	{
 		json = jansson_d.load.json_loadb(&(str[0]), len, 0, &error);
 
-		assert(json != null, "json_loadb failed on a valid JSON buffer");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert(json != null, "json_loadb failed on a valid JSON buffer");
 	}
 
 	{
 		json = jansson_d.load.json_loadb(&(str[0]), len - 1, 0, &error);
 
-		if (json != null) {
-			jansson_d.jansson.json_decref(json);
-			assert(false, "json_loadb should have failed on an incomplete buffer, but it didn't");
+		scope (exit) {
+			version (all) {
+				jansson_d.jansson.json_decref(json);
+			}
 		}
+
+		assert(json == null, "json_loadb should have failed on an incomplete buffer, but it didn't");
 	}
 
 	assert(error.line == 1, "json_loadb returned an invalid line number on fail");

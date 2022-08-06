@@ -223,6 +223,10 @@ private int hashtable_do_del(scope .hashtable_t* hashtable_, scope const char* k
 			return -1;
 		}
 
+		scope (exit) {
+			jansson_d.jansson_private.jsonp_free(pair);
+		}
+
 		if ((&pair.list == bucket.first) && (&pair.list == bucket.last)) {
 			bucket.first = bucket.last = &hashtable_.list;
 		} else if (&pair.list == bucket.first) {
@@ -235,7 +239,6 @@ private int hashtable_do_del(scope .hashtable_t* hashtable_, scope const char* k
 		.list_remove(&pair.ordered_list);
 		jansson_d.jansson.json_decref(pair.value);
 
-		jansson_d.jansson_private.jsonp_free(pair);
 		hashtable_.size--;
 
 		return 0;

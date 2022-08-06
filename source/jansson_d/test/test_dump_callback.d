@@ -56,50 +56,35 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads(&(str[0]), 0, null);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(json);
+	}
+
 	assert(json != null, "json_loads failed");
 
 	char* dumped_to_string = jansson_d.dump.json_dumps(json, 0);
 
-	if (dumped_to_string == null) {
-		jansson_d.jansson.json_decref(json);
-		assert(false, "json_dumps failed");
+	scope (exit) {
+		jansson_d.jansson_private.jsonp_free(dumped_to_string);
 	}
+
+	assert(dumped_to_string != null, "json_dumps failed");
 
 	.my_sink s = void;
 	s.off = 0;
 	s.cap = core.stdc.string.strlen(dumped_to_string);
 	s.buf = cast(char*)(core.memory.pureMalloc(s.cap));
 
-	if (s.buf == null) {
-		jansson_d.jansson.json_decref(json);
-		jansson_d.jansson_private.jsonp_free(dumped_to_string);
-		assert(false, "malloc failed");
+	assert(s.buf != null, "malloc failed");
+
+	scope (exit) {
+		core.memory.pureFree(s.buf);
 	}
 
-	if (jansson_d.dump.json_dump_callback(json, &.my_writer, &s, 0) == -1) {
-		jansson_d.jansson.json_decref(json);
-		jansson_d.jansson_private.jsonp_free(dumped_to_string);
-		core.memory.pureFree(s.buf);
-		assert(false, "json_dump_callback failed on an exact-length sink buffer");
-	}
-
-	if (core.stdc.string.strncmp(dumped_to_string, s.buf, s.off) != 0) {
-		jansson_d.jansson.json_decref(json);
-		jansson_d.jansson_private.jsonp_free(dumped_to_string);
-		core.memory.pureFree(s.buf);
-		assert(false, "json_dump_callback and json_dumps did not produce identical output");
-	}
+	assert(jansson_d.dump.json_dump_callback(json, &.my_writer, &s, 0) != -1, "json_dump_callback failed on an exact-length sink buffer");
+	assert(core.stdc.string.strncmp(dumped_to_string, s.buf, s.off) == 0, "json_dump_callback and json_dumps did not produce identical output");
 
 	s.off = 1;
 
-	if (jansson_d.dump.json_dump_callback(json, &.my_writer, &s, 0) != -1) {
-		jansson_d.jansson.json_decref(json);
-		jansson_d.jansson_private.jsonp_free(dumped_to_string);
-		core.memory.pureFree(s.buf);
-		assert(false, "json_dump_callback succeeded on a short buffer when it should have failed");
-	}
-
-	jansson_d.jansson.json_decref(json);
-	jansson_d.jansson_private.jsonp_free(dumped_to_string);
-	core.memory.pureFree(s.buf);
+	assert(jansson_d.dump.json_dump_callback(json, &.my_writer, &s, 0) == -1, "json_dump_callback succeeded on a short buffer when it should have failed");
 }

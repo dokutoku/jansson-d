@@ -51,6 +51,10 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(obj);
+	}
+
 	assert(jansson_d.value.json_object_size(obj) == 0, "incorrect json");
 
 	jansson_d.value.json_object_set_new_nocheck(obj, "test1", jansson_d.value.json_true());
@@ -112,8 +116,6 @@ unittest
 	assert(jansson_d.value.json_object_getn(obj, &(key[0]), key.length) == null, "json_object_deln failed");
 
 	assert(jansson_d.value.json_object_size(obj) == 0, "incorrect json");
-
-	jansson_d.jansson.json_decref(obj);
 }
 
 //test_invalid_keylen
@@ -124,6 +126,11 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* empty_obj = jansson_d.value.json_object();
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(obj);
+		jansson_d.jansson.json_decref(empty_obj);
+	}
 
 	jansson_d.value.json_object_set_new_nocheck(obj, "test1", jansson_d.value.json_true());
 
@@ -142,9 +149,6 @@ unittest
 	assert(jansson_d.value.json_object_deln(empty_obj, &(key[0]), key.length), "json_object_deln with empty object failed");
 
 	assert(jansson_d.value.json_object_deln(obj, &(key[0]), key.length - 1), "json_object_deln with incomplete key failed");
-
-	jansson_d.jansson.json_decref(obj);
-	jansson_d.jansson.json_decref(empty_obj);
 }
 
 //test_binary_keys
@@ -154,6 +158,10 @@ unittest
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 	int key1 = 0;
 	int key2 = 1;
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(obj);
+	}
 
 	jansson_d.jansson.json_object_setn_nocheck(obj, cast(const char*)(&key1), key1.sizeof, jansson_d.value.json_true());
 	jansson_d.jansson.json_object_setn_nocheck(obj, cast(const char*)(&key2), key2.sizeof, jansson_d.value.json_true());
@@ -171,8 +179,6 @@ unittest
 	assert(!jansson_d.value.json_object_deln(obj, cast(const char*)(&key2), key2.sizeof), "cannot del integer key2");
 
 	assert(jansson_d.value.json_object_size(obj) == 0, "binary object size missmatch");
-
-	jansson_d.jansson.json_decref(obj);
 }
 
 //test_dump_order
@@ -186,11 +192,21 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(obj);
+	}
+
 	jansson_d.value.json_object_setn_new_nocheck(obj, &(key1[0]), key1.length, jansson_d.value.json_string("second"));
 	jansson_d.value.json_object_setn_new_nocheck(obj, &(key2[0]), key2.length, jansson_d.value.json_string("first"));
 
 	{
 		char* out_ = cast(char*)(core.memory.pureMalloc(512));
+
+		assert(out_ != null);
+
+		scope (exit) {
+			core.memory.pureFree(out_);
+		}
 
 		{
 			jansson_d.dump.json_dumpb(obj, out_, 512, 0);
@@ -203,9 +219,5 @@ unittest
 
 			assert(core.stdc.string.memcmp(&(expected_sorted_str[0]), out_, expected_sorted_str.length - 1) == 0, "utf-8 sort failed");
 		}
-
-		core.memory.pureFree(out_);
 	}
-
-	jansson_d.jansson.json_decref(obj);
 }

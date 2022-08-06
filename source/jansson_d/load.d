@@ -953,8 +953,11 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 				return null;
 			}
 
-			if (core.stdc.string.memchr(key, '\0', len)) {
+			scope (exit) {
 				jansson_d.jansson_private.jsonp_free(key);
+			}
+
+			if (core.stdc.string.memchr(key, '\0', len)) {
 				.error_set(error, lex, jansson_d.jansson.json_error_code_t.json_error_null_byte_in_key, "NUL byte in object key not supported");
 
 				goto error_;
@@ -962,7 +965,6 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 
 			if (flags & jansson_d.jansson.JSON_REJECT_DUPLICATES) {
 				if (jansson_d.value.json_object_getn(object_, key, len)) {
-					jansson_d.jansson_private.jsonp_free(key);
 					.error_set(error, lex, jansson_d.jansson.json_error_code_t.json_error_duplicate_key, "duplicate object key");
 
 					goto error_;
@@ -972,7 +974,6 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 			.lex_scan(lex, error);
 
 			if (lex.token != ':') {
-				jansson_d.jansson_private.jsonp_free(key);
 				.error_set(error, lex, jansson_d.jansson.json_error_code_t.json_error_invalid_syntax, "':' expected");
 
 				goto error_;
@@ -982,18 +983,12 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 			jansson_d.jansson.json_t* value = .parse_value(lex, flags, error);
 
 			if (value == null) {
-				jansson_d.jansson_private.jsonp_free(key);
-
 				goto error_;
 			}
 
 			if (jansson_d.value.json_object_setn_new_nocheck(object_, key, len, value)) {
-				jansson_d.jansson_private.jsonp_free(key);
-
 				goto error_;
 			}
-
-			jansson_d.jansson_private.jsonp_free(key);
 
 			.lex_scan(lex, error);
 

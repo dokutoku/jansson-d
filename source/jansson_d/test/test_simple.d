@@ -22,6 +22,11 @@ private void test_bad_args()
 		jansson_d.jansson.json_t* num = jansson_d.value.json_integer(1);
 		jansson_d.jansson.json_t* txt = jansson_d.value.json_string("test");
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(num);
+			jansson_d.jansson.json_decref(txt);
+		}
+
 		assert((num != null) && (txt != null), "failed to allocate test objects");
 
 		assert(jansson_d.value.json_string_nocheck(null) == null, "json_string_nocheck with null argument did not return null");
@@ -55,9 +60,6 @@ private void test_bad_args()
 		assert(num.refcount == 1, "unexpected reference count for num");
 
 		assert(txt.refcount == 1, "unexpected reference count for txt");
-
-		jansson_d.jansson.json_decref(num);
-		jansson_d.jansson.json_decref(txt);
 	}
 
 /* Call the simple functions not covered by other tests of the public API */
@@ -70,31 +72,41 @@ unittest
 	{
 		value = mixin (jansson_d.jansson.json_boolean!("1"));
 
-		assert(mixin (jansson_d.jansson.json_is_true!("value")), "json_boolean(1) failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert(mixin (jansson_d.jansson.json_is_true!("value")), "json_boolean(1) failed");
 	}
 
 	{
 		value = mixin (jansson_d.jansson.json_boolean!("-123"));
 
-		assert(mixin (jansson_d.jansson.json_is_true!("value")), "json_boolean(-123) failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert(mixin (jansson_d.jansson.json_is_true!("value")), "json_boolean(-123) failed");
 	}
 
 	{
 		value = mixin (jansson_d.jansson.json_boolean!("0"));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(mixin (jansson_d.jansson.json_is_false!("value")), "json_boolean(0) failed");
 
 		assert(mixin (jansson_d.jansson.json_boolean_value!("value")) == 0, "json_boolean_value failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		value = jansson_d.value.json_integer(1);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
 		assert(mixin (jansson_d.jansson.json_typeof!("value")) == jansson_d.jansson.json_type.JSON_INTEGER, "json_typeof failed");
 
@@ -117,12 +129,14 @@ unittest
 		assert(!mixin (jansson_d.jansson.json_is_boolean!("value")), "json_is_boolean failed");
 
 		assert(!mixin (jansson_d.jansson.json_is_null!("value")), "json_is_null failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		value = jansson_d.value.json_string("foo");
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
 		assert(value != null, "json_string failed");
 
@@ -141,8 +155,6 @@ unittest
 		assert(core.stdc.string.memcmp(jansson_d.value.json_string_value(value), &("hi\0ho\0"[0]), 6) == 0, "invalid string value");
 
 		assert(jansson_d.value.json_string_length(value) == 5, "invalid string length");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
@@ -161,6 +173,10 @@ unittest
 	{
 		value = jansson_d.value.json_string_nocheck("foo");
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(value != null, "json_string_nocheck failed");
 
 		assert(!core.stdc.string.strcmp(jansson_d.value.json_string_value(value), "foo"), "invalid string value");
@@ -178,13 +194,15 @@ unittest
 		assert(core.stdc.string.memcmp(jansson_d.value.json_string_value(value), &("hi\0ho\0"[0]), 6) == 0, "invalid string value");
 
 		assert(jansson_d.value.json_string_length(value) == 5, "invalid string length");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* invalid UTF-8 */
 		value = jansson_d.value.json_string_nocheck("qu\xff");
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
 		assert(value != null, "json_string_nocheck failed");
 
@@ -197,12 +215,14 @@ unittest
 		assert(!core.stdc.string.strcmp(jansson_d.value.json_string_value(value), "\xfd\xfe\xff"), "invalid string value");
 
 		assert(jansson_d.value.json_string_length(value) == 3, "invalid string length");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		value = jansson_d.value.json_integer(123);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
 		assert(value != null, "json_integer failed");
 
@@ -215,12 +235,14 @@ unittest
 		assert(jansson_d.value.json_integer_value(value) == 321, "invalid integer value");
 
 		assert(jansson_d.value.json_number_value(value) == 321.0, "invalid number value");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		value = jansson_d.value.json_real(123.123);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
 		assert(value != null, "json_real failed");
 
@@ -233,41 +255,47 @@ unittest
 		assert(jansson_d.value.json_real_value(value) == 321.321, "invalid real value");
 
 		assert(jansson_d.value.json_number_value(value) == 321.321, "invalid number value");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		value = jansson_d.value.json_true();
 
-		assert(value != null, "json_true failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert(value != null, "json_true failed");
 	}
 
 	{
 		value = jansson_d.value.json_false();
 
-		assert(value != null, "json_false failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert(value != null, "json_false failed");
 	}
 
 	{
 		value = jansson_d.value.json_null();
 
-		assert(value != null, "json_null failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert(value != null, "json_null failed");
 	}
 
 	{
 		/* Test reference counting on singletons (true, false, null) */
 		value = jansson_d.value.json_true();
 
-		assert(value.refcount == size_t.max, "refcounting true works incorrectly");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert(value.refcount == size_t.max, "refcounting true works incorrectly");
 	}
 
 	assert(value.refcount == size_t.max, "refcounting true works incorrectly");
@@ -316,6 +344,10 @@ unittest
 		static if (__traits(compiles, jansson_d.jansson.json_auto_t)) {
 			value = jansson_d.value.json_string("foo");
 
+			scope (exit) {
+				jansson_d.jansson.json_decref(value);
+			}
+
 			{
 				jansson_d.jansson.json_auto_t* test = jansson_d.jansson.json_incref(value);
 
@@ -324,8 +356,6 @@ unittest
 			}
 
 			assert(value.refcount == 1, "automatic decrement failed");
-
-			jansson_d.jansson.json_decref(value);
 		}
 	}
 

@@ -127,6 +127,10 @@ private void read_conf(core.stdc.stdio.FILE* conffile)
 	{
 		char* buffer = .loadfile(conffile);
 
+		scope (exit) {
+			core.memory.pureFree(buffer);
+		}
+
 		for (char* line = core.stdc.string.strtok(buffer, "\r\n"); line != null; line = core.stdc.string.strtok(null, "\r\n")) {
 			if (!core.stdc.string.strncmp(line, "export ", 7)) {
 				continue;
@@ -177,8 +181,6 @@ private void read_conf(core.stdc.stdio.FILE* conffile)
 				.conf.have_hashseed = 0;
 			}
 		}
-
-		core.memory.pureFree(buffer);
 	}
 
 nothrow @nogc @live
@@ -205,7 +207,16 @@ private int cmpfile(scope const char* str, scope const char* path, scope const c
 			core.stdc.stdlib.exit(1);
 		}
 
+		scope (exit) {
+			core.stdc.stdio.fclose(file);
+		}
+
 		char* buffer = .loadfile(file);
+
+		scope (exit) {
+			core.memory.pureFree(buffer);
+		}
+
 		int ret = void;
 
 		if (core.stdc.string.strcmp(buffer, str) != 0) {
@@ -213,9 +224,6 @@ private int cmpfile(scope const char* str, scope const char* path, scope const c
 		} else {
 			ret = 0;
 		}
-
-		core.memory.pureFree(buffer);
-		core.stdc.stdio.fclose(file);
 
 		return ret;
 	}
@@ -295,8 +303,12 @@ int use_conf(scope const char* test_path)
 		if (.conf.strip) {
 			/* Load to memory, strip leading and trailing whitespace */
 			buffer = .loadfile(infile);
+
+			scope (exit) {
+				core.memory.pureFree(buffer);
+			}
+
 			json = jansson_d.jansson.json_loads(.strip(buffer), 0, &error);
-			core.memory.pureFree(buffer);
 		} else {
 			json = jansson_d.jansson.json_loadf(infile, 0, &error);
 		}
@@ -314,14 +326,19 @@ int use_conf(scope const char* test_path)
 			return ret;
 		}
 
-		buffer =jansson_d.jansson.json_dumps(json, flags);
-		ret = .cmpfile(buffer, test_path, "output");
-
-		if (buffer != null) {
-			core.memory.pureFree(buffer);
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
 		}
 
-		jansson_d.jansson.json_decref(json);
+		buffer =jansson_d.jansson.json_dumps(json, flags);
+
+		scope (exit) {
+			if (buffer != null) {
+				core.memory.pureFree(buffer);
+			}
+		}
+
+		ret = .cmpfile(buffer, test_path, "output");
 
 		return ret;
 	}
@@ -416,13 +433,16 @@ int use_env()
 			size_t used = 0;
 			char* buffer = null;
 
+			scope (exit) {
+				core.memory.pureFree(buffer);
+			}
+
 			while (true) {
 				size = (size == 0) ? (128) : (size * 2);
 				char* buf_ck = cast(char*)(core.memory.pureRealloc(buffer, size));
 
 				if (buf_ck == null) {
 					core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "Unable to allocate %d bytes\n", cast(int)(size));
-					core.memory.pureFree(buffer);
 
 					return 1;
 				}
@@ -441,7 +461,6 @@ int use_env()
 			}
 
 			json = jansson_d.jansson.json_loads(.strip(buffer), 0, &error);
-			core.memory.pureFree(buffer);
 		} else {
 			json = jansson_d.jansson.json_loadf(core.stdc.stdio.stdin, 0, &error);
 		}
@@ -452,8 +471,11 @@ int use_env()
 			return 1;
 		}
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
+
 		jansson_d.jansson.json_dumpf(json, core.stdc.stdio.stdout, flags);
-		jansson_d.jansson.json_decref(json);
 
 		return 0;
 	}

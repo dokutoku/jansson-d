@@ -67,99 +67,117 @@ unittest
 	{
 		value = jansson_d.pack_unpack.json_pack("b", 1);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(mixin (jansson_d.jansson.json_is_true!("value")), "json_pack boolean failed");
 
 		assert(value.refcount == size_t.max, "json_pack boolean refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* false */
 		value = jansson_d.pack_unpack.json_pack("b", 0);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(mixin (jansson_d.jansson.json_is_false!("value")), "json_pack boolean failed");
 
 		assert(value.refcount == size_t.max, "json_pack boolean refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* null */
 		value = jansson_d.pack_unpack.json_pack("n");
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(mixin (jansson_d.jansson.json_is_null!("value")), "json_pack null failed");
 
 		assert(value.refcount == size_t.max, "json_pack null refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* integer */
 		value = jansson_d.pack_unpack.json_pack("i", 1);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 1), "json_pack integer failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack integer refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* integer from json_int_t */
 		value = jansson_d.pack_unpack.json_pack("I", cast(jansson_d.jansson.json_int_t)(555555));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 555555), "json_pack jansson_d.jansson.json_int_t failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack integer refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* real */
 		value = jansson_d.pack_unpack.json_pack("f", 1.0);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_real!("value"))) && (jansson_d.value.json_real_value(value) == 1.0), "json_pack real failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack real refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* string */
 		value = jansson_d.pack_unpack.json_pack("s", &("test\0"[0]));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack string failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* nullable string (defined case) */
 		value = jansson_d.pack_unpack.json_pack("s?", &("test\0"[0]));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack nullable string (defined case) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack nullable string (defined case) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* nullable string (null case) */
 		value = jansson_d.pack_unpack.json_pack("s?", null);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(mixin (jansson_d.jansson.json_is_null!("value")), "json_pack nullable string (null case) failed");
 
 		assert(value.refcount == size_t.max, "json_pack nullable string (null case) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	jansson_d.jansson.json_error_t error = void;
@@ -182,22 +200,26 @@ unittest
 		/* string and length (int) */
 		value = jansson_d.pack_unpack.json_pack("s#", &("test asdf\0"[0]), 4);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack string and length failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* string and length (size_t) */
 		value = jansson_d.pack_unpack.json_pack("s%", &("test asdf\0"[0]), cast(size_t)(4));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack string and length failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	char[4] buffer = ['t', 'e', 's', 't'];
@@ -206,22 +228,26 @@ unittest
 		/* string and length (int), non-NUL terminated string */
 		value = jansson_d.pack_unpack.json_pack("s#", &(buffer[0]), buffer.length);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack string and length (int) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length (int) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* string and length (size_t), non-NUL terminated string */
 		value = jansson_d.pack_unpack.json_pack("s%", &(buffer[0]), buffer.length);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack string and length (size_t) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length (size_t) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
@@ -229,112 +255,132 @@ unittest
 		assert(jansson_d.pack_unpack.json_pack("s+", &("test\0"[0]), null) == null, "json_pack string concatenation succeeded with null string");
 		value = jansson_d.pack_unpack.json_pack("s++", &("te\0"[0]), &("st\0"[0]), &("ing\0"[0]));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("testing", jansson_d.value.json_string_value(value))), "json_pack string concatenation failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string concatenation refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* string concatenation and length (int) */
 		value = jansson_d.pack_unpack.json_pack("s#+#+", &("test\0"[0]), 1, &("test\0"[0]), 2, &("test\0"[0]));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("ttetest", jansson_d.value.json_string_value(value))), "json_pack string concatenation and length (int) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string concatenation and length (int) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* string concatenation and length (size_t) */
 		value = jansson_d.pack_unpack.json_pack("s%+%+", &("test\0"[0]), cast(size_t)(1), &("test\0"[0]), cast(size_t)(2), &("test\0"[0]));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("ttetest", jansson_d.value.json_string_value(value))), "json_pack string concatenation and length (size_t) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string concatenation and length (size_t) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* empty object */
 		value = jansson_d.pack_unpack.json_pack("{}", 1.0);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_object!("value"))) && (jansson_d.value.json_object_size(value) == 0), "json_pack empty object failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack empty object refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* empty list */
 		value = jansson_d.pack_unpack.json_pack("[]", 1.0);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 0), "json_pack empty list failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack empty list failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* non-incref'd object */
 		value = jansson_d.pack_unpack.json_pack("o", jansson_d.value.json_integer(1));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 1), "json_pack object failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack integer refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* non-incref'd nullable object (defined case) */
 		value = jansson_d.pack_unpack.json_pack("o?", jansson_d.value.json_integer(1));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 1), "json_pack nullable object (defined case) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack nullable object (defined case) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* non-incref'd nullable object (null case) */
 		value = jansson_d.pack_unpack.json_pack("o?", null);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(mixin (jansson_d.jansson.json_is_null!("value")), "json_pack nullable object (null case) failed");
 
 		assert(value.refcount == size_t.max, "json_pack nullable object (null case) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* incref'd object */
 		value = jansson_d.pack_unpack.json_pack("O", jansson_d.value.json_integer(1));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 1), "json_pack object failed");
 
 		assert(value.refcount == cast(size_t)(2), "json_pack integer refcount failed");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* incref'd nullable object (defined case) */
 		value = jansson_d.pack_unpack.json_pack("O?", jansson_d.value.json_integer(1));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 1), "json_pack incref'd nullable object (defined case) failed");
 
 		assert(value.refcount == cast(size_t)(2), "json_pack incref'd nullable object (defined case) refcount failed");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
@@ -350,26 +396,30 @@ unittest
 		/* simple object */
 		value = jansson_d.pack_unpack.json_pack("{s:[]}", &("foo\0"[0]));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_object!("value"))) && (jansson_d.value.json_object_size(value) == 1), "json_pack array failed");
 
 		assert(mixin (jansson_d.jansson.json_is_array!("jansson_d.value.json_object_get(value, `foo`)")), "json_pack array failed");
 
 		assert(jansson_d.value.json_object_get(value, "foo").refcount == cast(size_t)(1), "json_pack object refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
 		/* object with complex key */
 		value = jansson_d.pack_unpack.json_pack("{s+#+: []}", &("foo\0"[0]), &("barbar\0"[0]), 3, &("baz\0"[0]));
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_object!("value"))) && (jansson_d.value.json_object_size(value) == 1), "json_pack array failed");
 
 		assert(mixin (jansson_d.jansson.json_is_array!("jansson_d.value.json_object_get(value, `foobarbaz`)")), "json_pack array failed");
 
 		assert(jansson_d.value.json_object_get(value, "foobarbaz").refcount == cast(size_t)(1), "json_pack object refcount failed");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
@@ -392,9 +442,11 @@ unittest
 	{
 		value = jansson_d.pack_unpack.json_pack("{s:s*,s:o*,s:O*}", &("a\0"[0]), null, &("b\0"[0]), null, &("c\0"[0]), null);
 
-		assert((mixin (jansson_d.jansson.json_is_object!("value"))) && (jansson_d.value.json_object_size(value) == 0), "json_pack object optional failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert((mixin (jansson_d.jansson.json_is_object!("value"))) && (jansson_d.value.json_object_size(value) == 0), "json_pack object optional failed");
 	}
 
 	{
@@ -415,13 +467,15 @@ unittest
 		/* simple array */
 		value = jansson_d.pack_unpack.json_pack("[i,i,i]", 0, 1, 2);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 3), "json_pack object failed");
 
 		for (size_t i = 0; i < 3; i++) {
 			assert((mixin (jansson_d.jansson.json_is_integer!("jansson_d.value.json_array_get(value, i)"))) && (jansson_d.value.json_integer_value(jansson_d.value.json_array_get(value, i)) == i), "json_pack integer array failed");
 		}
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{
@@ -444,9 +498,11 @@ unittest
 	{
 		value = jansson_d.pack_unpack.json_pack("[s*,o*,O*]", null, null, null);
 
-		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 0), "json_pack array optional failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 0), "json_pack array optional failed");
 	}
 
 	{
@@ -469,27 +525,33 @@ unittest
 	{
 		value = jansson_d.pack_unpack.json_pack(" s\t ", &("test\0"[0]));
 
-		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack string (with whitespace) failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert((mixin (jansson_d.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson_d.value.json_string_value(value))), "json_pack string (with whitespace) failed");
 	}
 
 	/* Whitespace; empty array */
 	{
 		value = jansson_d.pack_unpack.json_pack("[ ]");
 
-		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 0), "json_pack empty array (with whitespace) failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 0), "json_pack empty array (with whitespace) failed");
 	}
 
 	/* Whitespace; array */
 	{
 		value = jansson_d.pack_unpack.json_pack("[ i , i,  i ] ", 1, 2, 3);
 
-		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 3), "json_pack array (with whitespace) failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
 
-		jansson_d.jansson.json_decref(value);
+		assert((mixin (jansson_d.jansson.json_is_array!("value"))) && (jansson_d.value.json_array_size(value) == 3), "json_pack array (with whitespace) failed");
 	}
 
 	/*
@@ -582,13 +644,15 @@ unittest
 		/* null value followed by object still steals the object's ref */
 		value = jansson_d.jansson.json_incref(jansson_d.value.json_object());
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+		}
+
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:s,s:o}", &("badnull\0"[0]), null, &("dontleak\0"[0]), value) == null, "json_pack failed to catch null value");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null string", "<args>", 1, 4, 4);
 
 		assert(value.refcount == cast(size_t)(1), "json_pack failed to steal reference after error.");
-
-		jansson_d.jansson.json_decref(value);
 	}
 
 	{

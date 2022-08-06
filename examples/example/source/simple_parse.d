@@ -255,10 +255,13 @@ int main(string[] argv)
 			/* parse text into JSON structure */
 			jansson_d.jansson.json_t* root = .load_json(&(line[0]));
 
+			scope (exit) {
+				jansson_d.jansson.json_decref(root);
+			}
+
 			if (root != null) {
 				/* print and release the JSON structure */
 				.print_json(root);
-				jansson_d.jansson.json_decref(root);
 			}
 		}
 

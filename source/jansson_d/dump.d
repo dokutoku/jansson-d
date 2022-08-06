@@ -469,6 +469,10 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 						return -1;
 					}
 
+					scope (exit) {
+						jansson_d.jansson_private.jsonp_free(keys);
+					}
+
 					size_t i = 0;
 
 					while (iter != null) {
@@ -493,27 +497,19 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 						.dump_string(key.key, key.len, dump, data, flags);
 
 						if ((dump(separator, separator_length, data)) || (.do_dump(value, flags, depth + 1, parents, dump, data))) {
-							jansson_d.jansson_private.jsonp_free(keys);
-
 							return -1;
 						}
 
 						if (i < (size - 1)) {
 							if ((dump(",", 1, data)) || (.dump_indent(flags, depth + 1, 1, dump, data))) {
-								jansson_d.jansson_private.jsonp_free(keys);
-
 								return -1;
 							}
 						} else {
 							if (.dump_indent(flags, depth, 0, dump, data)) {
-								jansson_d.jansson_private.jsonp_free(keys);
-
 								return -1;
 							}
 						}
 					}
-
-					jansson_d.jansson_private.jsonp_free(keys);
 				} else {
 					/* Don't sort keys */
 

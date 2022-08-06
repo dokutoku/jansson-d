@@ -24,6 +24,12 @@ unittest
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(five);
+		jansson_d.jansson.json_decref(seven);
+		jansson_d.jansson.json_decref(array);
+	}
+
 	assert(array != null, "unable to create array");
 
 	assert((five != null) && (seven != null), "unable to create integer");
@@ -97,10 +103,6 @@ unittest
 	assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 321), "json_array_append_new works incorrectly");
 
 	assert(jansson_d.value.json_array_append_new(array, null), "able to append_new null value");
-
-	jansson_d.jansson.json_decref(five);
-	jansson_d.jansson.json_decref(seven);
-	jansson_d.jansson.json_decref(array);
 }
 
 //test_insert
@@ -111,6 +113,13 @@ unittest
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
 	jansson_d.jansson.json_t* eleven = jansson_d.value.json_integer(11);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(five);
+		jansson_d.jansson.json_decref(seven);
+		jansson_d.jansson.json_decref(eleven);
+		jansson_d.jansson.json_decref(array);
+	}
 
 	assert(array != null, "unable to create array");
 
@@ -159,11 +168,6 @@ unittest
 	}
 
 	assert(jansson_d.value.json_array_size(array) == 24, "array size is invalid after loop insertion");
-
-	jansson_d.jansson.json_decref(five);
-	jansson_d.jansson.json_decref(seven);
-	jansson_d.jansson.json_decref(eleven);
-	jansson_d.jansson.json_decref(array);
 }
 
 //test_remove
@@ -174,47 +178,55 @@ unittest
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
 
-	assert(array != null, "unable to create array");
+	{
+		scope (exit) {
+			jansson_d.jansson.json_decref(array);
+		}
 
-	assert(five != null, "unable to create integer");
+		assert(array != null, "unable to create array");
 
-	assert(seven != null, "unable to create integer");
+		assert(five != null, "unable to create integer");
 
-	assert(jansson_d.value.json_array_remove(array, 0), "able to remove an unexisting index");
+		assert(seven != null, "unable to create integer");
 
-	assert(!jansson_d.jansson.json_array_append(array, five), "unable to append");
+		assert(jansson_d.value.json_array_remove(array, 0), "able to remove an unexisting index");
 
-	assert(jansson_d.value.json_array_remove(array, 1), "able to remove an unexisting index");
+		assert(!jansson_d.jansson.json_array_append(array, five), "unable to append");
 
-	assert(!jansson_d.value.json_array_remove(array, 0), "unable to remove");
+		assert(jansson_d.value.json_array_remove(array, 1), "able to remove an unexisting index");
 
-	assert(jansson_d.value.json_array_size(array) == 0, "array size is invalid after removing");
+		assert(!jansson_d.value.json_array_remove(array, 0), "unable to remove");
 
-	assert((!jansson_d.jansson.json_array_append(array, five)) && (!jansson_d.jansson.json_array_append(array, seven)) && (!jansson_d.jansson.json_array_append(array, five)) && (!jansson_d.jansson.json_array_append(array, seven)), "unable to append");
+		assert(jansson_d.value.json_array_size(array) == 0, "array size is invalid after removing");
 
-	assert(!jansson_d.value.json_array_remove(array, 2), "unable to remove");
+		assert((!jansson_d.jansson.json_array_append(array, five)) && (!jansson_d.jansson.json_array_append(array, seven)) && (!jansson_d.jansson.json_array_append(array, five)) && (!jansson_d.jansson.json_array_append(array, seven)), "unable to append");
 
-	assert(jansson_d.value.json_array_size(array) == 3, "array size is invalid after removing");
+		assert(!jansson_d.value.json_array_remove(array, 2), "unable to remove");
 
-	assert((jansson_d.value.json_array_get(array, 0) == five) && (jansson_d.value.json_array_get(array, 1) == seven) && (jansson_d.value.json_array_get(array, 2) == seven), "remove works incorrectly");
+		assert(jansson_d.value.json_array_size(array) == 3, "array size is invalid after removing");
 
-	jansson_d.jansson.json_decref(array);
-
-	array = jansson_d.value.json_array();
-
-	for (size_t i = 0; i < 4; i++) {
-		jansson_d.jansson.json_array_append(array, five);
-		jansson_d.jansson.json_array_append(array, seven);
+		assert((jansson_d.value.json_array_get(array, 0) == five) && (jansson_d.value.json_array_get(array, 1) == seven) && (jansson_d.value.json_array_get(array, 2) == seven), "remove works incorrectly");
 	}
 
-	assert(jansson_d.value.json_array_size(array) == 8, "unable to append 8 items to array");
+	{
+		array = jansson_d.value.json_array();
 
-	/* Remove an element from a "full" array. */
-	jansson_d.value.json_array_remove(array, 5);
+		scope (exit) {
+			jansson_d.jansson.json_decref(five);
+			jansson_d.jansson.json_decref(seven);
+			jansson_d.jansson.json_decref(array);
+		}
 
-	jansson_d.jansson.json_decref(five);
-	jansson_d.jansson.json_decref(seven);
-	jansson_d.jansson.json_decref(array);
+		for (size_t i = 0; i < 4; i++) {
+			jansson_d.jansson.json_array_append(array, five);
+			jansson_d.jansson.json_array_append(array, seven);
+		}
+
+		assert(jansson_d.value.json_array_size(array) == 8, "unable to append 8 items to array");
+
+		/* Remove an element from a "full" array. */
+		jansson_d.value.json_array_remove(array, 5);
+	}
 }
 
 //test_clear
@@ -224,6 +236,12 @@ unittest
 	jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(five);
+		jansson_d.jansson.json_decref(seven);
+		jansson_d.jansson.json_decref(array);
+	}
 
 	assert(array != null, "unable to create array");
 
@@ -242,10 +260,6 @@ unittest
 	assert(!jansson_d.value.json_array_clear(array), "unable to clear");
 
 	assert(jansson_d.value.json_array_size(array) == 0, "array size is invalid after clearing");
-
-	jansson_d.jansson.json_decref(five);
-	jansson_d.jansson.json_decref(seven);
-	jansson_d.jansson.json_decref(array);
 }
 
 //test_extend
@@ -256,6 +270,13 @@ unittest
 	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(five);
+		jansson_d.jansson.json_decref(seven);
+		jansson_d.jansson.json_decref(array1);
+		jansson_d.jansson.json_decref(array2);
+	}
 
 	assert((array1 != null) && (array2 != null), "unable to create array");
 
@@ -280,11 +301,6 @@ unittest
 	for (size_t i = 10; i < 20; i++) {
 		assert(jansson_d.value.json_array_get(array1, i) == seven, "invalid array contents after extending");
 	}
-
-	jansson_d.jansson.json_decref(five);
-	jansson_d.jansson.json_decref(seven);
-	jansson_d.jansson.json_decref(array1);
-	jansson_d.jansson.json_decref(array2);
 }
 
 //test_circular
@@ -296,34 +312,41 @@ unittest
 
 	jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
 
-	assert(array1 != null, "unable to create array");
+	{
+		scope (exit) {
+			jansson_d.jansson.json_decref(array1);
+		}
 
-	assert(jansson_d.jansson.json_array_append(array1, array1) != 0, "able to append self");
+		assert(array1 != null, "unable to create array");
 
-	assert(jansson_d.jansson.json_array_insert(array1, 0, array1) != 0, "able to insert self");
+		assert(jansson_d.jansson.json_array_append(array1, array1) != 0, "able to append self");
 
-	assert(!jansson_d.value.json_array_append_new(array1, jansson_d.value.json_true()), "failed to append true");
+		assert(jansson_d.jansson.json_array_insert(array1, 0, array1) != 0, "able to insert self");
 
-	assert(jansson_d.jansson.json_array_set(array1, 0, array1) != 0, "able to set self");
+		assert(!jansson_d.value.json_array_append_new(array1, jansson_d.value.json_true()), "failed to append true");
 
-	jansson_d.jansson.json_decref(array1);
+		assert(jansson_d.jansson.json_array_set(array1, 0, array1) != 0, "able to set self");
+	}
 
 	/* create circular references */
+	{
+		array1 = jansson_d.value.json_array();
+		jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 
-	array1 = jansson_d.value.json_array();
-	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
+		scope (exit) {
+			/* decref twice to deal with the circular references */
+			jansson_d.jansson.json_decref(array1);
+			jansson_d.jansson.json_decref(array2);
+			jansson_d.jansson.json_decref(array1);
+		}
 
-	assert((array1 != null) && (array2 != null), "unable to create array");
+		assert((array1 != null) && (array2 != null), "unable to create array");
 
-	assert((!jansson_d.jansson.json_array_append(array1, array2)) && (!jansson_d.jansson.json_array_append(array2, array1)), "unable to append");
+		assert((!jansson_d.jansson.json_array_append(array1, array2)) && (!jansson_d.jansson.json_array_append(array2, array1)), "unable to append");
 
-	/* circularity is detected when dumping */
-	assert(jansson_d.dump.json_dumps(array1, 0) == null, "able to dump circulars");
-
-	/* decref twice to deal with the circular references */
-	jansson_d.jansson.json_decref(array1);
-	jansson_d.jansson.json_decref(array2);
-	jansson_d.jansson.json_decref(array1);
+		/* circularity is detected when dumping */
+		assert(jansson_d.dump.json_dumps(array1, 0) == null, "able to dump circulars");
+	}
 }
 
 //test_array_foreach
@@ -333,14 +356,16 @@ unittest
 	jansson_d.jansson.json_t* array1 = jansson_d.pack_unpack.json_pack("[sisisi]", &("foo"[0]), 1, &("bar"[0]), 2, &("baz\0"[0]), 3);
 	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(array1);
+		jansson_d.jansson.json_decref(array2);
+	}
+
 	foreach (child_array1; jansson_d.jansson.json_array_foreach(array1)) {
 		jansson_d.jansson.json_array_append(array2, child_array1.value);
 	}
 
 	assert(jansson_d.value.json_equal(array1, array2), "json_array_foreach failed to iterate all elements");
-
-	jansson_d.jansson.json_decref(array1);
-	jansson_d.jansson.json_decref(array2);
 }
 
 //test_bad_args
@@ -349,6 +374,11 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* arr = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* num = jansson_d.value.json_integer(1);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(num);
+		jansson_d.jansson.json_decref(arr);
+	}
 
 	assert((arr != null) && (num != null), "failed to create required objects");
 
@@ -403,7 +433,4 @@ unittest
 	assert(num.refcount == 1, "unexpected reference count on num");
 
 	assert(arr.refcount == 1, "unexpected reference count on arr");
-
-	jansson_d.jansson.json_decref(num);
-	jansson_d.jansson.json_decref(arr);
 }

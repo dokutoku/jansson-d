@@ -122,6 +122,16 @@ unittest
 	jansson_d.jansson.json_t* dblnum = jansson_d.value.json_real(0.5);
 	jansson_d.jansson.json_t* dumpobj = jansson_d.pack_unpack.json_pack("{s:[iiis], s:s}", &("key1\0"[0]), 1, 2, 3, &("txt\0"[0]), &("key2\0"[0]), &("v2\0"[0]));
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(obj);
+		jansson_d.jansson.json_decref(arr1);
+		jansson_d.jansson.json_decref(arr2);
+		jansson_d.jansson.json_decref(txt);
+		jansson_d.jansson.json_decref(intnum);
+		jansson_d.jansson.json_decref(dblnum);
+		jansson_d.jansson.json_decref(dumpobj);
+	}
+
 	assert((obj != null) && (arr1 != null) && (arr2 != null) && (txt != null) && (intnum != null) && (dblnum != null) && (dumpobj != null), "failed to allocate basic objects");
 
 	jansson_d.jansson.json_malloc_t orig_malloc = void;
@@ -177,11 +187,4 @@ unittest
 	mixin (.chaos_loop!("jansson_d.value.json_string_set_nocheck(txt, `test`)", "", ""));
 
 	jansson_d.memory.json_set_alloc_funcs(orig_malloc, orig_free);
-	jansson_d.jansson.json_decref(obj);
-	jansson_d.jansson.json_decref(arr1);
-	jansson_d.jansson.json_decref(arr2);
-	jansson_d.jansson.json_decref(txt);
-	jansson_d.jansson.json_decref(intnum);
-	jansson_d.jansson.json_decref(dblnum);
-	jansson_d.jansson.json_decref(dumpobj);
 }

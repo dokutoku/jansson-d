@@ -65,9 +65,11 @@ unittest
 	{
 		json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
 
-		assert(json != null, "json_load_callback failed on a valid callback");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert(json != null, "json_load_callback failed on a valid callback");
 	}
 
 	s.off = 0;
@@ -77,10 +79,13 @@ unittest
 	{
 		json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
 
-		if (json != null) {
-			jansson_d.jansson.json_decref(json);
-			assert(false, "json_load_callback should have failed on an incomplete stream, but it didn't");
+		scope (exit) {
+			version (all) {
+				jansson_d.jansson.json_decref(json);
+			}
 		}
+
+		assert(json == null, "json_load_callback should have failed on an incomplete stream, but it didn't");
 
 		assert(core.stdc.string.strcmp(&(error.source[0]), "<callback>") == 0, "json_load_callback returned an invalid error source");
 
@@ -90,10 +95,13 @@ unittest
 	{
 		json = jansson_d.load.json_load_callback(null, null, 0, &error);
 
-		if (json != null) {
-			jansson_d.jansson.json_decref(json);
-			assert(false, "json_load_callback should have failed on null load callback, but it didn't");
+		scope (exit) {
+			version (all) {
+				jansson_d.jansson.json_decref(json);
+			}
 		}
+
+		assert(json == null, "json_load_callback should have failed on null load callback, but it didn't");
 
 		assert(core.stdc.string.strcmp(&(error.text[0]), "wrong arguments") == 0, "json_load_callback returned an invalid error message for a null load callback");
 	}

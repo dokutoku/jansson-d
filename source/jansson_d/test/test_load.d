@@ -86,9 +86,11 @@ unittest
 
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads(text, jansson_d.jansson.JSON_DISABLE_EOF_CHECK, &error);
 
-	assert(json != null, "json_loads failed with JSON_DISABLE_EOF_CHECK");
+	scope (exit) {
+		jansson_d.jansson.json_decref(json);
+	}
 
-	jansson_d.jansson.json_decref(json);
+	assert(json != null, "json_loads failed with JSON_DISABLE_EOF_CHECK");
 }
 
 //decode_any
@@ -101,33 +103,41 @@ unittest
 	{
 		json = jansson_d.load.json_loads("\"foo\"", jansson_d.jansson.JSON_DECODE_ANY, &error);
 
-		assert((json != null) && (mixin (jansson_d.jansson.json_is_string!("json"))), "json_load decoded any failed - string");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert((json != null) && (mixin (jansson_d.jansson.json_is_string!("json"))), "json_load decoded any failed - string");
 	}
 
 	{
 		json = jansson_d.load.json_loads("42", jansson_d.jansson.JSON_DECODE_ANY, &error);
 
-		assert((json != null) && (mixin (jansson_d.jansson.json_is_integer!("json"))), "json_load decoded any failed - integer");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert((json != null) && (mixin (jansson_d.jansson.json_is_integer!("json"))), "json_load decoded any failed - integer");
 	}
 
 	{
 		json = jansson_d.load.json_loads("true", jansson_d.jansson.JSON_DECODE_ANY, &error);
 
-		assert((json != null) && (mixin (jansson_d.jansson.json_is_true!("json"))), "json_load decoded any failed - boolean");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert((json != null) && (mixin (jansson_d.jansson.json_is_true!("json"))), "json_load decoded any failed - boolean");
 	}
 
 	{
 		json = jansson_d.load.json_loads("null", jansson_d.jansson.JSON_DECODE_ANY, &error);
 
-		assert((json != null) && (mixin (jansson_d.jansson.json_is_null!("json"))), "json_load decoded any failed - null");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert((json != null) && (mixin (jansson_d.jansson.json_is_null!("json"))), "json_load decoded any failed - null");
 	}
 }
 
@@ -141,9 +151,11 @@ unittest
 	{
 		json = jansson_d.load.json_loads("42", jansson_d.jansson.JSON_DECODE_INT_AS_REAL | jansson_d.jansson.JSON_DECODE_ANY, &error);
 
-		assert((json != null) && (mixin (jansson_d.jansson.json_is_real!("json"))) && (jansson_d.value.json_real_value(json) == 42.0), "json_load decode int as real failed - int");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert((json != null) && (mixin (jansson_d.jansson.json_is_real!("json"))) && (jansson_d.value.json_real_value(json) == 42.0), "json_load decode int as real failed - int");
 	}
 
 	static if (jansson_d.jansson_config.JSON_INTEGER_IS_LONG_LONG) {
@@ -153,9 +165,11 @@ unittest
 
 		json = jansson_d.load.json_loads(imprecise, jansson_d.jansson.JSON_DECODE_INT_AS_REAL | jansson_d.jansson.JSON_DECODE_ANY, &error);
 
-		assert((json != null) && (mixin (jansson_d.jansson.json_is_real!("json"))) && (expected == cast(jansson_d.jansson.json_int_t)(jansson_d.value.json_real_value(json))), "json_load decode int as real failed - expected imprecision");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert((json != null) && (mixin (jansson_d.jansson.json_is_real!("json"))) && (expected == cast(jansson_d.jansson.json_int_t)(jansson_d.value.json_real_value(json))), "json_load decode int as real failed - expected imprecision");
 	}
 
 	{
@@ -170,9 +184,11 @@ unittest
 
 		json = jansson_d.load.json_loads(&(big[0]), jansson_d.jansson.JSON_DECODE_INT_AS_REAL | jansson_d.jansson.JSON_DECODE_ANY, &error);
 
-		assert((json == null) && (core.stdc.string.strcmp(&(error.text[0]), "real number overflow") == 0) && (jansson_d.jansson.json_error_code(&error) == jansson_d.jansson.json_error_code_t.json_error_numeric_overflow), "json_load decode int as real failed - expected overflow");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert((json == null) && (core.stdc.string.strcmp(&(error.text[0]), "real number overflow") == 0) && (jansson_d.jansson.json_error_code(&error) == jansson_d.jansson.json_error_code_t.json_error_numeric_overflow), "json_load decode int as real failed - expected overflow");
 	}
 }
 
@@ -185,13 +201,15 @@ unittest
 	size_t len = 20;
 	jansson_d.jansson.json_t* json = jansson_d.load.json_loads(text, jansson_d.jansson.JSON_ALLOW_NUL | jansson_d.jansson.JSON_DECODE_ANY, null);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(json);
+	}
+
 	assert((json != null) && (mixin (jansson_d.jansson.json_is_string!("json"))), "unable to decode embedded NUL byte");
 
 	assert(jansson_d.value.json_string_length(json) == len, "decoder returned wrong string length");
 
 	assert(core.stdc.string.memcmp(jansson_d.value.json_string_value(json), expected, len + 1) == 0, "decoder returned wrong string content");
-
-	jansson_d.jansson.json_decref(json);
 }
 
 //load_wrong_args
@@ -243,17 +261,21 @@ unittest
 	{
 		json = jansson_d.load.json_loads("{\"foo\": \"bar\"}", 0, &error);
 
-		assert(error.position == 14, "json_loads returned a wrong position");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert(error.position == 14, "json_loads returned a wrong position");
 	}
 
 	{
 		json = jansson_d.load.json_loads("{\"foo\": \"bar\"} baz quux", flags, &error);
 
-		assert(error.position == 14, "json_loads returned a wrong position");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
 
-		jansson_d.jansson.json_decref(json);
+		assert(error.position == 14, "json_loads returned a wrong position");
 	}
 }
 

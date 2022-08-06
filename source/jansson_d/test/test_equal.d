@@ -27,12 +27,14 @@ unittest
 	{
 		value1 = jansson_d.value.json_true();
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value1);
+		}
+
 		assert((!jansson_d.value.json_equal(value1, null)) && (!jansson_d.value.json_equal(null, value1)), "json_equal fails for null");
 
 		/* this covers true, false and null as they are singletons */
 		assert(jansson_d.value.json_equal(value1, value1), "identical objects are not equal");
-
-		jansson_d.jansson.json_decref(value1);
 	}
 
 	{
@@ -42,73 +44,99 @@ unittest
 		{
 			value2 = jansson_d.value.json_integer(1);
 
+			scope (exit) {
+				jansson_d.jansson.json_decref(value2);
+			}
+
 			assert((value1 != null) && (value2 != null), "unable to create integers");
 
 			assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal integers");
-
-			jansson_d.jansson.json_decref(value2);
 		}
 
-		value2 = jansson_d.value.json_integer(2);
+		{
+			value2 = jansson_d.value.json_integer(2);
 
-		assert(value2 != null, "unable to create an integer");
+			scope (exit) {
+				jansson_d.jansson.json_decref(value1);
+				jansson_d.jansson.json_decref(value2);
+			}
 
-		assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal integers");
+			assert(value2 != null, "unable to create an integer");
 
-		jansson_d.jansson.json_decref(value1);
-		jansson_d.jansson.json_decref(value2);
+			assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal integers");
+		}
 	}
 
 	/* real */
 	{
 		value1 = jansson_d.value.json_real(1.2);
-		value2 = jansson_d.value.json_real(1.2);
 
-		assert((value1 != null) && (value2 != null), "unable to create reals");
+		{
+			value2 = jansson_d.value.json_real(1.2);
 
-		assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal reals");
+			scope (exit) {
+				jansson_d.jansson.json_decref(value2);
+			}
 
-		jansson_d.jansson.json_decref(value2);
+			assert((value1 != null) && (value2 != null), "unable to create reals");
 
-		value2 = jansson_d.value.json_real(3.141592);
+			assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal reals");
+		}
 
-		assert(value2 != null, "unable to create an real");
+		{
+			value2 = jansson_d.value.json_real(3.141592);
 
-		assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal reals");
+			scope (exit) {
+				jansson_d.jansson.json_decref(value1);
+				jansson_d.jansson.json_decref(value2);
+			}
 
-		jansson_d.jansson.json_decref(value1);
-		jansson_d.jansson.json_decref(value2);
+			assert(value2 != null, "unable to create an real");
+
+			assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal reals");
+		}
 	}
 
 	/* string */
 	{
 		value1 = jansson_d.value.json_string("foo");
-		value2 = jansson_d.value.json_string("foo");
 
-		assert((value1 != null) && (value2 != null), "unable to create strings");
+		{
+			value2 = jansson_d.value.json_string("foo");
 
-		assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal strings");
+			scope (exit) {
+				jansson_d.jansson.json_decref(value2);
+			}
 
-		jansson_d.jansson.json_decref(value2);
+			assert((value1 != null) && (value2 != null), "unable to create strings");
+
+			assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal strings");
+		}
 
 		{
 			value2 = jansson_d.value.json_string("bar");
 
+			scope (exit) {
+				jansson_d.jansson.json_decref(value2);
+			}
+
 			assert(value2 != null, "unable to create an string");
 
 			assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal strings");
-
-			jansson_d.jansson.json_decref(value2);
 		}
 
-		value2 = jansson_d.value.json_string("bar2");
+		{
+			value2 = jansson_d.value.json_string("bar2");
 
-		assert(value2 != null, "unable to create an string");
+			scope (exit) {
+				jansson_d.jansson.json_decref(value1);
+				jansson_d.jansson.json_decref(value2);
+			}
 
-		assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal length strings");
+			assert(value2 != null, "unable to create an string");
 
-		jansson_d.jansson.json_decref(value1);
-		jansson_d.jansson.json_decref(value2);
+			assert(!jansson_d.value.json_equal(value1, value2), "json_equal fails for two inequal length strings");
+		}
 	}
 }
 
@@ -118,6 +146,11 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(array1);
+		jansson_d.jansson.json_decref(array2);
+	}
 
 	assert((array1 != null) && (array2 != null), "unable to create arrays");
 
@@ -139,9 +172,6 @@ unittest
 	jansson_d.value.json_array_append_new(array2, jansson_d.value.json_integer(3));
 
 	assert(!jansson_d.value.json_equal(array1, array2), "json_equal fails for two inequal arrays");
-
-	jansson_d.jansson.json_decref(array1);
-	jansson_d.jansson.json_decref(array2);
 }
 
 //test_equal_object
@@ -150,6 +180,11 @@ unittest
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* object1 = jansson_d.value.json_object();
 	jansson_d.jansson.json_t* object2 = jansson_d.value.json_object();
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(object1);
+		jansson_d.jansson.json_decref(object2);
+	}
 
 	assert((object1 != null) && (object2 != null), "unable to create objects");
 
@@ -176,9 +211,6 @@ unittest
 	jansson_d.value.json_object_set_new(object2, "d", jansson_d.value.json_integer(2));
 
 	assert(!jansson_d.value.json_equal(object1, object2), "json_equal fails for two inequal objects");
-
-	jansson_d.jansson.json_decref(object1);
-	jansson_d.jansson.json_decref(object2);
 }
 
 //test_equal_complex
@@ -191,6 +223,12 @@ unittest
 	jansson_d.jansson.json_t* value2 = jansson_d.load.json_loads(complex_json, 0, null);
 	jansson_d.jansson.json_t* value3 = jansson_d.load.json_loads(complex_json, 0, null);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(value1);
+		jansson_d.jansson.json_decref(value2);
+		jansson_d.jansson.json_decref(value3);
+	}
+
 	assert((value1 != null) && (value2 != null), "unable to parse JSON");
 
 	assert(jansson_d.value.json_equal(value1, value2), "json_equal fails for two equal objects");
@@ -202,8 +240,4 @@ unittest
 	jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(jansson_d.value.json_object_get(value3, "object"), "object-in-object"), "foo", jansson_d.value.json_string("baz"));
 
 	assert(!jansson_d.value.json_equal(value1, value3), "json_equal fails for two inequal objects");
-
-	jansson_d.jansson.json_decref(value1);
-	jansson_d.jansson.json_decref(value2);
-	jansson_d.jansson.json_decref(value3);
 }

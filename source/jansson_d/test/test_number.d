@@ -34,11 +34,13 @@ unittest
 
 	real_ = jansson_d.value.json_real(1.0);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(real_);
+	}
+
 	assert(jansson_d.value.json_real_set(real_, core.stdc.math.INFINITY) == -1, "could set a real to Inf");
 
 	assert(jansson_d.value.json_real_value(real_) == 1.0, "real value changed unexpectedly");
-
-	jansson_d.jansson.json_decref(real_);
 }
 
 //test_bad_args
@@ -46,6 +48,10 @@ unittest
 {
 	jansson_d.test.util.init_unittest();
 	jansson_d.jansson.json_t* txt = jansson_d.value.json_string("test");
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(txt);
+	}
 
 	assert(jansson_d.value.json_integer_value(null) == 0, "json_integer_value did not return 0 for non-integer");
 
@@ -68,8 +74,6 @@ unittest
 	assert(jansson_d.value.json_number_value(txt) == 0.0, "json_number_value did not return 0.0 for non-numeric");
 
 	assert(txt.refcount == 1, "unexpected reference count for txt");
-
-	jansson_d.jansson.json_decref(txt);
 }
 
 //run_tests
@@ -81,10 +85,14 @@ unittest
 
 	{
 		jansson_d.jansson.json_t* integer = jansson_d.value.json_integer(5);
+		real_ = jansson_d.value.json_real(100.1);
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(integer);
+			jansson_d.jansson.json_decref(real_);
+		}
 
 		{
-			real_ = jansson_d.value.json_real(100.1);
-
 			assert(integer != null, "unable to create integer");
 
 			assert(real_ != null, "unable to create real");
@@ -115,9 +123,6 @@ unittest
 
 			assert(d == 100.1, "wrong number value");
 		}
-
-		jansson_d.jansson.json_decref(integer);
-		jansson_d.jansson.json_decref(real_);
 	}
 
 	static assert(__traits(compiles, core.stdc.math.NAN));
@@ -131,10 +136,12 @@ unittest
 	{
 		real_ = jansson_d.value.json_real(1.0);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(real_);
+		}
+
 		assert(jansson_d.value.json_real_set(real_, core.stdc.math.NAN) == -1, "could set a real to NaN");
 
 		assert(jansson_d.value.json_real_value(real_) == 1.0, "real value changed unexpectedly");
-
-		jansson_d.jansson.json_decref(real_);
 	}
 }

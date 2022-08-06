@@ -35,14 +35,16 @@ private void create_and_free_object_with_oom()
 	{
 		jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(obj);
+		}
+
 		char[4] key = void;
 
 		for (size_t i = 0; i < 10; i++) {
 			jansson_d.jansson_private.snprintf(&(key[0]), key.length, &("%d\0"[0]), i);
 			jansson_d.value.json_object_set_new(obj, &(key[0]), jansson_d.value.json_integer(i));
 		}
-
-		jansson_d.jansson.json_decref(obj);
 	}
 
 extern (C)

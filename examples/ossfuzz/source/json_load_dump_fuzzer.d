@@ -92,6 +92,10 @@ int LLVMFuzzerTestOneInput(scope const ubyte* data, size_t size)
 			return 0;
 		}
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(jobj);
+		}
+
 		if (dump_mode & .FUZZ_DUMP_STRING) {
 			// Dump as a string. Remove indents so that we don't run out of memory.
 			char* out_ =jansson_d.jansson.json_dumps(jobj, dump_flags & ~jansson_d.jansson.JSON_MAX_INDENT);
@@ -107,10 +111,6 @@ int LLVMFuzzerTestOneInput(scope const ubyte* data, size_t size)
 
 			jansson_d.jansson.json_dump_callback(jobj, &.json_dump_counter, &counter, dump_flags);
 			.FUZZ_DEBUG("Counter function counted %llu bytes.", counter);
-		}
-
-		if (jobj != null) {
-			jansson_d.jansson.json_decref(jobj);
 		}
 
 		return 0;

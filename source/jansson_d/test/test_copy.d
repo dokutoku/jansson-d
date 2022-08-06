@@ -30,10 +30,12 @@ unittest
 		value = jansson_d.value.json_true();
 		copy = jansson_d.value.json_copy(value);
 
-		assert(value == copy, "copying true failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
 
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "copying true failed");
 	}
 
 	{
@@ -41,10 +43,12 @@ unittest
 		value = jansson_d.value.json_false();
 		copy = jansson_d.value.json_copy(value);
 
-		assert(value == copy, "copying false failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
 
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "copying false failed");
 	}
 
 	{
@@ -52,10 +56,12 @@ unittest
 		value = jansson_d.value.json_null();
 		copy = jansson_d.value.json_copy(value);
 
-		assert(value == copy, "copying null failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
 
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "copying null failed");
 	}
 
 	{
@@ -66,6 +72,11 @@ unittest
 
 		copy = jansson_d.value.json_copy(value);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
+
 		assert(copy != null, "unable to copy a string");
 
 		assert(copy != value, "copying a string doesn't copy");
@@ -73,9 +84,6 @@ unittest
 		assert(jansson_d.value.json_equal(copy, value), "copying a string produces an inequal copy");
 
 		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
 	}
 
 	{
@@ -86,6 +94,11 @@ unittest
 
 		copy = jansson_d.value.json_copy(value);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
+
 		assert(copy != null, "unable to copy an integer");
 
 		assert(copy != value, "copying an integer doesn't copy");
@@ -93,9 +106,6 @@ unittest
 		assert(jansson_d.value.json_equal(copy, value), "copying an integer produces an inequal copy");
 
 		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
 	}
 
 	{
@@ -106,6 +116,11 @@ unittest
 
 		copy = jansson_d.value.json_copy(value);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
+
 		assert(copy != null, "unable to copy a real");
 
 		assert(copy != value, "copying a real doesn't copy");
@@ -113,9 +128,6 @@ unittest
 		assert(jansson_d.value.json_equal(copy, value), "copying a real produces an inequal copy");
 
 		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
 	}
 }
 
@@ -133,10 +145,12 @@ unittest
 		value = jansson_d.value.json_true();
 		copy = jansson_d.value.json_deep_copy(value);
 
-		assert(value == copy, "deep copying true failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
 
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "deep copying true failed");
 	}
 
 	{
@@ -144,10 +158,12 @@ unittest
 		value = jansson_d.value.json_false();
 		copy = jansson_d.value.json_deep_copy(value);
 
-		assert(value == copy, "deep copying false failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
 
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "deep copying false failed");
 	}
 
 	{
@@ -155,10 +171,12 @@ unittest
 		value = jansson_d.value.json_null();
 		copy = jansson_d.value.json_deep_copy(value);
 
-		assert(value == copy, "deep copying null failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
 
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
+		assert(value == copy, "deep copying null failed");
 	}
 
 	{
@@ -169,6 +187,11 @@ unittest
 
 		copy = jansson_d.value.json_deep_copy(value);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
+
 		assert(copy != null, "unable to deep copy a string");
 
 		assert(copy != value, "deep copying a string doesn't copy");
@@ -176,9 +199,6 @@ unittest
 		assert(jansson_d.value.json_equal(copy, value), "deep copying a string produces an inequal copy");
 
 		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
 	}
 
 	{
@@ -189,6 +209,11 @@ unittest
 
 		copy = jansson_d.value.json_deep_copy(value);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
+
 		assert(copy != null, "unable to deep copy an integer");
 
 		assert(copy != value, "deep copying an integer doesn't copy");
@@ -196,9 +221,6 @@ unittest
 		assert(jansson_d.value.json_equal(copy, value), "deep copying an integer produces an inequal copy");
 
 		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
 	}
 
 	{
@@ -209,6 +231,11 @@ unittest
 
 		copy = jansson_d.value.json_deep_copy(value);
 
+		scope (exit) {
+			jansson_d.jansson.json_decref(value);
+			jansson_d.jansson.json_decref(copy);
+		}
+
 		assert(copy != null, "unable to deep copy a real");
 
 		assert(copy != value, "deep copying a real doesn't copy");
@@ -216,9 +243,6 @@ unittest
 		assert(jansson_d.value.json_equal(copy, value), "deep copying a real produces an inequal copy");
 
 		assert((value.refcount == 1) && (copy.refcount == 1), "invalid refcounts");
-
-		jansson_d.jansson.json_decref(value);
-		jansson_d.jansson.json_decref(copy);
 	}
 }
 
@@ -234,6 +258,11 @@ unittest
 
 	jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(array);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(array);
+		jansson_d.jansson.json_decref(copy);
+	}
+
 	assert(copy != null, "unable to copy an array");
 
 	assert(copy != array, "copying an array doesn't copy");
@@ -243,9 +272,6 @@ unittest
 	for (size_t i = 0; i < jansson_d.value.json_array_size(copy); i++) {
 		assert(jansson_d.value.json_array_get(array, i) == jansson_d.value.json_array_get(copy, i), "copying an array modifies its elements");
 	}
-
-	jansson_d.jansson.json_decref(array);
-	jansson_d.jansson.json_decref(copy);
 }
 
 //test_deep_copy_array
@@ -260,6 +286,11 @@ unittest
 
 	jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(array);
 
+	scope (exit) {
+		jansson_d.jansson.json_decref(array);
+		jansson_d.jansson.json_decref(copy);
+	}
+
 	assert(copy != null, "unable to deep copy an array");
 
 	assert(copy != array, "deep copying an array doesn't copy");
@@ -269,9 +300,6 @@ unittest
 	for (size_t i = 0; i < jansson_d.value.json_array_size(copy); i++) {
 		assert(jansson_d.value.json_array_get(array, i) != jansson_d.value.json_array_get(copy, i), "deep copying an array doesn't copy its elements");
 	}
-
-	jansson_d.jansson.json_decref(array);
-	jansson_d.jansson.json_decref(copy);
 }
 
 //test_copy_object
@@ -288,6 +316,11 @@ unittest
 	assert(object_ != null, "unable to parse an object");
 
 	jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(object_);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(object_);
+		jansson_d.jansson.json_decref(copy);
+	}
 
 	assert(copy != null, "unable to copy an object");
 
@@ -310,9 +343,6 @@ unittest
 		iter = jansson_d.value.json_object_iter_next(object_, iter);
 		i++;
 	}
-
-	jansson_d.jansson.json_decref(object_);
-	jansson_d.jansson.json_decref(copy);
 }
 
 //test_deep_copy_object
@@ -329,6 +359,11 @@ unittest
 	assert(object_ != null, "unable to parse an object");
 
 	jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(object_);
+
+	scope (exit) {
+		jansson_d.jansson.json_decref(object_);
+		jansson_d.jansson.json_decref(copy);
+	}
 
 	assert(copy != null, "unable to deep copy an object");
 
@@ -351,9 +386,6 @@ unittest
 		iter = jansson_d.value.json_object_iter_next(object_, iter);
 		i++;
 	}
-
-	jansson_d.jansson.json_decref(object_);
-	jansson_d.jansson.json_decref(copy);
 }
 
 //test_deep_copy_circular_references
@@ -375,6 +407,11 @@ unittest
 
 	{
 		json = jansson_d.value.json_object();
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
+		}
+
 		jansson_d.value.json_object_set_new(json, "a", jansson_d.value.json_object());
 		jansson_d.value.json_object_set_new(jansson_d.value.json_object_get(json, "a"), "b", jansson_d.value.json_object());
 		jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c", jansson_d.value.json_object_get(json, "a"));
@@ -393,8 +430,6 @@ unittest
 			assert(copy != null, "json_deep_copy failed!");
 			jansson_d.jansson.json_decref(copy);
 		}
-
-		jansson_d.jansson.json_decref(json);
 	}
 
 	{
@@ -402,6 +437,11 @@ unittest
 		jansson_d.value.json_array_append_new(json, jansson_d.value.json_array());
 		jansson_d.value.json_array_append_new(jansson_d.value.json_array_get(json, 0), jansson_d.value.json_array());
 		jansson_d.jansson.json_array_append(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), jansson_d.value.json_array_get(json, 0));
+
+		scope (exit) {
+			jansson_d.jansson.json_decref(copy);
+			jansson_d.jansson.json_decref(json);
+		}
 
 		{
 			copy = jansson_d.value.json_deep_copy(json);
@@ -416,8 +456,5 @@ unittest
 
 			assert(copy != null, "json_deep_copy failed!");
 		}
-
-		jansson_d.jansson.json_decref(copy);
-		jansson_d.jansson.json_decref(json);
 	}
 }

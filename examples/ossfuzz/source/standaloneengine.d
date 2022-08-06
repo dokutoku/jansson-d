@@ -41,6 +41,11 @@ void main(string[] argv)
 				buffer = cast(ubyte*)(core.memory.pureCalloc(buffer_len, ubyte.sizeof));
 
 				if (buffer != null) {
+					scope (exit) {
+						/* Free the buffer as it's no longer needed. */
+						core.memory.pureFree(buffer);
+					}
+
 					/* Read all the text from the file into the buffer. */
 					core.stdc.stdio.fread(buffer, ubyte.sizeof, buffer_len, infile);
 					core.stdc.stdio.printf("Read %zu bytes, fuzzing.. ", buffer_len);
@@ -49,9 +54,6 @@ void main(string[] argv)
 					ossfuzz.json_load_dump_fuzzer.LLVMFuzzerTestOneInput(buffer, buffer_len);
 
 					core.stdc.stdio.printf("complete !!");
-
-					/* Free the buffer as it's no longer needed. */
-					core.memory.pureFree(buffer);
 				} else {
 					core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "[%s] Failed to allocate %zu bytes \n", std.string.toStringz(argv[ii]), buffer_len);
 				}
