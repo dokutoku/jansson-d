@@ -98,7 +98,7 @@ int LLVMFuzzerTestOneInput(scope const ubyte* data, size_t size)
 
 		if (dump_mode & .FUZZ_DUMP_STRING) {
 			// Dump as a string. Remove indents so that we don't run out of memory.
-			char* out_ =jansson_d.jansson.json_dumps(jobj, dump_flags & ~jansson_d.jansson.JSON_MAX_INDENT);
+			char* out_ = jansson_d.jansson.json_dumps(jobj, dump_flags & ~jansson_d.jansson.JSON_MAX_INDENT);
 
 			if (out_ != null) {
 				core.memory.pureFree(out_);

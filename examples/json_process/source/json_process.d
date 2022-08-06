@@ -330,7 +330,7 @@ int use_conf(scope const char* test_path)
 			jansson_d.jansson.json_decref(json);
 		}
 
-		buffer =jansson_d.jansson.json_dumps(json, flags);
+		buffer = jansson_d.jansson.json_dumps(json, flags);
 
 		scope (exit) {
 			if (buffer != null) {
