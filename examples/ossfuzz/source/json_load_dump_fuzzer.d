@@ -101,7 +101,9 @@ int LLVMFuzzerTestOneInput(scope const ubyte* data, size_t size)
 			char* out_ = jansson_d.jansson.json_dumps(jobj, dump_flags & ~jansson_d.jansson.JSON_MAX_INDENT);
 
 			if (out_ != null) {
-				core.memory.pureFree(out_);
+				jansson_d.jansson.json_free_t free_func;
+				json_get_alloc_funcs(null, &free_func);
+				free_func(out_);
 			}
 		} else {
 			// Default is callback mode.
