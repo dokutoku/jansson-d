@@ -186,11 +186,6 @@ private:
 	extern (D)
 	int json_array_foreach(int delegate (ref size_t index, ref .json_t* value) operations, .json_t* object_)
 
-		in
-		{
-			assert(.json_is_array(object_));
-		}
-
 		do
 		{
 			int result = 0;
