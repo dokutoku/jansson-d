@@ -322,7 +322,7 @@ unittest
 
 	assert(jansson_d.value.json_equal(copy, object_), "copying an object produces an inequal copy");
 
-	int i = 0;
+	size_t i = 0;
 
 	for (void* iter = jansson_d.value.json_object_iter(object_); iter != null; iter = jansson_d.value.json_object_iter_next(object_, iter), i++) {
 		const char* key = jansson_d.value.json_object_iter_key(iter);
@@ -361,7 +361,7 @@ unittest
 
 	assert(jansson_d.value.json_equal(copy, object_), "deep copying an object produces an inequal copy");
 
-	int i = 0;
+	size_t i = 0;
 
 	for (void* iter = jansson_d.value.json_object_iter(object_); iter != null; iter = jansson_d.value.json_object_iter_next(object_, iter), i++) {
 		const char* key = jansson_d.value.json_object_iter_key(iter);

@@ -314,9 +314,9 @@ unittest
 
 	scope (exit) {
 		/* decref twice to deal with the circular references */
-			jansson_d.jansson.json_decref(object1);
-			jansson_d.jansson.json_decref(object2);
-			jansson_d.jansson.json_decref(object1);
+		jansson_d.jansson.json_decref(object1);
+		jansson_d.jansson.json_decref(object2);
+		jansson_d.jansson.json_decref(object1);
 	}
 
 	assert((object1 != null) && (object2 != null), "unable to create object");
