@@ -250,9 +250,7 @@ private void hashtable_do_clear(scope .hashtable_t* hashtable_)
 
 	do
 	{
-		.list_t* next = void;
-
-		for (.list_t* list = hashtable_.list.next; list != &hashtable_.list; list = next) {
+		for (.list_t* list = hashtable_.list.next, next = void; list != &hashtable_.list; list = next) {
 			assert(list != null);
 			next = list.next;
 			.pair_t* pair = mixin (.list_to_pair!("list"));
