@@ -58,12 +58,9 @@ unittest
 		buf: &(.my_str[0]),
 	};
 
-	jansson_d.jansson.json_error_t error = void;
-
-	jansson_d.jansson.json_t* json = void;
-
 	{
-		json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
+		jansson_d.jansson.json_error_t error = void;
+		jansson_d.jansson.json_t* json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
@@ -77,7 +74,8 @@ unittest
 	s.buf = &(.my_str[0]);
 
 	{
-		json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
+		jansson_d.jansson.json_error_t error = void;
+		jansson_d.jansson.json_t* json = jansson_d.load.json_load_callback(&.greedy_reader, &s, 0, &error);
 
 		scope (exit) {
 			version (all) {
@@ -93,7 +91,8 @@ unittest
 	}
 
 	{
-		json = jansson_d.load.json_load_callback(null, null, 0, &error);
+		jansson_d.jansson.json_error_t error = void;
+		jansson_d.jansson.json_t* json = jansson_d.load.json_load_callback(null, null, 0, &error);
 
 		scope (exit) {
 			version (all) {

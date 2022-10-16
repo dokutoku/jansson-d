@@ -151,8 +151,11 @@ unittest
 
 	mixin (.chaos_loop!("jansson_d.dump.json_dump_callback(dumpobj, &.dump_chaos_callback, null, mixin (jansson_d.jansson.JSON_INDENT!(`1`)))", "", ""));
 	mixin (.chaos_loop!("jansson_d.dump.json_dump_callback(dumpobj, &.dump_chaos_callback, null, mixin (jansson_d.jansson.JSON_INDENT!(`1`)) | jansson_d.jansson.JSON_SORT_KEYS)", "", ""));
-	char* dumptxt = null;
-	mixin (.chaos_loop!("dumptxt == null", "dumptxt = jansson_d.dump.json_dumps(dumpobj, jansson_d.jansson.JSON_COMPACT);", "jansson_d.jansson_private.jsonp_free(dumptxt); dumptxt = null;"));
+
+	{
+		char* dumptxt = null;
+		mixin (.chaos_loop!("dumptxt == null", "dumptxt = jansson_d.dump.json_dumps(dumpobj, jansson_d.jansson.JSON_COMPACT);", "jansson_d.jansson_private.jsonp_free(dumptxt); dumptxt = null;"));
+	}
 
 	mixin (.chaos_loop_new_value!("json", "jansson_d.value.json_copy(obj)"));
 	mixin (.chaos_loop_new_value!("json", "jansson_d.value.json_deep_copy(obj)"));

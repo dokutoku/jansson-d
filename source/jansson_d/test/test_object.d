@@ -150,67 +150,68 @@ unittest
 {
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* object_ = void;
-	jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4);
-
-	scope (exit) {
-		jansson_d.jansson.json_decref(other);
-	}
-
 	{
-		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+		jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4);
 
 		scope (exit) {
-			jansson_d.jansson.json_decref(object_);
+			jansson_d.jansson.json_decref(other);
 		}
 
-		assert(!jansson_d.value.json_object_update_existing(object_, other), "json_object_update_existing failed");
+		{
+			jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
-		assert(jansson_d.value.json_object_size(object_) == 2, "json_object_update_existing added new items");
+			scope (exit) {
+				jansson_d.jansson.json_decref(object_);
+			}
 
-		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 3, "json_object_update_existing failed to update existing key");
+			assert(!jansson_d.value.json_object_update_existing(object_, other), "json_object_update_existing failed");
 
-		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_existing updated wrong key");
-	}
+			assert(jansson_d.value.json_object_size(object_) == 2, "json_object_update_existing added new items");
 
-	{
-		/* json_object_update_existing_new check */
-		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+			assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 3, "json_object_update_existing failed to update existing key");
 
-		scope (exit) {
-			jansson_d.jansson.json_decref(object_);
+			assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_existing updated wrong key");
 		}
 
-		assert(!jansson_d.jansson.json_object_update_existing_new(object_, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_existing_new failed");
+		{
+			/* json_object_update_existing_new check */
+			jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
-		assert(jansson_d.value.json_object_size(object_) == 2, "json_object_update_existing_new added new items");
+			scope (exit) {
+				jansson_d.jansson.json_decref(object_);
+			}
 
-		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 3, "json_object_update_existing_new failed to update existing key");
+			assert(!jansson_d.jansson.json_object_update_existing_new(object_, jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 3, &("baz\0"[0]), 4)), "json_object_update_existing_new failed");
 
-		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_existing_new updated wrong key");
-	}
+			assert(jansson_d.value.json_object_size(object_) == 2, "json_object_update_existing_new added new items");
 
-	{
-		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+			assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 3, "json_object_update_existing_new failed to update existing key");
 
-		scope (exit) {
-			jansson_d.jansson.json_decref(object_);
+			assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_existing_new updated wrong key");
 		}
 
-		assert(!jansson_d.value.json_object_update_missing(object_, other), "json_object_update_missing failed");
+		{
+			jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
-		assert(jansson_d.value.json_object_size(object_) == 3, "json_object_update_missing didn't add new items");
+			scope (exit) {
+				jansson_d.jansson.json_decref(object_);
+			}
 
-		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 1, "json_object_update_missing updated existing key");
+			assert(!jansson_d.value.json_object_update_missing(object_, other), "json_object_update_missing failed");
 
-		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_missing updated wrong key");
+			assert(jansson_d.value.json_object_size(object_) == 3, "json_object_update_missing didn't add new items");
 
-		assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "baz")) == 4, "json_object_update_missing didn't add new items");
+			assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "foo")) == 1, "json_object_update_missing updated existing key");
+
+			assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "bar")) == 2, "json_object_update_missing updated wrong key");
+
+			assert(jansson_d.value.json_integer_value(jansson_d.value.json_object_get(object_, "baz")) == 4, "json_object_update_missing didn't add new items");
+		}
 	}
 
 	{
 		/* json_object_update_missing_new check */
-		object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
+		jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sisi}", &("foo\0"[0]), 1, &("bar\0"[0]), 2);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(object_);
@@ -233,13 +234,10 @@ unittest
 {
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* object_ = void;
-	jansson_d.jansson.json_t* other = void;
-
 	{
 		jansson_d.jansson.json_t* invalid = jansson_d.value.json_integer(42);
-		object_ = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
-		other = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 3, &("bar\0"[0]), 4, &("baz\0"[0]), 5);
+		jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
+		jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{sisisi}", &("foo\0"[0]), 3, &("bar\0"[0]), 4, &("baz\0"[0]), 5);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(invalid);
@@ -261,8 +259,8 @@ unittest
 	}
 
 	{
-		object_ = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
-		other = jansson_d.pack_unpack.json_pack("{s{si}}", &("bar\0"[0]), &("baz\0"[0]), 3);
+		jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{sis{si}}", &("foo\0"[0]), 1, &("bar\0"[0]), &("baz\0"[0]), 2);
+		jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{s{si}}", &("bar\0"[0]), &("baz\0"[0]), 3);
 		jansson_d.jansson.json_t* barBefore = jansson_d.value.json_object_get(object_, "bar");
 
 		scope (exit) {
@@ -289,8 +287,8 @@ unittest
 
 	{
 		/* check circular reference */
-		object_ = jansson_d.pack_unpack.json_pack("{s{s{s{si}}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), &("xxx\0"[0]), 2);
-		other = jansson_d.pack_unpack.json_pack("{s{s{si}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), 2);
+		jansson_d.jansson.json_t* object_ = jansson_d.pack_unpack.json_pack("{s{s{s{si}}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), &("xxx\0"[0]), 2);
+		jansson_d.jansson.json_t* other = jansson_d.pack_unpack.json_pack("{s{s{si}}}", &("foo\0"[0]), &("bar\0"[0]), &("baz\0"[0]), 2);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(object_);
@@ -396,47 +394,51 @@ unittest
 
 	assert((!jansson_d.jansson.json_object_set(object_, "a", foo)) && (!jansson_d.jansson.json_object_set(object_, "b", bar)) && (!jansson_d.jansson.json_object_set(object_, "c", baz)), "unable to populate object");
 
-	void* iter = jansson_d.value.json_object_iter(object_);
+	{
+		void* iter = jansson_d.value.json_object_iter(object_);
 
-	assert(iter != null, "unable to get iterator");
+		assert(iter != null, "unable to get iterator");
 
-	assert(core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "a") == 0, "iterating doesn't yield keys in order");
+		assert(core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "a") == 0, "iterating doesn't yield keys in order");
 
-	assert(jansson_d.value.json_object_iter_value(iter) == foo, "iterating doesn't yield values in order");
+		assert(jansson_d.value.json_object_iter_value(iter) == foo, "iterating doesn't yield values in order");
 
-	iter = jansson_d.value.json_object_iter_next(object_, iter);
+		iter = jansson_d.value.json_object_iter_next(object_, iter);
 
-	assert(iter != null, "unable to increment iterator");
+		assert(iter != null, "unable to increment iterator");
 
-	assert(core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "b") == 0, "iterating doesn't yield keys in order");
+		assert(core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "b") == 0, "iterating doesn't yield keys in order");
 
-	assert(jansson_d.value.json_object_iter_value(iter) == bar, "iterating doesn't yield values in order");
+		assert(jansson_d.value.json_object_iter_value(iter) == bar, "iterating doesn't yield values in order");
 
-	iter = jansson_d.value.json_object_iter_next(object_, iter);
+		iter = jansson_d.value.json_object_iter_next(object_, iter);
 
-	assert(iter != null, "unable to increment iterator");
+		assert(iter != null, "unable to increment iterator");
 
-	assert(core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "c") == 0, "iterating doesn't yield keys in order");
+		assert(core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "c") == 0, "iterating doesn't yield keys in order");
 
-	assert(jansson_d.value.json_object_iter_value(iter) == baz, "iterating doesn't yield values in order");
+		assert(jansson_d.value.json_object_iter_value(iter) == baz, "iterating doesn't yield values in order");
 
-	assert(jansson_d.value.json_object_iter_next(object_, iter) == null, "able to iterate over the end");
+		assert(jansson_d.value.json_object_iter_next(object_, iter) == null, "able to iterate over the end");
+	}
 
 	assert(jansson_d.value.json_object_iter_at(object_, "foo") == null, "json_object_iter_at() succeeds for non-existent key");
 
-	iter = jansson_d.value.json_object_iter_at(object_, "b");
+	{
+		void* iter = jansson_d.value.json_object_iter_at(object_, "b");
 
-	assert(iter != null, "json_object_iter_at() fails for an existing key");
+		assert(iter != null, "json_object_iter_at() fails for an existing key");
 
-	assert(!core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "b"), "iterating failed: wrong key");
+		assert(!core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "b"), "iterating failed: wrong key");
 
-	assert(jansson_d.value.json_object_iter_value(iter) == bar, "iterating failed: wrong value");
+		assert(jansson_d.value.json_object_iter_value(iter) == bar, "iterating failed: wrong value");
 
-	assert(!jansson_d.jansson.json_object_iter_set(object_, iter, baz), "unable to set value at iterator");
+		assert(!jansson_d.jansson.json_object_iter_set(object_, iter, baz), "unable to set value at iterator");
 
-	assert(!core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "b"), "json_object_iter_key() fails after json_object_iter_set()");
+		assert(!core.stdc.string.strcmp(jansson_d.value.json_object_iter_key(iter), "b"), "json_object_iter_key() fails after json_object_iter_set()");
 
-	assert(jansson_d.value.json_object_iter_value(iter) == baz, "json_object_iter_value() fails after json_object_iter_set()");
+		assert(jansson_d.value.json_object_iter_value(iter) == baz, "json_object_iter_value() fails after json_object_iter_set()");
+	}
 
 	assert(jansson_d.value.json_object_get(object_, "b") == baz, "json_object_get() fails after json_object_iter_set()");
 }
@@ -474,28 +476,34 @@ unittest
 	/* invalid UTF-8 in key */
 	assert(jansson_d.jansson.json_object_set(object_, "a\xefz", string_), "able to set invalid unicode key");
 
-	jansson_d.jansson.json_t* value = jansson_d.value.json_object_get(object_, "a");
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_object_get(object_, "a");
 
-	assert(value != null, "no value for existing key");
+		assert(value != null, "no value for existing key");
 
-	assert(value == string_, "got different value than what was added");
+		assert(value == string_, "got different value than what was added");
+	}
 
 	/* "a", "lp" and "px" collide in a five-bucket hashtable */
 	assert((!jansson_d.jansson.json_object_set(object_, "b", string_)) && (!jansson_d.jansson.json_object_set(object_, "lp", string_)) && (!jansson_d.jansson.json_object_set(object_, "px", string_)), "unable to set value");
 
-	value = jansson_d.value.json_object_get(object_, "a");
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_object_get(object_, "a");
 
-	assert(value != null, "no value for existing key");
+		assert(value != null, "no value for existing key");
 
-	assert(value == string_, "got different value than what was added");
+		assert(value == string_, "got different value than what was added");
+	}
 
 	assert(!jansson_d.jansson.json_object_set(object_, "a", other_string), "unable to replace an existing key");
 
-	value = jansson_d.value.json_object_get(object_, "a");
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_object_get(object_, "a");
 
-	assert(value != null, "no value for existing key");
+		assert(value != null, "no value for existing key");
 
-	assert(value == other_string, "got different value than what was set");
+		assert(value == other_string, "got different value than what was set");
+	}
 
 	assert(jansson_d.value.json_object_del(object_, "nonexisting"), "able to delete a nonexisting key");
 
@@ -521,9 +529,11 @@ unittest
 
 	assert(!jansson_d.value.json_object_set_new(object_, "foo", jansson_d.value.json_integer(123)), "unable to set new value");
 
-	value = jansson_d.value.json_object_get(object_, "foo");
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_object_get(object_, "foo");
 
-	assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 123), "json_object_set_new works incorrectly");
+		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 123), "json_object_set_new works incorrectly");
+	}
 
 	assert(jansson_d.value.json_object_set_new(object_, null, jansson_d.value.json_integer(432)), "able to set_new null key");
 

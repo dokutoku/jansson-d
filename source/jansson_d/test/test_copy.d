@@ -22,13 +22,10 @@ unittest
 	jansson_d.test.util.init_unittest();
 	assert(!jansson_d.value.json_copy(null), "copying null doesn't return null");
 
-	/* true */
-	jansson_d.jansson.json_t* value = void;
-	jansson_d.jansson.json_t* copy = void;
-
 	{
-		value = jansson_d.value.json_true();
-		copy = jansson_d.value.json_copy(value);
+		/* true */
+		jansson_d.jansson.json_t* value = jansson_d.value.json_true();
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -40,8 +37,8 @@ unittest
 
 	{
 		/* false */
-		value = jansson_d.value.json_false();
-		copy = jansson_d.value.json_copy(value);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_false();
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -53,8 +50,8 @@ unittest
 
 	{
 		/* null */
-		value = jansson_d.value.json_null();
-		copy = jansson_d.value.json_copy(value);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_null();
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -66,11 +63,11 @@ unittest
 
 	{
 		/* string */
-		value = jansson_d.value.json_string("foo");
+		jansson_d.jansson.json_t* value = jansson_d.value.json_string("foo");
 
 		assert(value != null, "unable to create a string");
 
-		copy = jansson_d.value.json_copy(value);
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -88,11 +85,11 @@ unittest
 
 	{
 		/* integer */
-		value = jansson_d.value.json_integer(543);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_integer(543);
 
 		assert(value != null, "unable to create an integer");
 
-		copy = jansson_d.value.json_copy(value);
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -110,11 +107,11 @@ unittest
 
 	{
 		/* real */
-		value = jansson_d.value.json_real(123e9);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_real(123e9);
 
 		assert(value != null, "unable to create a real");
 
-		copy = jansson_d.value.json_copy(value);
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -137,13 +134,10 @@ unittest
 	jansson_d.test.util.init_unittest();
 	assert(jansson_d.value.json_deep_copy(null) == null, "deep copying null doesn't return null");
 
-	/* true */
-	jansson_d.jansson.json_t* value = void;
-	jansson_d.jansson.json_t* copy = void;
-
 	{
-		value = jansson_d.value.json_true();
-		copy = jansson_d.value.json_deep_copy(value);
+		/* true */
+		jansson_d.jansson.json_t* value = jansson_d.value.json_true();
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -155,8 +149,8 @@ unittest
 
 	{
 		/* false */
-		value = jansson_d.value.json_false();
-		copy = jansson_d.value.json_deep_copy(value);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_false();
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -168,8 +162,8 @@ unittest
 
 	{
 		/* null */
-		value = jansson_d.value.json_null();
-		copy = jansson_d.value.json_deep_copy(value);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_null();
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -181,11 +175,11 @@ unittest
 
 	{
 		/* string */
-		value = jansson_d.value.json_string("foo");
+		jansson_d.jansson.json_t* value = jansson_d.value.json_string("foo");
 
 		assert(value != null, "unable to create a string");
 
-		copy = jansson_d.value.json_deep_copy(value);
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -203,11 +197,11 @@ unittest
 
 	{
 		/* integer */
-		value = jansson_d.value.json_integer(543);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_integer(543);
 
 		assert(value != null, "unable to create an integer");
 
-		copy = jansson_d.value.json_deep_copy(value);
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -225,11 +219,11 @@ unittest
 
 	{
 		/* real */
-		value = jansson_d.value.json_real(123e9);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_real(123e9);
 
 		assert(value != null, "unable to create a real");
 
-		copy = jansson_d.value.json_deep_copy(value);
+		jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(value);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -394,11 +388,8 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* json = void;
-	jansson_d.jansson.json_t* copy = void;
-
 	{
-		json = jansson_d.value.json_object();
+		jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
@@ -409,7 +400,7 @@ unittest
 		jansson_d.jansson.json_object_set(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c", jansson_d.value.json_object_get(json, "a"));
 
 		{
-			copy = jansson_d.value.json_deep_copy(json);
+			jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(json);
 
 			assert(copy == null, "json_deep_copy copied a circular reference!");
 		}
@@ -417,7 +408,7 @@ unittest
 		jansson_d.value.json_object_del(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c");
 
 		{
-			copy = jansson_d.value.json_deep_copy(json);
+			jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(json);
 
 			assert(copy != null, "json_deep_copy failed!");
 			jansson_d.jansson.json_decref(copy);
@@ -425,18 +416,17 @@ unittest
 	}
 
 	{
-		json = jansson_d.value.json_array();
+		jansson_d.jansson.json_t* json = jansson_d.value.json_array();
 		jansson_d.value.json_array_append_new(json, jansson_d.value.json_array());
 		jansson_d.value.json_array_append_new(jansson_d.value.json_array_get(json, 0), jansson_d.value.json_array());
 		jansson_d.jansson.json_array_append(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), jansson_d.value.json_array_get(json, 0));
 
 		scope (exit) {
-			jansson_d.jansson.json_decref(copy);
 			jansson_d.jansson.json_decref(json);
 		}
 
 		{
-			copy = jansson_d.value.json_deep_copy(json);
+			jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(json);
 
 			assert(copy == null, "json_deep_copy copied a circular reference!");
 		}
@@ -444,9 +434,13 @@ unittest
 		jansson_d.value.json_array_remove(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), 0);
 
 		{
-			copy = jansson_d.value.json_deep_copy(json);
+			jansson_d.jansson.json_t* copy = jansson_d.value.json_deep_copy(json);
 
 			assert(copy != null, "json_deep_copy failed!");
+
+			scope (exit) {
+				jansson_d.jansson.json_decref(copy);
+			}
 		}
 	}
 }

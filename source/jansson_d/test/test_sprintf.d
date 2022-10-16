@@ -14,10 +14,8 @@ unittest
 {
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* s = void;
-
 	{
-		s = jansson_d.value.json_sprintf("foo bar %d", 42);
+		jansson_d.jansson.json_t* s = jansson_d.value.json_sprintf("foo bar %d", 42);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(s);
@@ -31,7 +29,7 @@ unittest
 	}
 
 	{
-		s = jansson_d.value.json_sprintf("%s", &("\0"[0]));
+		jansson_d.jansson.json_t* s = jansson_d.value.json_sprintf("%s", &("\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(s);

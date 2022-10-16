@@ -28,19 +28,24 @@ unittest
 	static assert(__traits(compiles, core.stdc.math.INFINITY));
 
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(core.stdc.math.INFINITY);
 
-	assert(real_ == null, "could construct a real from Inf");
+	{
+		jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(core.stdc.math.INFINITY);
 
-	real_ = jansson_d.value.json_real(1.0);
-
-	scope (exit) {
-		jansson_d.jansson.json_decref(real_);
+		assert(real_ == null, "could construct a real from Inf");
 	}
 
-	assert(jansson_d.value.json_real_set(real_, core.stdc.math.INFINITY) == -1, "could set a real to Inf");
+	{
+		jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(1.0);
 
-	assert(jansson_d.value.json_real_value(real_) == 1.0, "real value changed unexpectedly");
+		scope (exit) {
+			jansson_d.jansson.json_decref(real_);
+		}
+
+		assert(jansson_d.value.json_real_set(real_, core.stdc.math.INFINITY) == -1, "could set a real to Inf");
+
+		assert(jansson_d.value.json_real_value(real_) == 1.0, "real value changed unexpectedly");
+	}
 }
 
 //test_bad_args
@@ -81,11 +86,9 @@ unittest
 {
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* real_ = void;
-
 	{
 		jansson_d.jansson.json_t* integer = jansson_d.value.json_integer(5);
-		real_ = jansson_d.value.json_real(100.1);
+		jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(100.1);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(integer);
@@ -104,22 +107,20 @@ unittest
 			assert(i == 5, "wrong integer value");
 		}
 
-		double d = void;
-
 		{
-			d = jansson_d.value.json_real_value(real_);
+			double d = jansson_d.value.json_real_value(real_);
 
 			assert(d == 100.1, "wrong real value");
 		}
 
 		{
-			d = jansson_d.value.json_number_value(integer);
+			double d = jansson_d.value.json_number_value(integer);
 
 			assert(d == 5.0, "wrong number value");
 		}
 
 		{
-			d = jansson_d.value.json_number_value(real_);
+			double d = jansson_d.value.json_number_value(real_);
 
 			assert(d == 100.1, "wrong number value");
 		}
@@ -128,13 +129,13 @@ unittest
 	static assert(__traits(compiles, core.stdc.math.NAN));
 
 	{
-		real_ = jansson_d.value.json_real(core.stdc.math.NAN);
+		jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(core.stdc.math.NAN);
 
 		assert(real_ == null, "could construct a real from NaN");
 	}
 
 	{
-		real_ = jansson_d.value.json_real(1.0);
+		jansson_d.jansson.json_t* real_ = jansson_d.value.json_real(1.0);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(real_);

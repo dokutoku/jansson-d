@@ -42,21 +42,25 @@ unittest
 
 	assert(jansson_d.value.json_array_size(array) == 1, "wrong array size");
 
-	jansson_d.jansson.json_t* value = jansson_d.value.json_array_get(array, 0);
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_array_get(array, 0);
 
-	assert(value != null, "unable to get item");
+		assert(value != null, "unable to get item");
 
-	assert(value == five, "got wrong value");
+		assert(value == five, "got wrong value");
+	}
 
 	assert(!jansson_d.jansson.json_array_append(array, seven), "unable to append value");
 
 	assert(jansson_d.value.json_array_size(array) == 2, "wrong array size");
 
-	value = jansson_d.value.json_array_get(array, 1);
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_array_get(array, 1);
 
-	assert(value != null, "unable to get item");
+		assert(value != null, "unable to get item");
 
-	assert(value == seven, "got wrong value");
+		assert(value == seven, "got wrong value");
+	}
 
 	assert(!jansson_d.jansson.json_array_set(array, 0, seven), "unable to set value");
 
@@ -64,11 +68,13 @@ unittest
 
 	assert(jansson_d.value.json_array_size(array) == 2, "wrong array size");
 
-	value = jansson_d.value.json_array_get(array, 0);
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_array_get(array, 0);
 
-	assert(value != null, "unable to get item");
+		assert(value != null, "unable to get item");
 
-	assert(value == seven, "got wrong value");
+		assert(value == seven, "got wrong value");
+	}
 
 	assert(jansson_d.value.json_array_get(array, 2) == null, "able to get value out of bounds");
 
@@ -81,7 +87,7 @@ unittest
 	}
 
 	for (size_t i = 0; i < 30; i++) {
-		value = jansson_d.value.json_array_get(array, i);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_array_get(array, i);
 
 		assert(value != null, "unable to get item");
 
@@ -90,17 +96,21 @@ unittest
 
 	assert(!jansson_d.value.json_array_set_new(array, 15, jansson_d.value.json_integer(123)), "unable to set new value");
 
-	value = jansson_d.value.json_array_get(array, 15);
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_array_get(array, 15);
 
-	assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 123), "json_array_set_new works incorrectly");
+		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 123), "json_array_set_new works incorrectly");
 
-	assert(jansson_d.value.json_array_set_new(array, 15, null), "able to set_new null value");
+		assert(jansson_d.value.json_array_set_new(array, 15, null), "able to set_new null value");
+	}
 
 	assert(!jansson_d.value.json_array_append_new(array, jansson_d.value.json_integer(321)), "unable to append new value");
 
-	value = jansson_d.value.json_array_get(array, jansson_d.value.json_array_size(array) - 1);
+	{
+		jansson_d.jansson.json_t* value = jansson_d.value.json_array_get(array, jansson_d.value.json_array_size(array) - 1);
 
-	assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 321), "json_array_append_new works incorrectly");
+		assert((mixin (jansson_d.jansson.json_is_integer!("value"))) && (jansson_d.value.json_integer_value(value) == 321), "json_array_append_new works incorrectly");
+	}
 
 	assert(jansson_d.value.json_array_append_new(array, null), "able to append_new null value");
 }
@@ -174,11 +184,12 @@ unittest
 unittest
 {
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 	jansson_d.jansson.json_t* five = jansson_d.value.json_integer(5);
 	jansson_d.jansson.json_t* seven = jansson_d.value.json_integer(7);
 
 	{
+		jansson_d.jansson.json_t* array = jansson_d.value.json_array();
+
 		scope (exit) {
 			jansson_d.jansson.json_decref(array);
 		}
@@ -209,7 +220,7 @@ unittest
 	}
 
 	{
-		array = jansson_d.value.json_array();
+		jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(five);
@@ -310,9 +321,9 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
-
 	{
+		jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
+
 		scope (exit) {
 			jansson_d.jansson.json_decref(array1);
 		}
@@ -330,7 +341,7 @@ unittest
 
 	/* create circular references */
 	{
-		array1 = jansson_d.value.json_array();
+		jansson_d.jansson.json_t* array1 = jansson_d.value.json_array();
 		jansson_d.jansson.json_t* array2 = jansson_d.value.json_array();
 
 		scope (exit) {

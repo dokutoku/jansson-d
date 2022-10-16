@@ -67,10 +67,8 @@ unittest
 {
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* value = void;
-
 	{
-		value = mixin (jansson_d.jansson.json_boolean!("1"));
+		jansson_d.jansson.json_t* value = mixin (jansson_d.jansson.json_boolean!("1"));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -80,7 +78,7 @@ unittest
 	}
 
 	{
-		value = mixin (jansson_d.jansson.json_boolean!("-123"));
+		jansson_d.jansson.json_t* value = mixin (jansson_d.jansson.json_boolean!("-123"));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -90,7 +88,7 @@ unittest
 	}
 
 	{
-		value = mixin (jansson_d.jansson.json_boolean!("0"));
+		jansson_d.jansson.json_t* value = mixin (jansson_d.jansson.json_boolean!("0"));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -102,7 +100,7 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_integer(1);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_integer(1);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -132,7 +130,7 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_string("foo");
+		jansson_d.jansson.json_t* value = jansson_d.value.json_string("foo");
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -158,20 +156,20 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_string(null);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_string(null);
 
 		assert(value == null, "json_string(null) failed");
 	}
 
 	{
 		/* invalid UTF-8 */
-		value = jansson_d.value.json_string("a\xefz");
+		jansson_d.jansson.json_t* value = jansson_d.value.json_string("a\xefz");
 
 		assert(value == null, "json_string(<invalid utf-8>) failed");
 	}
 
 	{
-		value = jansson_d.value.json_string_nocheck("foo");
+		jansson_d.jansson.json_t* value = jansson_d.value.json_string_nocheck("foo");
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -198,7 +196,7 @@ unittest
 
 	{
 		/* invalid UTF-8 */
-		value = jansson_d.value.json_string_nocheck("qu\xff");
+		jansson_d.jansson.json_t* value = jansson_d.value.json_string_nocheck("qu\xff");
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -218,7 +216,7 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_integer(123);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_integer(123);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -238,7 +236,7 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_real(123.123);
+		jansson_d.jansson.json_t* value = jansson_d.value.json_real(123.123);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -258,7 +256,7 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_true();
+		jansson_d.jansson.json_t* value = jansson_d.value.json_true();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -268,7 +266,7 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_false();
+		jansson_d.jansson.json_t* value = jansson_d.value.json_false();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -278,7 +276,7 @@ unittest
 	}
 
 	{
-		value = jansson_d.value.json_null();
+		jansson_d.jansson.json_t* value = jansson_d.value.json_null();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -288,74 +286,78 @@ unittest
 	}
 
 	{
-		/* Test reference counting on singletons (true, false, null) */
-		value = jansson_d.value.json_true();
-
-		scope (exit) {
-			jansson_d.jansson.json_decref(value);
-		}
-
-		assert(value.refcount == size_t.max, "refcounting true works incorrectly");
-	}
-
-	assert(value.refcount == size_t.max, "refcounting true works incorrectly");
-
-	{
-		{
-			jansson_d.jansson.json_incref(value);
-			assert(value.refcount == size_t.max, "refcounting true works incorrectly");
-		}
+		jansson_d.jansson.json_t* value = void;
 
 		{
-			value = jansson_d.value.json_false();
-			assert(value.refcount == size_t.max, "refcounting false works incorrectly");
-		}
-
-		{
-			jansson_d.jansson.json_decref(value);
-			assert(value.refcount == size_t.max, "refcounting false works incorrectly");
-		}
-	}
-
-	{
-		{
-			jansson_d.jansson.json_incref(value);
-			assert(value.refcount == size_t.max, "refcounting false works incorrectly");
-		}
-
-		{
-			value = jansson_d.value.json_null();
-			assert(value.refcount == size_t.max, "refcounting null works incorrectly");
-		}
-
-		{
-			jansson_d.jansson.json_decref(value);
-			assert(value.refcount == size_t.max, "refcounting null works incorrectly");
-		}
-	}
-
-	{
-		{
-			jansson_d.jansson.json_incref(value);
-
-			assert(value.refcount == size_t.max, "refcounting null works incorrectly");
-		}
-
-		static if (__traits(compiles, jansson_d.jansson.json_auto_t)) {
-			value = jansson_d.value.json_string("foo");
+			/* Test reference counting on singletons (true, false, null) */
+			value = jansson_d.value.json_true();
 
 			scope (exit) {
 				jansson_d.jansson.json_decref(value);
 			}
 
-			{
-				jansson_d.jansson.json_auto_t* test = jansson_d.jansson.json_incref(value);
+			assert(value.refcount == size_t.max, "refcounting true works incorrectly");
+		}
 
-				/* Use test so GCC doesn't complain it is unused. */
-				assert(mixin (jansson_d.jansson.json_is_string!("test")), "value type check failed");
+		assert(value.refcount == size_t.max, "refcounting true works incorrectly");
+
+		{
+			{
+				jansson_d.jansson.json_incref(value);
+				assert(value.refcount == size_t.max, "refcounting true works incorrectly");
 			}
 
-			assert(value.refcount == 1, "automatic decrement failed");
+			{
+				value = jansson_d.value.json_false();
+				assert(value.refcount == size_t.max, "refcounting false works incorrectly");
+			}
+
+			{
+				jansson_d.jansson.json_decref(value);
+				assert(value.refcount == size_t.max, "refcounting false works incorrectly");
+			}
+		}
+
+		{
+			{
+				jansson_d.jansson.json_incref(value);
+				assert(value.refcount == size_t.max, "refcounting false works incorrectly");
+			}
+
+			{
+				value = jansson_d.value.json_null();
+				assert(value.refcount == size_t.max, "refcounting null works incorrectly");
+			}
+
+			{
+				jansson_d.jansson.json_decref(value);
+				assert(value.refcount == size_t.max, "refcounting null works incorrectly");
+			}
+		}
+
+		{
+			{
+				jansson_d.jansson.json_incref(value);
+
+				assert(value.refcount == size_t.max, "refcounting null works incorrectly");
+			}
+
+			static if (__traits(compiles, jansson_d.jansson.json_auto_t)) {
+				value = jansson_d.value.json_string("foo");
+
+				scope (exit) {
+					jansson_d.jansson.json_decref(value);
+				}
+
+				{
+					jansson_d.jansson.json_auto_t* test = jansson_d.jansson.json_incref(value);
+
+					/* Use test so GCC doesn't complain it is unused. */
+					assert(mixin (jansson_d.jansson.json_is_string!("test")), "value type check failed");
+				}
+
+				assert(value.refcount == 1, "automatic decrement failed");
+			}
 		}
 	}
 

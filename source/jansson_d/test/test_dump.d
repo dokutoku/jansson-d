@@ -62,18 +62,15 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* json = void;
-	char* result = void;
-
 	{
-		json = jansson_d.value.json_object();
+		jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
 		}
 
 		{
-			result = jansson_d.dump.json_dumps(json, 0);
+			char* result = jansson_d.dump.json_dumps(json, 0);
 
 			scope (exit) {
 				jansson_d.jansson_private.jsonp_free(result);
@@ -85,7 +82,7 @@ unittest
 		jansson_d.value.json_object_set_new(json, "foo", jansson_d.value.json_integer(5));
 
 		{
-			result = jansson_d.dump.json_dumps(json, 0);
+			char* result = jansson_d.dump.json_dumps(json, 0);
 
 			scope (exit) {
 				jansson_d.jansson_private.jsonp_free(result);
@@ -96,14 +93,14 @@ unittest
 	}
 
 	{
-		json = jansson_d.value.json_array();
+		jansson_d.jansson.json_t* json = jansson_d.value.json_array();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
 		}
 
 		{
-			result = jansson_d.dump.json_dumps(json, 0);
+			char* result = jansson_d.dump.json_dumps(json, 0);
 
 			scope (exit) {
 				jansson_d.jansson_private.jsonp_free(result);
@@ -115,7 +112,7 @@ unittest
 		jansson_d.value.json_array_append_new(json, jansson_d.value.json_integer(5));
 
 		{
-			result = jansson_d.dump.json_dumps(json, 0);
+			char* result = jansson_d.dump.json_dumps(json, 0);
 
 			scope (exit) {
 				jansson_d.jansson_private.jsonp_free(result);
@@ -140,11 +137,8 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* json = void;
-	char* result = void;
-
 	{
-		json = jansson_d.value.json_object();
+		jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
@@ -158,7 +152,7 @@ unittest
 
 		jansson_d.value.json_object_del(jansson_d.value.json_object_get(jansson_d.value.json_object_get(json, "a"), "b"), "c");
 
-		result = jansson_d.dump.json_dumps(json, 0);
+		char* result = jansson_d.dump.json_dumps(json, 0);
 
 		scope (exit) {
 			jansson_d.jansson_private.jsonp_free(result);
@@ -168,7 +162,7 @@ unittest
 	}
 
 	{
-		json = jansson_d.value.json_array();
+		jansson_d.jansson.json_t* json = jansson_d.value.json_array();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
@@ -182,7 +176,7 @@ unittest
 
 		jansson_d.value.json_array_remove(jansson_d.value.json_array_get(jansson_d.value.json_array_get(json, 0), 0), 0);
 
-		result = jansson_d.dump.json_dumps(json, 0);
+		char* result = jansson_d.dump.json_dumps(json, 0);
 
 		scope (exit) {
 			jansson_d.jansson_private.jsonp_free(result);
@@ -202,11 +196,8 @@ unittest
 
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* json = void;
-	char* result = void;
-
 	{
-		json = jansson_d.value.json_string("foo");
+		jansson_d.jansson.json_t* json = jansson_d.value.json_string("foo");
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
@@ -218,7 +209,7 @@ unittest
 
 		assert(jansson_d.dump.json_dumpfd(json, -1, 0) != 0, "json_dumpfd encoded a string!");
 
-		result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
+		char* result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
 
 		scope (exit) {
 			jansson_d.jansson_private.jsonp_free(result);
@@ -228,7 +219,7 @@ unittest
 	}
 
 	{
-		json = jansson_d.value.json_integer(42);
+		jansson_d.jansson.json_t* json = jansson_d.value.json_integer(42);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(json);
@@ -240,7 +231,7 @@ unittest
 
 		assert(jansson_d.dump.json_dumpfd(json, -1, 0) != 0, "json_dumpfd encoded an integer!");
 
-		result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
+		char* result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ENCODE_ANY);
 
 		scope (exit) {
 			jansson_d.jansson_private.jsonp_free(result);
@@ -264,10 +255,8 @@ unittest
 
 	jansson_d.value.json_object_set_new(json, "url", jansson_d.value.json_string("https://github.com/akheron/jansson"));
 
-	char* result = void;
-
 	{
-		result = jansson_d.dump.json_dumps(json, 0);
+		char* result = jansson_d.dump.json_dumps(json, 0);
 
 		scope (exit) {
 			jansson_d.jansson_private.jsonp_free(result);
@@ -277,7 +266,7 @@ unittest
 	}
 
 	{
-		result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ESCAPE_SLASH);
+		char* result = jansson_d.dump.json_dumps(json, jansson_d.jansson.JSON_ESCAPE_SLASH);
 
 		scope (exit) {
 			jansson_d.jansson_private.jsonp_free(result);
@@ -310,50 +299,54 @@ unittest
 unittest
 {
 	jansson_d.test.util.init_unittest();
-	int result = jansson_d.dump.json_dump_file(null, "\0", 0);
 
-	assert(result == -1, "json_dump_file succeeded with invalid args");
+	{
+		int result = jansson_d.dump.json_dump_file(null, "\0", 0);
 
-	jansson_d.jansson.json_t* json = jansson_d.value.json_object();
-
-	scope (exit) {
-		jansson_d.jansson.json_decref(json);
+		assert(result == -1, "json_dump_file succeeded with invalid args");
 	}
 
-	result = jansson_d.dump.json_dump_file(json, "json_dump_file.json", 0);
+	{
+		jansson_d.jansson.json_t* json = jansson_d.value.json_object();
 
-	assert(result == 0, "json_dump_file failed");
+		scope (exit) {
+			jansson_d.jansson.json_decref(json);
 
-	core.stdc.stdio.remove("json_dump_file.json");
+			core.stdc.stdio.remove("json_dump_file.json");
+		}
+
+		int result = jansson_d.dump.json_dump_file(json, "json_dump_file.json", 0);
+
+		assert(result == 0, "json_dump_file failed");
+	}
 }
 
 //dumpb
 unittest
 {
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_t* obj = void;
-
-	char[2] buf = void;
 
 	{
-		obj = jansson_d.value.json_object();
+		jansson_d.jansson.json_t* obj = jansson_d.value.json_object();
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(obj);
 		}
 
+		char[2] buf = void;
 		size_t size = jansson_d.dump.json_dumpb(obj, &(buf[0]), buf.length, 0);
 
 		assert((size == 2) && (!core.stdc.string.strncmp(&(buf[0]), "{}", 2)), "json_dumpb failed");
 	}
 
 	{
-		obj = jansson_d.pack_unpack.json_pack("{s:s}", &("foo\0"[0]), &("bar\0"[0]));
+		jansson_d.jansson.json_t* obj = jansson_d.pack_unpack.json_pack("{s:s}", &("foo\0"[0]), &("bar\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(obj);
 		}
 
+		char[2] buf = void;
 		size_t size = jansson_d.dump.json_dumpb(obj, &(buf[0]), buf.length, jansson_d.jansson.JSON_COMPACT);
 
 		assert(size == 13, "json_dumpb size check failed");

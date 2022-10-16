@@ -32,21 +32,23 @@ unittest
 	static assert(__traits(compiles, core.stdc.math.INFINITY));
 
 	jansson_d.test.util.init_unittest();
-	jansson_d.jansson.json_error_t error = void;
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "f", core.stdc.math.INFINITY) == null, "json_pack infinity incorrectly succeeded");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_numeric_overflow, "Invalid floating point value", "<args>", 1, 1, 1);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[f]", core.stdc.math.INFINITY) == null, "json_pack infinity array element incorrectly succeeded");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_numeric_overflow, "Invalid floating point value", "<args>", 1, 2, 2);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:f}", &("key\0"[0]), core.stdc.math.INFINITY) == null, "json_pack infinity object value incorrectly succeeded");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_numeric_overflow, "Invalid floating point value", "<args>", 1, 4, 4);
@@ -62,10 +64,8 @@ unittest
 	/* true */
 	jansson_d.test.util.init_unittest();
 
-	jansson_d.jansson.json_t* value = void;
-
 	{
-		value = jansson_d.pack_unpack.json_pack("b", 1);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("b", 1);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -78,7 +78,7 @@ unittest
 
 	{
 		/* false */
-		value = jansson_d.pack_unpack.json_pack("b", 0);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("b", 0);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -91,7 +91,7 @@ unittest
 
 	{
 		/* null */
-		value = jansson_d.pack_unpack.json_pack("n");
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("n");
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -104,7 +104,7 @@ unittest
 
 	{
 		/* integer */
-		value = jansson_d.pack_unpack.json_pack("i", 1);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("i", 1);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -117,7 +117,7 @@ unittest
 
 	{
 		/* integer from json_int_t */
-		value = jansson_d.pack_unpack.json_pack("I", cast(jansson_d.jansson.json_int_t)(555555));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("I", cast(jansson_d.jansson.json_int_t)(555555));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -130,7 +130,7 @@ unittest
 
 	{
 		/* real */
-		value = jansson_d.pack_unpack.json_pack("f", 1.0);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("f", 1.0);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -143,7 +143,7 @@ unittest
 
 	{
 		/* string */
-		value = jansson_d.pack_unpack.json_pack("s", &("test\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s", &("test\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -156,7 +156,7 @@ unittest
 
 	{
 		/* nullable string (defined case) */
-		value = jansson_d.pack_unpack.json_pack("s?", &("test\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s?", &("test\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -169,7 +169,7 @@ unittest
 
 	{
 		/* nullable string (null case) */
-		value = jansson_d.pack_unpack.json_pack("s?", null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s?", null);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -180,10 +180,9 @@ unittest
 		assert(value.refcount == size_t.max, "json_pack nullable string (null case) refcount failed");
 	}
 
-	jansson_d.jansson.json_error_t error = void;
-
 	{
 		/* nullable string concatenation */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "s?+", &("test\0"[0]), &("ing\0"[0])) == null, "json_pack failed to catch invalid format 's?+'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Cannot use '+' on optional strings", "<format>", 1, 2, 2);
@@ -191,6 +190,7 @@ unittest
 
 	{
 		/* nullable string with integer length */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "s?#", &("test\0"[0]), 4) == null, "json_pack failed to catch invalid format 's?#'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Cannot use '#' on optional strings", "<format>", 1, 2, 2);
@@ -198,7 +198,7 @@ unittest
 
 	{
 		/* string and length (int) */
-		value = jansson_d.pack_unpack.json_pack("s#", &("test asdf\0"[0]), 4);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s#", &("test asdf\0"[0]), 4);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -211,7 +211,7 @@ unittest
 
 	{
 		/* string and length (size_t) */
-		value = jansson_d.pack_unpack.json_pack("s%", &("test asdf\0"[0]), cast(size_t)(4));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s%", &("test asdf\0"[0]), cast(size_t)(4));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -222,11 +222,10 @@ unittest
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length refcount failed");
 	}
 
-	char[4] buffer = ['t', 'e', 's', 't'];
-
 	{
 		/* string and length (int), non-NUL terminated string */
-		value = jansson_d.pack_unpack.json_pack("s#", &(buffer[0]), buffer.length);
+		char[4] buffer = ['t', 'e', 's', 't'];
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s#", &(buffer[0]), buffer.length);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -239,7 +238,8 @@ unittest
 
 	{
 		/* string and length (size_t), non-NUL terminated string */
-		value = jansson_d.pack_unpack.json_pack("s%", &(buffer[0]), buffer.length);
+		char[4] buffer = ['t', 'e', 's', 't'];
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s%", &(buffer[0]), buffer.length);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -253,7 +253,7 @@ unittest
 	{
 		/* string concatenation */
 		assert(jansson_d.pack_unpack.json_pack("s+", &("test\0"[0]), null) == null, "json_pack string concatenation succeeded with null string");
-		value = jansson_d.pack_unpack.json_pack("s++", &("te\0"[0]), &("st\0"[0]), &("ing\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s++", &("te\0"[0]), &("st\0"[0]), &("ing\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -266,7 +266,7 @@ unittest
 
 	{
 		/* string concatenation and length (int) */
-		value = jansson_d.pack_unpack.json_pack("s#+#+", &("test\0"[0]), 1, &("test\0"[0]), 2, &("test\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s#+#+", &("test\0"[0]), 1, &("test\0"[0]), 2, &("test\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -279,7 +279,7 @@ unittest
 
 	{
 		/* string concatenation and length (size_t) */
-		value = jansson_d.pack_unpack.json_pack("s%+%+", &("test\0"[0]), cast(size_t)(1), &("test\0"[0]), cast(size_t)(2), &("test\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("s%+%+", &("test\0"[0]), cast(size_t)(1), &("test\0"[0]), cast(size_t)(2), &("test\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -292,7 +292,7 @@ unittest
 
 	{
 		/* empty object */
-		value = jansson_d.pack_unpack.json_pack("{}", 1.0);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("{}", 1.0);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -305,7 +305,7 @@ unittest
 
 	{
 		/* empty list */
-		value = jansson_d.pack_unpack.json_pack("[]", 1.0);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("[]", 1.0);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -318,7 +318,7 @@ unittest
 
 	{
 		/* non-incref'd object */
-		value = jansson_d.pack_unpack.json_pack("o", jansson_d.value.json_integer(1));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("o", jansson_d.value.json_integer(1));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -331,7 +331,7 @@ unittest
 
 	{
 		/* non-incref'd nullable object (defined case) */
-		value = jansson_d.pack_unpack.json_pack("o?", jansson_d.value.json_integer(1));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("o?", jansson_d.value.json_integer(1));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -344,7 +344,7 @@ unittest
 
 	{
 		/* non-incref'd nullable object (null case) */
-		value = jansson_d.pack_unpack.json_pack("o?", null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("o?", null);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -357,7 +357,7 @@ unittest
 
 	{
 		/* incref'd object */
-		value = jansson_d.pack_unpack.json_pack("O", jansson_d.value.json_integer(1));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("O", jansson_d.value.json_integer(1));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -371,7 +371,7 @@ unittest
 
 	{
 		/* incref'd nullable object (defined case) */
-		value = jansson_d.pack_unpack.json_pack("O?", jansson_d.value.json_integer(1));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("O?", jansson_d.value.json_integer(1));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -385,7 +385,7 @@ unittest
 
 	{
 		/* incref'd nullable object (null case) */
-		value = jansson_d.pack_unpack.json_pack("O?", null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("O?", null);
 
 		assert(mixin (jansson_d.jansson.json_is_null!("value")), "json_pack incref'd nullable object (null case) failed");
 
@@ -394,7 +394,7 @@ unittest
 
 	{
 		/* simple object */
-		value = jansson_d.pack_unpack.json_pack("{s:[]}", &("foo\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("{s:[]}", &("foo\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -409,7 +409,7 @@ unittest
 
 	{
 		/* object with complex key */
-		value = jansson_d.pack_unpack.json_pack("{s+#+: []}", &("foo\0"[0]), &("barbar\0"[0]), 3, &("baz\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("{s+#+: []}", &("foo\0"[0]), &("barbar\0"[0]), 3, &("baz\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -424,23 +424,24 @@ unittest
 
 	{
 		/* object with optional members */
-		value = jansson_d.pack_unpack.json_pack("{s:s,s:o,s:O}", &("a\0"[0]), null, &("b\0"[0]), null, &("c\0"[0]), null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("{s:s,s:o,s:O}", &("a\0"[0]), null, &("b\0"[0]), null, &("c\0"[0]), null);
 
 		assert(value == null, "json_pack object optional incorrectly succeeded");
 	}
 
 	{
-		value = jansson_d.pack_unpack.json_pack("{s:**}", &("a\0"[0]), null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("{s:**}", &("a\0"[0]), null);
 
 		assert(value == null, "json_pack object optional invalid incorrectly succeeded");
 
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:i*}", &("a\0"[0]), 1) == null, "json_pack object optional invalid incorrectly succeeded");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Expected format 's', got '*'", "<format>", 1, 5, 5);
 	}
 
 	{
-		value = jansson_d.pack_unpack.json_pack("{s:s*,s:o*,s:O*}", &("a\0"[0]), null, &("b\0"[0]), null, &("c\0"[0]), null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("{s:s*,s:o*,s:O*}", &("a\0"[0]), null, &("b\0"[0]), null, &("c\0"[0]), null);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -450,10 +451,11 @@ unittest
 	}
 
 	{
-		value = jansson_d.pack_unpack.json_pack("{s:s*}", &("key\0"[0]), &("\xff\xff\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("{s:s*}", &("key\0"[0]), &("\xff\xff\0"[0]));
 
 		assert(value == null, "json_pack object optional with invalid UTF-8 incorrectly succeeded");
 
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s: s*#}", &("key\0"[0]), &("test\0"[0]), 1) == null, "json_pack failed to catch invalid format 's*#'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Cannot use '#' on optional strings", "<format>", 1, 6, 6);
@@ -465,7 +467,7 @@ unittest
 
 	{
 		/* simple array */
-		value = jansson_d.pack_unpack.json_pack("[i,i,i]", 0, 1, 2);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("[i,i,i]", 0, 1, 2);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -480,23 +482,24 @@ unittest
 
 	{
 		/* simple array with optional members */
-		value = jansson_d.pack_unpack.json_pack("[s,o,O]", null, null, null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("[s,o,O]", null, null, null);
 
 		assert(value == null, "json_pack array optional incorrectly succeeded");
 
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[i*]", 1) == null, "json_pack array optional invalid incorrectly succeeded");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected format character '*'", "<format>", 1, 3, 3);
 	}
 
 	{
-		value = jansson_d.pack_unpack.json_pack("[**]", null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("[**]", null);
 
 		assert(value == null, "json_pack array optional invalid incorrectly succeeded");
 	}
 
 	{
-		value = jansson_d.pack_unpack.json_pack("[s*,o*,O*]", null, null, null);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("[s*,o*,O*]", null, null, null);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -508,6 +511,7 @@ unittest
 	{
 		static assert(__traits(compiles, core.stdc.math.NAN));
 		/* Invalid float values */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "f", core.stdc.math.NAN) == null, "json_pack NAN incorrectly succeeded");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_numeric_overflow, "Invalid floating point value", "<args>", 1, 1, 1);
@@ -523,7 +527,7 @@ unittest
 
 	/* Whitespace; regular string */
 	{
-		value = jansson_d.pack_unpack.json_pack(" s\t ", &("test\0"[0]));
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack(" s\t ", &("test\0"[0]));
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -534,7 +538,7 @@ unittest
 
 	/* Whitespace; empty array */
 	{
-		value = jansson_d.pack_unpack.json_pack("[ ]");
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("[ ]");
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -545,7 +549,7 @@ unittest
 
 	/* Whitespace; array */
 	{
-		value = jansson_d.pack_unpack.json_pack("[ i , i,  i ] ", 1, 2, 3);
+		jansson_d.jansson.json_t* value = jansson_d.pack_unpack.json_pack("[ i , i,  i ] ", 1, 2, 3);
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
@@ -560,6 +564,7 @@ unittest
 
 	{
 		/* newline in format string */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{\n\n1") == null, "json_pack failed to catch invalid format '1'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Expected format 's', got '1'", "<format>", 3, 1, 4);
@@ -567,12 +572,14 @@ unittest
 
 	{
 		/* mismatched open/close array/object */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[}") == null, "json_pack failed to catch mismatched '}'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected format character '}'", "<format>", 1, 2, 2);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{]") == null, "json_pack failed to catch mismatched ']'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Expected format 's', got ']'", "<format>", 1, 2, 2);
@@ -580,6 +587,7 @@ unittest
 
 	{
 		/* missing close array */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[") == null, "json_pack failed to catch missing ']'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected end of format string", "<format>", 1, 2, 2);
@@ -587,6 +595,7 @@ unittest
 
 	{
 		/* missing close object */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{") == null, "json_pack failed to catch missing '}'");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected end of format string", "<format>", 1, 2, 2);
@@ -594,12 +603,14 @@ unittest
 
 	{
 		/* garbage after format string */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[i]a", 42) == null, "json_pack failed to catch garbage after format string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Garbage after format string", "<format>", 1, 4, 4);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "ia", 42) == null, "json_pack failed to catch garbage after format string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Garbage after format string", "<format>", 1, 2, 2);
@@ -607,6 +618,7 @@ unittest
 
 	{
 		/* null string */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "s", null) == null, "json_pack failed to catch null argument string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null string", "<args>", 1, 1, 1);
@@ -614,6 +626,7 @@ unittest
 
 	{
 		/* + on its own */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "+", null) == null, "json_pack failed to a lone +");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected format character '+'", "<format>", 1, 1, 1);
@@ -621,6 +634,7 @@ unittest
 
 	{
 		/* Empty format */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "\0") == null, "json_pack failed to catch empty format string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_argument, "null or empty format string", "<format>", -1, -1, 0);
@@ -628,6 +642,7 @@ unittest
 
 	{
 		/* null format */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, null) == null, "json_pack failed to catch null format string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_argument, "null or empty format string", "<format>", -1, -1, 0);
@@ -635,6 +650,7 @@ unittest
 
 	{
 		/* null key */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:i}", null, 1) == null, "json_pack failed to catch null key");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null object key", "<args>", 1, 2, 2);
@@ -642,12 +658,13 @@ unittest
 
 	{
 		/* null value followed by object still steals the object's ref */
-		value = jansson_d.jansson.json_incref(jansson_d.value.json_object());
+		jansson_d.jansson.json_t* value = jansson_d.jansson.json_incref(jansson_d.value.json_object());
 
 		scope (exit) {
 			jansson_d.jansson.json_decref(value);
 		}
 
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:s,s:o}", &("badnull\0"[0]), null, &("dontleak\0"[0]), value) == null, "json_pack failed to catch null value");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null string", "<args>", 1, 4, 4);
@@ -657,6 +674,7 @@ unittest
 
 	{
 		/* More complicated checks for row/columns */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{ {}: s }", &("foo\0"[0])) == null, "json_pack failed to catch object as key");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Expected format 's', got '{'", "<format>", 1, 3, 3);
@@ -664,6 +682,7 @@ unittest
 
 	{
 		/* Complex object */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{ s: {},  s:[ii{} }", &("foo\0"[0]), &("bar\0"[0]), 12, 13) == null, "json_pack failed to catch missing ]");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected format character '}'", "<format>", 1, 19, 19);
@@ -671,6 +690,7 @@ unittest
 
 	{
 		/* Complex array */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[[[[[   [[[[[  [[[[ }]]]] ]]]] ]]]]]") == null, "json_pack failed to catch extra }");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected format character '}'", "<format>", 1, 21, 21);
@@ -678,6 +698,7 @@ unittest
 
 	{
 		/* Invalid UTF-8 in object key */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:i}", &("\xff\xff\0"[0]), 42) == null, "json_pack failed to catch invalid UTF-8 in an object key");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_utf8, "Invalid UTF-8 object key", "<args>", 1, 2, 2);
@@ -685,6 +706,7 @@ unittest
 
 	{
 		/* Invalid UTF-8 in a string */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:s}", &("foo\0"[0]), &("\xff\xff\0"[0])) == null, "json_pack failed to catch invalid UTF-8 in a string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_utf8, "Invalid UTF-8 string", "<args>", 1, 4, 4);
@@ -692,6 +714,7 @@ unittest
 
 	{
 		/* Invalid UTF-8 in an optional '?' string */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:s?}", &("foo\0"[0]), &("\xff\xff\0"[0])) == null, "json_pack failed to catch invalid UTF-8 in an optional '?' string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_utf8, "Invalid UTF-8 string", "<args>", 1, 5, 5);
@@ -699,6 +722,7 @@ unittest
 
 	{
 		/* Invalid UTF-8 in an optional '*' string */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:s*}", &("foo\0"[0]), &("\xff\xff\0"[0])) == null, "json_pack failed to catch invalid UTF-8 in an optional '*' string");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_utf8, "Invalid UTF-8 string", "<args>", 1, 5, 5);
@@ -706,42 +730,49 @@ unittest
 
 	{
 		/* Invalid UTF-8 in a concatenated key */
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s+:i}", &("\xff\xff\0"[0]), &("concat\0"[0]), 42) == null, "json_pack failed to catch invalid UTF-8 in an object key");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_utf8, "Invalid UTF-8 object key", "<args>", 1, 3, 3);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:o}", &("foo\0"[0]), null) == null, "json_pack failed to catch nullable object");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null object", "<args>", 1, 4, 4);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s:O}", &("foo\0"[0]), null) == null, "json_pack failed to catch nullable incref object");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null object", "<args>", 1, 4, 4);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "{s+:o}", &("foo\0"[0]), &("bar\0"[0]), null) == null, "json_pack failed to catch non-nullable object value");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null object", "<args>", 1, 5, 5);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[1s", &("Hi\0"[0])) == null, "json_pack failed to catch invalid format");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected format character '1'", "<format>", 1, 2, 2);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[1s+", &("Hi\0"[0]), &("ya\0"[0])) == null, "json_pack failed to catch invalid format");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected format character '1'", "<format>", 1, 2, 2);
 	}
 
 	{
+		jansson_d.jansson.json_error_t error = void;
 		assert(jansson_d.pack_unpack.json_pack_ex(&error, 0, "[so]", null, jansson_d.value.json_object()) == null, "json_pack failed to catch null value");
 
 		jansson_d.test.util.check_error(error, jansson_d.jansson.json_error_code_t.json_error_null_value, "null string", "<args>", 1, 2, 2);
