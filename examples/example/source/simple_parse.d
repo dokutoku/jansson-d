@@ -29,10 +29,10 @@
 private static import core.stdc.config;
 private static import core.stdc.stdio;
 private static import core.stdc.stdlib;
-private static import jansson_d.jansson;
+private static import jansson.jansson;
 
 nothrow @nogc @live
-void print_json(scope jansson_d.jansson.json_t* root)
+void print_json(scope jansson.jansson.json_t* root)
 
 	do
 	{
@@ -40,53 +40,53 @@ void print_json(scope jansson_d.jansson.json_t* root)
 	}
 
 nothrow @nogc @live
-void print_json_aux(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_aux(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
-		switch (mixin (jansson_d.jansson.json_typeof!("element"))) {
-			case jansson_d.jansson.json_type.JSON_OBJECT:
+		switch (mixin (jansson.jansson.json_typeof!("element"))) {
+			case jansson.jansson.json_type.JSON_OBJECT:
 				.print_json_object(element, indent);
 
 				break;
 
-			case jansson_d.jansson.json_type.JSON_ARRAY:
+			case jansson.jansson.json_type.JSON_ARRAY:
 				.print_json_array(element, indent);
 
 				break;
 
-			case jansson_d.jansson.json_type.JSON_STRING:
+			case jansson.jansson.json_type.JSON_STRING:
 				.print_json_string(element, indent);
 
 				break;
 
-			case jansson_d.jansson.json_type.JSON_INTEGER:
+			case jansson.jansson.json_type.JSON_INTEGER:
 				.print_json_integer(element, indent);
 
 				break;
 
-			case jansson_d.jansson.json_type.JSON_REAL:
+			case jansson.jansson.json_type.JSON_REAL:
 				.print_json_real(element, indent);
 
 				break;
 
-			case jansson_d.jansson.json_type.JSON_TRUE:
+			case jansson.jansson.json_type.JSON_TRUE:
 				.print_json_true(element, indent);
 
 				break;
 
-			case jansson_d.jansson.json_type.JSON_FALSE:
+			case jansson.jansson.json_type.JSON_FALSE:
 				.print_json_false(element, indent);
 
 				break;
 
-			case jansson_d.jansson.json_type.JSON_NULL:
+			case jansson.jansson.json_type.JSON_NULL:
 				.print_json_null(element, indent);
 
 				break;
 
 			default:
-				core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "unrecognized JSON type %d\n", mixin (jansson_d.jansson.json_typeof!("element")));
+				core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "unrecognized JSON type %d\n", mixin (jansson.jansson.json_typeof!("element")));
 
 				break;
 		}
@@ -111,16 +111,16 @@ immutable (char)* json_plural(size_t count)
 	}
 
 nothrow @nogc @live
-void print_json_object(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_object(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
 		.print_json_indent(indent);
-		size_t size = jansson_d.jansson.json_object_size(element);
+		size_t size = jansson.jansson.json_object_size(element);
 
 		core.stdc.stdio.printf("JSON Object of %zd pair%s:\n", size, .json_plural(size));
 
-		foreach (child_obj; jansson_d.jansson.json_object_foreach(element)) {
+		foreach (child_obj; jansson.jansson.json_object_foreach(element)) {
 			.print_json_indent(indent + 2);
 			core.stdc.stdio.printf("JSON Key: \"%s\"\n", child_obj.key);
 			.print_json_aux(child_obj.value, indent + 2);
@@ -128,49 +128,49 @@ void print_json_object(scope jansson_d.jansson.json_t* element, size_t indent)
 	}
 
 nothrow @nogc @live
-void print_json_array(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_array(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
-		size_t size = jansson_d.jansson.json_array_size(element);
+		size_t size = jansson.jansson.json_array_size(element);
 		.print_json_indent(indent);
 
 		core.stdc.stdio.printf("JSON Array of %zd element%s:\n", size, .json_plural(size));
 
 		for (size_t i = 0; i < size; i++) {
-			.print_json_aux(jansson_d.jansson.json_array_get(element, i), indent + 2);
+			.print_json_aux(jansson.jansson.json_array_get(element, i), indent + 2);
 		}
 	}
 
 nothrow @nogc @live
-void print_json_string(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_string(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
 		.print_json_indent(indent);
-		core.stdc.stdio.printf("JSON String: \"%s\"\n", jansson_d.jansson.json_string_value(element));
+		core.stdc.stdio.printf("JSON String: \"%s\"\n", jansson.jansson.json_string_value(element));
 	}
 
 nothrow @nogc @live
-void print_json_integer(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_integer(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
 		.print_json_indent(indent);
-		core.stdc.stdio.printf("JSON Integer: \"%" ~ jansson_d.jansson.JSON_INTEGER_FORMAT ~ "\"\n", jansson_d.jansson.json_integer_value(element));
+		core.stdc.stdio.printf("JSON Integer: \"%" ~ jansson.jansson.JSON_INTEGER_FORMAT ~ "\"\n", jansson.jansson.json_integer_value(element));
 	}
 
 nothrow @nogc @live
-void print_json_real(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_real(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
 		.print_json_indent(indent);
-		core.stdc.stdio.printf("JSON Real: %f\n", jansson_d.jansson.json_real_value(element));
+		core.stdc.stdio.printf("JSON Real: %f\n", jansson.jansson.json_real_value(element));
 	}
 
 nothrow @nogc @live
-void print_json_true(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_true(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
@@ -179,7 +179,7 @@ void print_json_true(scope jansson_d.jansson.json_t* element, size_t indent)
 	}
 
 nothrow @nogc @live
-void print_json_false(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_false(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
@@ -188,7 +188,7 @@ void print_json_false(scope jansson_d.jansson.json_t* element, size_t indent)
 	}
 
 nothrow @nogc @live
-void print_json_null(scope jansson_d.jansson.json_t* element, size_t indent)
+void print_json_null(scope jansson.jansson.json_t* element, size_t indent)
 
 	do
 	{
@@ -198,16 +198,16 @@ void print_json_null(scope jansson_d.jansson.json_t* element, size_t indent)
 
 /*
  * Parse text into a JSON object. If text is valid JSON, returns a
- * jansson_d.jansson.json_t structure, otherwise prints and error and returns null.
+ * jansson.jansson.json_t structure, otherwise prints and error and returns null.
  */
 nothrow @nogc
-jansson_d.jansson.json_t* load_json(scope const char* text)
+jansson.jansson.json_t* load_json(scope const char* text)
 
 	do
 	{
-		jansson_d.jansson.json_error_t error = void;
+		jansson.jansson.json_error_t error = void;
 
-		jansson_d.jansson.json_t* root = jansson_d.jansson.json_loads(text, 0, &error);
+		jansson.jansson.json_t* root = jansson.jansson.json_loads(text, 0, &error);
 
 		if (root != null) {
 			return root;
@@ -253,10 +253,10 @@ int main(string[] argv)
 
 		while ((.read_line(&(line[0]), line.length) != null) && (!((line[0] == '\n') && (line[1] == '\0'))) && (!((line[0] == '\r') && (line[1] == '\n') && (line[2] == '\0')))) {
 			/* parse text into JSON structure */
-			jansson_d.jansson.json_t* root = .load_json(&(line[0]));
+			jansson.jansson.json_t* root = .load_json(&(line[0]));
 
 			scope (exit) {
-				jansson_d.jansson.json_decref(root);
+				jansson.jansson.json_decref(root);
 			}
 
 			if (root != null) {

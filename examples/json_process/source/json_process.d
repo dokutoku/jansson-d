@@ -15,9 +15,9 @@ private static import core.stdc.locale;
 private static import core.stdc.stdio;
 private static import core.stdc.stdlib;
 private static import core.stdc.string;
-private static import jansson_d.hashtable_seed;
-private static import jansson_d.jansson;
-private static import jansson_d.jansson_private;
+private static import jansson.hashtable_seed;
+private static import jansson.jansson;
+private static import jansson.jansson_private;
 private static import std.string;
 
 version (Windows) {
@@ -261,23 +261,23 @@ int use_conf(scope const char* test_path)
 		size_t flags = 0;
 
 		if (.conf.indent) {
-			flags |= mixin (jansson_d.jansson.JSON_INDENT!("conf.indent"));
+			flags |= mixin (jansson.jansson.JSON_INDENT!("conf.indent"));
 		}
 
 		if (.conf.compact) {
-			flags |= jansson_d.jansson.JSON_COMPACT;
+			flags |= jansson.jansson.JSON_COMPACT;
 		}
 
 		if (.conf.ensure_ascii) {
-			flags |= jansson_d.jansson.JSON_ENSURE_ASCII;
+			flags |= jansson.jansson.JSON_ENSURE_ASCII;
 		}
 
 		if (.conf.preserve_order) {
-			flags |= jansson_d.jansson.JSON_PRESERVE_ORDER;
+			flags |= jansson.jansson.JSON_PRESERVE_ORDER;
 		}
 
 		if (.conf.sort_keys) {
-			flags |= jansson_d.jansson.JSON_SORT_KEYS;
+			flags |= jansson.jansson.JSON_SORT_KEYS;
 		}
 
 		if ((.conf.precision < 0) || (.conf.precision > 31)) {
@@ -288,16 +288,16 @@ int use_conf(scope const char* test_path)
 		}
 
 		if (.conf.precision) {
-			flags |= mixin (jansson_d.jansson.JSON_REAL_PRECISION!("conf.precision"));
+			flags |= mixin (jansson.jansson.JSON_REAL_PRECISION!("conf.precision"));
 		}
 
 		if (.conf.have_hashseed) {
-			jansson_d.hashtable_seed.json_object_seed(.conf.hashseed);
+			jansson.hashtable_seed.json_object_seed(.conf.hashseed);
 		}
 
-		jansson_d.jansson.json_t* json = void;
+		jansson.jansson.json_t* json = void;
 		char* buffer = void;
-		jansson_d.jansson.json_error_t error = void;
+		jansson.jansson.json_error_t error = void;
 
 		if (.conf.strip) {
 			/* Load to memory, strip leading and trailing whitespace */
@@ -307,9 +307,9 @@ int use_conf(scope const char* test_path)
 				core.memory.pureFree(buffer);
 			}
 
-			json = jansson_d.jansson.json_loads(.strip(buffer), 0, &error);
+			json = jansson.jansson.json_loads(.strip(buffer), 0, &error);
 		} else {
-			json = jansson_d.jansson.json_loadf(infile, 0, &error);
+			json = jansson.jansson.json_loadf(infile, 0, &error);
 		}
 
 		core.stdc.stdio.fclose(infile);
@@ -326,14 +326,14 @@ int use_conf(scope const char* test_path)
 		}
 
 		scope (exit) {
-			jansson_d.jansson.json_decref(json);
+			jansson.jansson.json_decref(json);
 		}
 
-		buffer = jansson_d.jansson.json_dumps(json, flags);
+		buffer = jansson.jansson.json_dumps(json, flags);
 
 		scope (exit) {
 			if (buffer != null) {
-				jansson_d.jansson.json_free_t free_func;
+				jansson.jansson.json_free_t free_func;
 				json_get_alloc_funcs(null, &free_func);
 				free_func(buffer);
 			}
@@ -390,23 +390,23 @@ int use_env()
 		size_t flags = 0;
 
 		if (indent > 0) {
-			flags |= mixin (jansson_d.jansson.JSON_INDENT!("indent"));
+			flags |= mixin (jansson.jansson.JSON_INDENT!("indent"));
 		}
 
 		if (.getenv_int("JSON_COMPACT") > 0) {
-			flags |= jansson_d.jansson.JSON_COMPACT;
+			flags |= jansson.jansson.JSON_COMPACT;
 		}
 
 		if (.getenv_int("JSON_ENSURE_ASCII")) {
-			flags |= jansson_d.jansson.JSON_ENSURE_ASCII;
+			flags |= jansson.jansson.JSON_ENSURE_ASCII;
 		}
 
 		if (.getenv_int("JSON_PRESERVE_ORDER")) {
-			flags |= jansson_d.jansson.JSON_PRESERVE_ORDER;
+			flags |= jansson.jansson.JSON_PRESERVE_ORDER;
 		}
 
 		if (.getenv_int("JSON_SORT_KEYS")) {
-			flags |= jansson_d.jansson.JSON_SORT_KEYS;
+			flags |= jansson.jansson.JSON_SORT_KEYS;
 		}
 
 		int precision = .getenv_int("JSON_REAL_PRECISION");
@@ -418,15 +418,15 @@ int use_env()
 		}
 
 		if (core.stdc.stdlib.getenv("HASHSEED")) {
-			jansson_d.hashtable_seed.json_object_seed(.getenv_int("HASHSEED"));
+			jansson.hashtable_seed.json_object_seed(.getenv_int("HASHSEED"));
 		}
 
 		if (precision > 0) {
-			flags |= mixin (jansson_d.jansson.JSON_REAL_PRECISION!("precision"));
+			flags |= mixin (jansson.jansson.JSON_REAL_PRECISION!("precision"));
 		}
 
-		jansson_d.jansson.json_t* json = void;
-		jansson_d.jansson.json_error_t error = void;
+		jansson.jansson.json_t* json = void;
+		jansson.jansson.json_error_t error = void;
 
 		if (.getenv_int("STRIP")) {
 			/* Load to memory, strip leading and trailing whitespace */
@@ -457,9 +457,9 @@ int use_env()
 				}
 			}
 
-			json = jansson_d.jansson.json_loads(.strip(buffer), 0, &error);
+			json = jansson.jansson.json_loads(.strip(buffer), 0, &error);
 		} else {
-			json = jansson_d.jansson.json_loadf(core.stdc.stdio.stdin, 0, &error);
+			json = jansson.jansson.json_loadf(core.stdc.stdio.stdin, 0, &error);
 		}
 
 		if (json == null) {
@@ -469,10 +469,10 @@ int use_env()
 		}
 
 		scope (exit) {
-			jansson_d.jansson.json_decref(json);
+			jansson.jansson.json_decref(json);
 		}
 
-		jansson_d.jansson.json_dumpf(json, core.stdc.stdio.stdout, flags);
+		jansson.jansson.json_dumpf(json, core.stdc.stdio.stdout, flags);
 
 		return 0;
 	}

@@ -14,8 +14,8 @@ private static import core.stdc.config;
 private static import core.stdc.stdio;
 private static import core.stdc.string;
 private static import etc.c.curl;
-private static import jansson_d.jansson;
-private static import jansson_d.jansson_private;
+private static import jansson.jansson;
+private static import jansson.jansson_private;
 private static import std.string;
 
 /* 256 KB */
@@ -175,8 +175,8 @@ int main(string[] argv)
 			return 1;
 		}
 
-		jansson_d.jansson.json_error_t error = void;
-		jansson_d.jansson.json_t* root = jansson_d.jansson.json_loads(text, 0, &error);
+		jansson.jansson.json_error_t error = void;
+		jansson.jansson.json_t* root = jansson.jansson.json_loads(text, 0, &error);
 		core.memory.pureFree(text);
 
 		if (root == null) {
@@ -185,54 +185,54 @@ int main(string[] argv)
 			return 1;
 		}
 
-		if (!mixin (jansson_d.jansson.json_is_array!("root"))) {
+		if (!mixin (jansson.jansson.json_is_array!("root"))) {
 			core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "error: root is not an array\n");
-			jansson_d.jansson.json_decref(root);
+			jansson.jansson.json_decref(root);
 
 			return 1;
 		}
 
-		for (size_t i = 0; i < jansson_d.jansson.json_array_size(root); i++) {
-			jansson_d.jansson.json_t* data = jansson_d.jansson.json_array_get(root, i);
+		for (size_t i = 0; i < jansson.jansson.json_array_size(root); i++) {
+			jansson.jansson.json_t* data = jansson.jansson.json_array_get(root, i);
 
-			if (!mixin (jansson_d.jansson.json_is_object!("data"))) {
+			if (!mixin (jansson.jansson.json_is_object!("data"))) {
 				core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "error: commit data %d is not an object\n", cast(int)(i + 1));
-				jansson_d.jansson.json_decref(root);
+				jansson.jansson.json_decref(root);
 
 				return 1;
 			}
 
-			jansson_d.jansson.json_t* sha = jansson_d.jansson.json_object_get(data, "sha");
+			jansson.jansson.json_t* sha = jansson.jansson.json_object_get(data, "sha");
 
-			if (!mixin (jansson_d.jansson.json_is_string!("sha"))) {
+			if (!mixin (jansson.jansson.json_is_string!("sha"))) {
 				core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "error: commit %d: sha is not a string\n", cast(int)(i + 1));
 
 				return 1;
 			}
 
-			jansson_d.jansson.json_t* commit = jansson_d.jansson.json_object_get(data, "commit");
+			jansson.jansson.json_t* commit = jansson.jansson.json_object_get(data, "commit");
 
-			if (!mixin (jansson_d.jansson.json_is_object!("commit"))) {
+			if (!mixin (jansson.jansson.json_is_object!("commit"))) {
 				core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "error: commit %d: commit is not an object\n", cast(int)(i + 1));
-				jansson_d.jansson.json_decref(root);
+				jansson.jansson.json_decref(root);
 
 				return 1;
 			}
 
-			jansson_d.jansson.json_t* message = jansson_d.jansson.json_object_get(commit, "message");
+			jansson.jansson.json_t* message = jansson.jansson.json_object_get(commit, "message");
 
-			if (!mixin (jansson_d.jansson.json_is_string!("message"))) {
+			if (!mixin (jansson.jansson.json_is_string!("message"))) {
 				core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "error: commit %d: message is not a string\n", cast(int)(i + 1));
-				jansson_d.jansson.json_decref(root);
+				jansson.jansson.json_decref(root);
 
 				return 1;
 			}
 
-			const char* message_text = jansson_d.jansson.json_string_value(message);
-			core.stdc.stdio.printf("%.8s %.*s\n", jansson_d.jansson.json_string_value(sha), .newline_offset(message_text), message_text);
+			const char* message_text = jansson.jansson.json_string_value(message);
+			core.stdc.stdio.printf("%.8s %.*s\n", jansson.jansson.json_string_value(sha), .newline_offset(message_text), message_text);
 		}
 
-		jansson_d.jansson.json_decref(root);
+		jansson.jansson.json_decref(root);
 
 		return 0;
 	}
