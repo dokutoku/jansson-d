@@ -352,7 +352,7 @@ public int json_object_update_missing(scope jansson_d.jansson.json_t* object_, s
 		}
 
 		foreach (child_obj; jansson_d.jansson.json_object_keylen_foreach(other)) {
-			if (!.json_object_getn(object_, child_obj.key, child_obj.key_len)) {
+			if (.json_object_getn(object_, child_obj.key, child_obj.key_len) == null) {
 				jansson_d.jansson.json_object_setn_nocheck(object_, child_obj.key, child_obj.key_len, child_obj.value);
 			}
 		}

@@ -42,5 +42,5 @@ unittest
 		assert(jansson_d.value.json_string_length(s) == 0, "string is not empty");
 	}
 
-	assert(!jansson_d.value.json_sprintf("%s", &("\xff\xff\0"[0])), "json_sprintf unexpected success with invalid UTF");
+	assert(jansson_d.value.json_sprintf("%s", &("\xff\xff\0"[0])) == null, "json_sprintf unexpected success with invalid UTF");
 }

@@ -959,7 +959,7 @@ private jansson_d.jansson.json_t* parse_object(scope lex_t* lex, size_t flags, s
 			}
 
 			if (flags & jansson_d.jansson.JSON_REJECT_DUPLICATES) {
-				if (jansson_d.value.json_object_getn(object_, key, len)) {
+				if (jansson_d.value.json_object_getn(object_, key, len) != null) {
 					.error_set(error, lex, jansson_d.jansson.json_error_code_t.json_error_duplicate_key, "duplicate object key");
 
 					goto error_;
