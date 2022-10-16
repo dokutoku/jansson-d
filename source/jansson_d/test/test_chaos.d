@@ -49,7 +49,7 @@ private void chaos_free(scope void* obj)
 /* Test all potential allocation failures. */
 private template chaos_loop(string condition, string code, string cleanup)
 {
-	enum chaos_loop = "{ .chaos_fail = 0; .chaos_pos = 0; while (" ~ condition ~ ") { if (.chaos_fail > .CHAOS_MAX_FAILURE) assert(false, \"too many chaos failures\"); " ~ code ~" .chaos_pos = 0; .chaos_fail++; } " ~ cleanup ~" }";
+	enum chaos_loop = "{ for (.chaos_fail = 0, .chaos_pos = 0; " ~ condition ~ "; .chaos_pos = 0, .chaos_fail++) { if (.chaos_fail > .CHAOS_MAX_FAILURE) assert(false, \"too many chaos failures\"); " ~ code ~" } " ~ cleanup ~" }";
 }
 
 private template chaos_loop_new_value(string json, string initcall)

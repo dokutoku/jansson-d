@@ -401,10 +401,8 @@ private void lex_save_cached(scope .lex_t* lex)
 
 	do
 	{
-		while (lex.stream.buffer[lex.stream.buffer_pos] != '\0') {
+		for (; lex.stream.buffer[lex.stream.buffer_pos] != '\0'; lex.stream.buffer_pos++, lex.stream.position++) {
 			.lex_save(lex, lex.stream.buffer[lex.stream.buffer_pos]);
-			lex.stream.buffer_pos++;
-			lex.stream.position++;
 		}
 	}
 
@@ -471,9 +469,7 @@ private void lex_scan_string(scope .lex_t* lex, scope jansson_d.jansson.json_err
 		lex.value.string_.val = null;
 		lex.token = .TOKEN_INVALID;
 
-		int c = .lex_get_save(lex, error);
-
-		while (c != '"') {
+		for (int c = .lex_get_save(lex, error); c != '"'; ) {
 			if (c == .STREAM_STATE_ERROR) {
 				goto out_;
 			} else if (c == .STREAM_STATE_EOF) {
@@ -537,9 +533,8 @@ private void lex_scan_string(scope .lex_t* lex, scope jansson_d.jansson.json_err
 
 		/* + 1 to skip the " */
 		assert(jansson_d.strbuffer.strbuffer_value(&lex.saved_text) != null);
-		p = jansson_d.strbuffer.strbuffer_value(&lex.saved_text) + 1;
 
-		while (*p != '"') {
+		for (p = jansson_d.strbuffer.strbuffer_value(&lex.saved_text) + 1; *p != '"'; ) {
 			if (*p == '\\') {
 				p++;
 
@@ -1035,7 +1030,7 @@ private jansson_d.jansson.json_t* parse_array(scope .lex_t* lex, size_t flags, s
 			return array;
 		}
 
-		while (lex.token) {
+		for (; lex.token; .lex_scan(lex, error)) {
 			jansson_d.jansson.json_t* elem = .parse_value(lex, flags, error);
 
 			if (elem == null) {
@@ -1051,8 +1046,6 @@ private jansson_d.jansson.json_t* parse_array(scope .lex_t* lex, size_t flags, s
 			if (lex.token != ',') {
 				break;
 			}
-
-			.lex_scan(lex, error);
 		}
 
 		if (lex.token != ']') {

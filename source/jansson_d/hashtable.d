@@ -183,9 +183,7 @@ private .pair_t* hashtable_find_pair(scope .hashtable_t* hashtable_, scope .buck
 			return null;
 		}
 
-		.list_t* list = bucket.first;
-
-		while (true) {
+		for (.list_t* list = bucket.first; true; list = list.next) {
 			assert(list != null);
 			.pair_t* pair = mixin (.list_to_pair!("list"));
 
@@ -196,8 +194,6 @@ private .pair_t* hashtable_find_pair(scope .hashtable_t* hashtable_, scope .buck
 			if (list == bucket.last) {
 				break;
 			}
-
-			list = list.next;
 		}
 
 		return null;

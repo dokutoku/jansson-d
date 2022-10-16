@@ -111,16 +111,13 @@ private void next_token(scope .scanner_t* s)
 		s.pos++;
 
 		/* skip space and ignored chars */
-		while ((*t == ' ') || (*t == '\t') || (*t == '\n') || (*t == ',') || (*t == ':')) {
+		for (; (*t == ' ') || (*t == '\t') || (*t == '\n') || (*t == ',') || (*t == ':'); s.pos++, t++) {
 			if (*t == '\n') {
 				s.line++;
 				s.column = 1;
 			} else {
 				s.column++;
 			}
-
-			s.pos++;
-			t++;
 		}
 
 		s.token.token = *t;
@@ -292,7 +289,7 @@ private jansson_d.jansson.json_t* pack_object(scope .scanner_t* s, scope core.st
 		jansson_d.jansson.json_t* object_ = jansson_d.value.json_object();
 		.next_token(s);
 
-		while (mixin (.token!("s")) != '}') {
+		for (; mixin (.token!("s")) != '}'; .next_token(s)) {
 			if (!mixin (.token!("s"))) {
 				.set_error(s, "<format>", jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected end of format string");
 
@@ -327,8 +324,6 @@ private jansson_d.jansson.json_t* pack_object(scope .scanner_t* s, scope core.st
 					s.has_error = 1;
 				}
 
-				.next_token(s);
-
 				continue;
 			}
 
@@ -344,8 +339,6 @@ private jansson_d.jansson.json_t* pack_object(scope .scanner_t* s, scope core.st
 			if (ours) {
 				jansson_d.jansson_private.jsonp_free(key);
 			}
-
-			.next_token(s);
 		}
 
 		if (!s.has_error) {
@@ -366,7 +359,7 @@ private jansson_d.jansson.json_t* pack_array(scope .scanner_t* s, scope core.std
 		jansson_d.jansson.json_t* array = jansson_d.value.json_array();
 		.next_token(s);
 
-		while (mixin (.token!("s")) != ']') {
+		for (; mixin (.token!("s")) != ']'; .next_token(s)) {
 			if (!mixin (.token!("s"))) {
 				.set_error(s, "<format>", jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Unexpected end of format string");
 				/* Format string errors are unrecoverable. */
@@ -384,8 +377,6 @@ private jansson_d.jansson.json_t* pack_array(scope .scanner_t* s, scope core.std
 					s.has_error = 1;
 				}
 
-				.next_token(s);
-
 				continue;
 			}
 
@@ -397,8 +388,6 @@ private jansson_d.jansson.json_t* pack_array(scope .scanner_t* s, scope core.std
 				.set_error(s, "<internal>", jansson_d.jansson.json_error_code_t.json_error_out_of_memory, "Unable to append to array");
 				s.has_error = 1;
 			}
-
-			.next_token(s);
 		}
 
 		if (!s.has_error) {
@@ -614,7 +603,7 @@ private int unpack_object(scope .scanner_t* s, scope jansson_d.jansson.json_t* r
 
 		.next_token(s);
 
-		while (mixin (.token!("s")) != '}') {
+		for (; mixin (.token!("s")) != '}'; .next_token(s)) {
 			bool opt = false;
 
 			if (strict != 0) {
@@ -631,7 +620,6 @@ private int unpack_object(scope .scanner_t* s, scope jansson_d.jansson.json_t* r
 
 			if ((mixin (.token!("s")) == '!') || (mixin (.token!("s")) == '*')) {
 				strict = (mixin (.token!("s")) == '!') ? (1) : (-1);
-				.next_token(s);
 
 				continue;
 			}
@@ -678,7 +666,6 @@ private int unpack_object(scope .scanner_t* s, scope jansson_d.jansson.json_t* r
 			}
 
 			jansson_d.hashtable.hashtable_set(&key_set, key, core.stdc.string.strlen(key), jansson_d.value.json_null());
-			.next_token(s);
 		}
 
 		if ((strict == 0) && (s.flags & jansson_d.jansson.JSON_STRICT)) {
@@ -745,7 +732,7 @@ private int unpack_array(scope .scanner_t* s, scope jansson_d.jansson.json_t* ro
 
 		.next_token(s);
 
-		while (mixin (.token!("s")) != ']') {
+		for (; mixin (.token!("s")) != ']'; .next_token(s)) {
 			if (strict != 0) {
 				.set_error(s, "<format>", jansson_d.jansson.json_error_code_t.json_error_invalid_format, "Expected ']' after '%c', got '%c'", (strict == 1) ? ('!') : ('*'), mixin (.token!("s")));
 
@@ -760,7 +747,6 @@ private int unpack_array(scope .scanner_t* s, scope jansson_d.jansson.json_t* ro
 
 			if ((mixin (.token!("s")) == '!') || (mixin (.token!("s")) == '*')) {
 				strict = (mixin (.token!("s")) == '!') ? (1) : (-1);
-				.next_token(s);
 
 				continue;
 			}
@@ -790,7 +776,6 @@ private int unpack_array(scope .scanner_t* s, scope jansson_d.jansson.json_t* ro
 				return -1;
 			}
 
-			.next_token(s);
 			i++;
 		}
 

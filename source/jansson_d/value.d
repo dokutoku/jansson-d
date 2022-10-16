@@ -587,7 +587,6 @@ private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.ja
 	{
 		char[jansson_d.jansson_private.LOOP_KEY_LEN] loop_key = void;
 		size_t loop_key_len = void;
-		void* iter = void;
 
 		if (.jsonp_loop_check(parents, object_, &(loop_key[0]), loop_key.length, &loop_key_len)) {
 			return null;
@@ -603,9 +602,7 @@ private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.ja
 		 * Cannot use jansson_d.jansson.json_object_foreach because object has to be cast
 		 * non-const
 		 */
-		iter = .json_object_iter(cast(jansson_d.jansson.json_t*)(object_));
-
-		while (iter != null) {
+		for (void* iter = .json_object_iter(cast(jansson_d.jansson.json_t*)(object_)); iter != null; iter = .json_object_iter_next(cast(jansson_d.jansson.json_t*)(object_), iter)) {
 			const char* key = .json_object_iter_key(iter);
 			size_t key_len = .json_object_iter_key_len(iter);
 			const jansson_d.jansson.json_t* value = .json_object_iter_value(iter);
@@ -616,8 +613,6 @@ private jansson_d.jansson.json_t* json_object_deep_copy(scope const jansson_d.ja
 
 				break;
 			}
-
-			iter = .json_object_iter_next(cast(jansson_d.jansson.json_t*)(object_), iter);
 		}
 
 	out_:

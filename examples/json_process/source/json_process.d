@@ -72,8 +72,7 @@ private const (char)* strip(return scope char* str)
 	{
 		char* result = str;
 
-		while ((*result != '\0') && (mixin (l_isspace!("*result")))) {
-			result++;
+		for (; (*result != '\0') && (mixin (l_isspace!("*result"))); result++) {
 		}
 
 		size_t length_ = core.stdc.string.strlen(result);
@@ -431,16 +430,14 @@ int use_env()
 
 		if (.getenv_int("STRIP")) {
 			/* Load to memory, strip leading and trailing whitespace */
-			size_t size = 0;
-			size_t used = 0;
-			char* buffer = null;
 
+			char* buffer = null;
+			
 			scope (exit) {
 				core.memory.pureFree(buffer);
 			}
 
-			while (true) {
-				size = (size == 0) ? (128) : (size * 2);
+			for (size_t size = 128, used = 0; true; used += count, size = size * 2) {
 				char* buf_ck = cast(char*)(core.memory.pureRealloc(buffer, size));
 
 				if (buf_ck == null) {
@@ -458,8 +455,6 @@ int use_env()
 
 					break;
 				}
-
-				used += count;
 			}
 
 			json = jansson_d.jansson.json_loads(.strip(buffer), 0, &error);

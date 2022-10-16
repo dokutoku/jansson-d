@@ -219,13 +219,11 @@ package uint hashlittle(scope const void* key, size_t length_, uint initval)
 			const (uint)* k = cast(const (uint)*)(key);
 
 			/*------ all but last block: aligned reads and affect 32 bits of (a, b, c) */
-			while (length_ > 12) {
+			for (; length_ > 12; length_ -= 12, k += 3) {
 				a += k[0];
 				b += k[1];
 				c += k[2];
 				mixin (.mix!("a", "b", "c"));
-				length_ -= 12;
-				k += 3;
 			}
 
 			/*----------------------------- handle the last (probably partial) block */
@@ -403,13 +401,11 @@ package uint hashlittle(scope const void* key, size_t length_, uint initval)
 			const (ushort)* k = cast(const (ushort)*)(key);
 
 			/*--------------- all but last block: aligned reads and different mixing */
-			while (length_ > 12) {
+			for (; length_ > 12; length_ -= 12, k += 6) {
 				a += k[0] + (cast(uint)(k[1]) << 16);
 				b += k[2] + (cast(uint)(k[3]) << 16);
 				c += k[4] + (cast(uint)(k[5]) << 16);
 				mixin (.mix!("a", "b", "c"));
-				length_ -= 12;
-				k += 6;
 			}
 
 			/*----------------------------- handle the last (probably partial) block */
@@ -498,7 +494,7 @@ package uint hashlittle(scope const void* key, size_t length_, uint initval)
 			const (ubyte)* k = cast(const ubyte*)(key);
 
 			/*--------------- all but the last block: affect some 32 bits of (a, b, c) */
-			while (length_ > 12) {
+			for (; length_ > 12; length_ -= 12, k += 12) {
 				a += k[0];
 				a += cast(uint)(k[1]) << 8;
 				a += cast(uint)(k[2]) << 16;
@@ -512,8 +508,6 @@ package uint hashlittle(scope const void* key, size_t length_, uint initval)
 				c += cast(uint)(k[10]) << 16;
 				c += cast(uint)(k[11]) << 24;
 				mixin (.mix!("a", "b", "c"));
-				length_ -= 12;
-				k += 12;
 			}
 
 			/*-------------------------------- last block: affect all 32 bits of (c) */

@@ -166,8 +166,7 @@ int jsonp_dtostr(scope char* buffer, size_t size, double value, int precision)
 				start++;
 			}
 
-			while (*end == '0') {
-				end++;
+			for (; *end == '0'; end++) {
 			}
 
 			if (end != start) {

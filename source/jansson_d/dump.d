@@ -134,21 +134,18 @@ private int dump_indent(size_t flags, int depth, int space, jansson_d.jansson.js
 	do
 	{
 		if (mixin (.FLAGS_TO_INDENT!("flags")) > 0) {
-			uint ws_count = mixin (.FLAGS_TO_INDENT!("flags"));
-			uint n_spaces = depth * ws_count;
-
 			if (dump("\n", 1, data)) {
 				return -1;
 			}
 
-			while (n_spaces > 0) {
-				int cur_n = (n_spaces < (.whitespace.length - 1)) ? (n_spaces) : (.whitespace.length - 1);
+			int cur_n = void;
+
+			for (uint ws_count = mixin (.FLAGS_TO_INDENT!("flags")), n_spaces = depth * ws_count; n_spaces > 0; n_spaces -= cur_n) {
+				cur_n = (n_spaces < (.whitespace.length - 1)) ? (n_spaces) : (.whitespace.length - 1);
 
 				if (dump(&(.whitespace[0]), cur_n, data)) {
 					return -1;
 				}
-
-				n_spaces -= cur_n;
 			}
 		} else if ((space) && (!(flags & jansson_d.jansson.JSON_COMPACT))) {
 			return dump(" ", 1, data);
@@ -172,14 +169,10 @@ private int dump_string(scope const char* str, size_t len, jansson_d.jansson.jso
 			return -1;
 		}
 
-		const (char)* str_temp = str;
-		const (char)* pos = str_temp;
-		const (char)* end = str_temp;
-		const (char)* lim = str_temp + len;
 		int codepoint = 0;
 
-		while (true) {
-			while (end < lim) {
+		for (const (char)* str_temp = str, pos = str, end = str, lim = str + len; true; pos = end, str_temp = end) {
+			for (; end < lim; pos = end) {
 				end = jansson_d.utf.utf8_iterate(pos, lim - pos, &codepoint);
 
 				if (end == null) {
@@ -200,8 +193,6 @@ private int dump_string(scope const char* str, size_t len, jansson_d.jansson.jso
 				if ((flags & jansson_d.jansson.JSON_ENSURE_ASCII) && (codepoint > 0x7F)) {
 					break;
 				}
-
-				pos = end;
 			}
 
 			if (pos != str_temp) {
@@ -286,9 +277,6 @@ private int dump_string(scope const char* str, size_t len, jansson_d.jansson.jso
 			if (dump(text, length_, data)) {
 				return -1;
 			}
-
-			pos = end;
-			str_temp = end;
 		}
 
 		return dump("\"", 1, data);
@@ -475,14 +463,11 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 
 					size_t i = 0;
 
-					while (iter != null) {
+					for (; iter != null; iter = jansson_d.value.json_object_iter_next(cast(jansson_d.jansson.json_t*)(json), iter), i++) {
 						.key_len_* key_len = &keys[i];
 
 						key_len.key = jansson_d.value.json_object_iter_key(iter);
 						key_len.len = cast(int)(jansson_d.value.json_object_iter_key_len(iter));
-
-						iter = jansson_d.value.json_object_iter_next(cast(jansson_d.jansson.json_t*)(json), iter);
-						i++;
 					}
 
 					assert(i == size);
@@ -513,8 +498,10 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 				} else {
 					/* Don't sort keys */
 
-					while (iter != null) {
-						void* next = jansson_d.value.json_object_iter_next(cast(jansson_d.jansson.json_t*)(json), iter);
+					void* next = void;
+
+					for (; iter != null; iter = next) {
+						next = jansson_d.value.json_object_iter_next(cast(jansson_d.jansson.json_t*)(json), iter);
 						const char* key = jansson_d.value.json_object_iter_key(iter);
 						const size_t key_len = jansson_d.value.json_object_iter_key_len(iter);
 
@@ -533,8 +520,6 @@ private int do_dump(scope const jansson_d.jansson.json_t* json, size_t flags, in
 								return -1;
 							}
 						}
-
-						iter = next;
 					}
 				}
 
