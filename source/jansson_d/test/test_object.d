@@ -325,9 +325,7 @@ unittest
 	assert(jansson_d.jansson.json_object_set(object1, "a", object1) != 0, "able to set self");
 
 	/* create circular references */
-	if ((jansson_d.jansson.json_object_set(object1, "a", object2)) || (jansson_d.jansson.json_object_set(object2, "a", object1))) {
-		assert(false, "unable to set value");
-	}
+	assert((jansson_d.jansson.json_object_set(object1, "a", object2) == 0) && (jansson_d.jansson.json_object_set(object2, "a", object1) == 0), "unable to set value");
 
 	/* circularity is detected when dumping */
 	assert(jansson_d.dump.json_dumps(object1, 0) == null, "able to dump circulars");
