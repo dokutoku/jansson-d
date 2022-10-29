@@ -21,13 +21,10 @@ private static import jansson.jansson_private;
 private static import std.string;
 
 version (Windows) {
-	extern (Windows)
-	nothrow @nogc
-	private int _setmode(int, int);
-
-	extern (Windows)
-	nothrow @nogc
-	private int _fileno(core.stdc.stdio.FILE*);
+	version (CRuntime_Microsoft) {
+	} else {
+		static assert(false, "Microsoft C runtime is required to build this program.");
+	}
 
 	static const char dir_sep = '\\';
 } else {
@@ -375,8 +372,8 @@ int use_env()
 			 * On Windows, set stdout and stderr to binary mode to avoid
 			 * outputting DOS line terminators
 			 */
-			._setmode(._fileno(core.stdc.stdio.stdout), core.stdc.stdio._O_BINARY);
-			._setmode(._fileno(core.stdc.stdio.stderr), core.stdc.stdio._O_BINARY);
+			core.stdc.stdio._setmode(core.stdc.stdio._fileno(core.stdc.stdio.stdout), core.stdc.stdio._O_BINARY);
+			core.stdc.stdio._setmode(core.stdc.stdio._fileno(core.stdc.stdio.stderr), core.stdc.stdio._O_BINARY);
 		}
 
 		int indent = .getenv_int("JSON_INDENT");
