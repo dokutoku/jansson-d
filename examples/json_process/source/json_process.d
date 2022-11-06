@@ -334,7 +334,7 @@ int use_conf(scope const char* test_path)
 		scope (exit) {
 			if (buffer != null) {
 				jansson.jansson.json_free_t free_func;
-				json_get_alloc_funcs(null, &free_func);
+				jansson.jansson.json_get_alloc_funcs(null, &free_func);
 				free_func(buffer);
 			}
 		}

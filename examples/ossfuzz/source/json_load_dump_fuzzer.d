@@ -102,7 +102,7 @@ int LLVMFuzzerTestOneInput(scope const ubyte* data, size_t size)
 
 			if (out_ != null) {
 				jansson.jansson.json_free_t free_func;
-				json_get_alloc_funcs(null, &free_func);
+				jansson.jansson.json_get_alloc_funcs(null, &free_func);
 				free_func(out_);
 			}
 		} else {
