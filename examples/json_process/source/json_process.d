@@ -437,6 +437,8 @@ int use_env()
 				core.memory.pureFree(buffer);
 			}
 
+			size_t count = void;
+
 			for (size_t size = 128, used = 0; true; used += count, size = size * 2) {
 				char* buf_ck = cast(char*)(core.memory.pureRealloc(buffer, size));
 
@@ -448,7 +450,7 @@ int use_env()
 
 				buffer = buf_ck;
 
-				size_t count = core.stdc.stdio.fread(buffer + used, 1, size - used, core.stdc.stdio.stdin);
+				count = core.stdc.stdio.fread(buffer + used, 1, size - used, core.stdc.stdio.stdin);
 
 				if (count < (size - used)) {
 					buffer[used + count] = '\0';
