@@ -22,6 +22,9 @@ private static import std.string;
 
 version (Windows) {
 	version (CRuntime_Microsoft) {
+		extern (C)
+		nothrow @nogc
+		int _fileno(core.stdc.stdio.FILE*);
 	} else {
 		static assert(false, "Microsoft C runtime is required to build this program.");
 	}
@@ -372,8 +375,8 @@ int use_env()
 			 * On Windows, set stdout and stderr to binary mode to avoid
 			 * outputting DOS line terminators
 			 */
-			core.stdc.stdio._setmode(core.stdc.stdio._fileno(core.stdc.stdio.stdout), core.stdc.stdio._O_BINARY);
-			core.stdc.stdio._setmode(core.stdc.stdio._fileno(core.stdc.stdio.stderr), core.stdc.stdio._O_BINARY);
+			core.stdc.stdio._setmode(._fileno(core.stdc.stdio.stdout), core.stdc.stdio._O_BINARY);
+			core.stdc.stdio._setmode(._fileno(core.stdc.stdio.stderr), core.stdc.stdio._O_BINARY);
 		}
 
 		int indent = .getenv_int("JSON_INDENT");
