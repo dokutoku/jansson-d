@@ -22,6 +22,10 @@ private static import jansson.value;
 private static import jansson.version_;
 private static import std.typecons;
 
+version (GNU) {
+	private static import gcc.attributes;
+}
+
 /* version */
 
 ///
