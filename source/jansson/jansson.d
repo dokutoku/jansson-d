@@ -55,11 +55,22 @@ static if ((jansson.jansson_config.JSON_HAVE_ATOMIC_BUILTINS) || (jansson.jansso
 	enum JANSSON_THREAD_SAFE_REFCOUNT = 1;
 }
 
-//#if (defined(__GNUC__)) || (defined(__clang__))
-	//#define JANSSON_ATTRS(x) __attribute__(x)
-//#else
-	//#define JANSSON_ATTRS(x)
-//#endif
+version (GNU) {
+	public alias JANSSON_ATTRS = gcc.attributes.attribute;
+} else {
+	private struct JANSSON_ATTRS_(A...)
+	{
+		A arguments;
+	}
+
+	pure nothrow @safe @nogc @live
+	public auto JANSSON_ATTRS(A...)(A arguments)
+
+		do
+		{
+			return .JANSSON_ATTRS_!(A)(arguments);
+		}
+}
 
 /* types */
 
