@@ -7,12 +7,12 @@
 	"license": "MIT",
 	"buildTypes":
 	{
-		"plain": {"buildOptions": ["betterC"]},
-		"debug": {"buildOptions": ["betterC", "debugMode", "debugInfo"]},
-		"release": {"buildOptions": ["betterC", "releaseMode", "optimize", "inline"]},
-		"release-debug": {"buildOptions": ["betterC", "releaseMode", "optimize", "inline", "debugInfo"]},
-		"release-nobounds": {"buildOptions": ["betterC", "releaseMode", "optimize", "inline", "noBoundsCheck"]},
-		"syntax": {"buildOptions": ["betterC", "syntaxOnly"]}
+		"betterC-plain": {"buildOptions": ["betterC"]},
+		"betterC-debug": {"buildOptions": ["betterC", "debugMode", "debugInfo"]},
+		"betterC-release": {"buildOptions": ["betterC", "releaseMode", "optimize", "inline"]},
+		"betterC-release-debug": {"buildOptions": ["betterC", "releaseMode", "optimize", "inline", "debugInfo"]},
+		"betterC-release-nobounds": {"buildOptions": ["betterC", "releaseMode", "optimize", "inline", "noBoundsCheck"]},
+		"betterC-syntax": {"buildOptions": ["betterC", "syntaxOnly"]}
 	},
 	"configurations":
 	[
