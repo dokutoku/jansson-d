@@ -531,7 +531,7 @@ public int json_object_iter_set_new(scope jansson.jansson.json_t* json, scope vo
 ///
 extern (C)
 pure nothrow @trusted @nogc @live
-public void* json_object_key_to_iter(scope const char* key)
+public void* json_object_key_to_iter(return scope const char* key)
 
 	do
 	{
@@ -1645,7 +1645,7 @@ public int json_equal(scope const jansson.jansson.json_t* json1, scope const jan
 //nodiscard
 extern (C)
 nothrow @trusted @nogc
-public jansson.jansson.json_t* json_copy(scope jansson.jansson.json_t* json)
+public jansson.jansson.json_t* json_copy(return scope jansson.jansson.json_t* json)
 
 	do
 	{
@@ -1700,7 +1700,7 @@ public jansson.jansson.json_t* json_deep_copy(scope const jansson.jansson.json_t
 	}
 
 nothrow @trusted @nogc
-jansson.jansson.json_t* do_deep_copy(scope const jansson.jansson.json_t* json, scope jansson.hashtable.hashtable_t* parents)
+jansson.jansson.json_t* do_deep_copy(return scope const jansson.jansson.json_t* json, scope jansson.hashtable.hashtable_t* parents)
 
 	do
 	{

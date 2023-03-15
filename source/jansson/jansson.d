@@ -544,7 +544,7 @@ static if (jansson.jansson_config.JSON_HAVE_ATOMIC_BUILTINS) {
 ///
 pragma(inline, true)
 pure nothrow @trusted @nogc @live
-public .json_t* json_incref(scope .json_t* json)
+public .json_t* json_incref(return scope .json_t* json)
 
 	do
 	{
@@ -814,7 +814,7 @@ public:
 		}
 
 	pure nothrow @safe @nogc @live
-	.json_object_return front() scope
+	.json_object_return front()
 
 		do
 		{
@@ -912,7 +912,7 @@ public:
 		}
 
 	pure nothrow @safe @nogc @live
-	.json_object_keylen_return front() scope
+	.json_object_keylen_return front()
 
 		do
 		{
@@ -1012,7 +1012,7 @@ public:
 		}
 
 	pure nothrow @safe @nogc @live
-	.json_object_foreach_safe_return front() scope
+	.json_object_foreach_safe_return front()
 
 		do
 		{
@@ -1118,7 +1118,7 @@ public:
 		}
 
 	pure nothrow @safe @nogc @live
-	.json_object_keylen_foreach_safe_return front() scope
+	.json_object_keylen_foreach_safe_return front()
 
 		do
 		{
@@ -1214,7 +1214,7 @@ public:
 		}
 
 	pure nothrow @safe @nogc @live
-	.json_array_return front() scope
+	.json_array_return front()
 
 		do
 		{
