@@ -87,27 +87,27 @@ struct json_integer_t
 
 template json_to_object(string json_)
 {
-	enum json_to_object = "mixin (jansson.jansson_private.container_of!(\"" ~ json_ ~ "\", \"jansson.jansson_private.json_object_t\", \"json\"))";
+	enum json_to_object = jansson.jansson_private.container_of!(json_, "jansson.jansson_private.json_object_t", "json");
 }
 
 template json_to_array(string json_)
 {
-	enum json_to_array = "mixin (jansson.jansson_private.container_of!(\"" ~ json_ ~ "\", \"jansson.jansson_private.json_array_t\", \"json\"))";
+	enum json_to_array = jansson.jansson_private.container_of!(json_, "jansson.jansson_private.json_array_t", "json");
 }
 
 template json_to_string(string json_)
 {
-	enum json_to_string = "mixin (jansson.jansson_private.container_of!(\"" ~ json_ ~ "\", \"jansson.jansson_private.json_string_t\", \"json\"))";
+	enum json_to_string = jansson.jansson_private.container_of!(json_, "jansson.jansson_private.json_string_t", "json");
 }
 
 template json_to_real(string json_)
 {
-	enum json_to_real = "mixin (jansson.jansson_private.container_of!(\"" ~ json_ ~ "\", \"jansson.jansson_private.json_real_t\", \"json\"))";
+	enum json_to_real = jansson.jansson_private.container_of!(json_, "jansson.jansson_private.json_real_t", "json");
 }
 
 template json_to_integer(string json_)
 {
-	enum json_to_integer = "mixin (jansson.jansson_private.container_of!(\"" ~ json_ ~ "\", \"jansson.jansson_private.json_integer_t\", \"json\"))";
+	enum json_to_integer = jansson.jansson_private.container_of!(json_, "jansson.jansson_private.json_integer_t", "json");
 }
 
 /* Create a string by taking ownership of an existing buffer */

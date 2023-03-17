@@ -65,7 +65,7 @@ alias hashtable_t = .hashtable;
 
 package template hashtable_key_to_iter(string key_)
 {
-	enum hashtable_key_to_iter = "(&(mixin (jansson.jansson_private.container_of!(\"" ~ key_ ~ "\", \"jansson.hashtable.hashtable_pair\", \"key\")).ordered_list))";
+	enum hashtable_key_to_iter = "(&(" ~ jansson.jansson_private.container_of!(key_, "jansson.hashtable.hashtable_pair", "key") ~ ".ordered_list))";
 }
 
 alias list_t = .hashtable_list;
@@ -74,12 +74,12 @@ alias bucket_t = .hashtable_bucket;
 
 template list_to_pair(string list_)
 {
-	enum list_to_pair = "(mixin (jansson.jansson_private.container_of!(\"" ~ list_ ~ "\", \"jansson.hashtable.pair_t\", \"list\")))";
+	enum list_to_pair = "(" ~ jansson.jansson_private.container_of!(list_, "jansson.hashtable.pair_t", "list") ~ ")";
 }
 
 template ordered_list_to_pair(string list_)
 {
-	enum ordered_list_to_pair = "(mixin (jansson.jansson_private.container_of!(\"" ~ list_ ~ "\", \"jansson.hashtable.pair_t\", \"ordered_list\")))";
+	enum ordered_list_to_pair = "(" ~ jansson.jansson_private.container_of!(list_, "jansson.hashtable.pair_t", "ordered_list") ~ ")";
 }
 
 template hash_str(string key, string len)

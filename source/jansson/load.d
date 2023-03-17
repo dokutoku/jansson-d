@@ -40,27 +40,27 @@ enum TOKEN_NULL = 261;
 /* Locale independent versions of isxxx() functions */
 private template l_isupper(string c)
 {
-	enum l_isupper = "(('A' <= (c)) && ((c) <= 'Z'))";
+	enum l_isupper = "(('A' <= (" ~ c ~ ")) && ((" ~ c ~ ") <= 'Z'))";
 }
 
 private template l_islower(string c)
 {
-	enum l_islower = "(('a' <= (c)) && ((c) <= 'z'))";
+	enum l_islower = "(('a' <= (" ~ c ~ ")) && ((" ~ c ~ ") <= 'z'))";
 }
 
 private template l_isalpha(string c)
 {
-	enum l_isalpha = "((mixin (jansson.load.l_isupper!(\"" ~ c ~ "\"))) || (mixin (jansson.load.l_islower!(\"" ~ c ~ "\"))))";
+	enum l_isalpha = "((" ~ jansson.load.l_isupper!(c) ~ ") || (" ~ jansson.load.l_islower!(c) ~ "))";
 }
 
 private template l_isdigit(string c)
 {
-	enum l_isdigit = "(('0' <= (c)) && ((c) <= '9'))";
+	enum l_isdigit = "(('0' <= (" ~ c ~ ")) && ((" ~ c ~ ") <= '9'))";
 }
 
 private template l_isxdigit(string c)
 {
-	enum l_isxdigit = "((mixin (jansson.load.l_isdigit!(\"" ~ c ~ "\"))) || (('A' <= (c)) && ((c) <= 'F')) || (('a' <= (c)) && ((c) <= 'f')))";
+	enum l_isxdigit = "(" ~ "( ~ " ~ jansson.load.l_isdigit!(c) ~ ") || (('A' <= ( " ~ c ~ ")) && ((" ~ c ~ ") <= 'F')) || (('a' <= (" ~ c ~ ")) && ((" ~ c ~ ") <= 'f')))";
 }
 
 /*
@@ -109,7 +109,7 @@ struct lex_t
 
 private template stream_to_lex(string stream)
 {
-	enum stream_to_lex = "(mixin (jansson.jansson_private.container_of!(\"" ~ stream ~ "\", \"jansson.load.lex_t\", \"stream\")))";
+	enum stream_to_lex = "(" ~ jansson.jansson_private.container_of!(stream, "jansson.load.lex_t", "stream") ~ ")";
 }
 
 /* error reporting */

@@ -76,7 +76,7 @@ template hashsize(string n)
 
 template hashmask(string n)
 {
-	enum hashmask = "(mixin (jansson.lookup3.hashsize!(\"" ~ n ~ "\")) - 1)";
+	enum hashmask = "(" ~ jansson.lookup3.hashsize!(n) ~ " - 1)";
 }
 
 template rot(string x, string k)
@@ -128,7 +128,7 @@ template rot(string x, string k)
  */
 template mix(string a, string b, string c)
 {
-	enum mix = "{ a -= c; a ^= mixin (jansson.lookup3.rot!(\"" ~ c ~ "\", \"4\")); c += b; b -= a; b ^= mixin (jansson.lookup3.rot!(\"" ~ a ~ "\", \"6\")); a += c; c -= b; c ^= mixin (jansson.lookup3.rot!(\"" ~ b ~ "\", \"8\")); b += a; a -= c; a ^= mixin (jansson.lookup3.rot!(\"" ~ c ~ "\", \"16\")); c += b; b -= a; b ^= mixin (jansson.lookup3.rot!(\"" ~ a ~ "\", \"19\")); a += c; c -= b; c ^= mixin (jansson.lookup3.rot!(\"" ~ b ~ "\", \"4\")); b += a; }";
+	enum mix = "{ " ~ a ~ " -= " ~ c ~ "; " ~ a ~ " ^= " ~ jansson.lookup3.rot!(c, "4") ~ "; " ~ c ~ " += " ~ b ~ "; " ~ b ~ " -= " ~ a ~ "; " ~ b ~ " ^= " ~ jansson.lookup3.rot!(a, "6") ~ "; " ~ a ~ " += " ~ c ~ "; " ~ c ~ " -= " ~ b ~ "; " ~ c ~ " ^= " ~ jansson.lookup3.rot!(b, "8") ~ "; " ~ b ~ " += " ~ a ~ "; " ~ a ~ " -= " ~ c ~ "; " ~ a ~ " ^= " ~ jansson.lookup3.rot!(c, "16") ~ "; " ~ c ~ " += " ~ b ~ "; " ~ b ~ " -= " ~ a ~ "; " ~ b ~ " ^= " ~ jansson.lookup3.rot!(a, "19") ~ "; " ~ a ~ " += " ~ c ~ "; " ~ c ~ " -= " ~ b ~ "; " ~ c ~ " ^= " ~ jansson.lookup3.rot!(b, "4") ~ "; " ~ b ~ " += " ~ a ~ "; }";
 }
 
 /*
@@ -156,7 +156,7 @@ template mix(string a, string b, string c)
  */
 template final_(string a, string b, string c)
 {
-	enum final_ = "{ c ^= b; c -= mixin (jansson.lookup3.rot!(\"" ~ b ~ "\", \"14\")); a ^= c; a -= mixin (jansson.lookup3.rot!(\"" ~ c ~ "\", \"11\")); b ^= a; b -= mixin (jansson.lookup3.rot!(\"" ~ a ~ "\", \"25\")); c ^= b; c -= mixin (jansson.lookup3.rot!(\"" ~ b ~ "\", \"16\")); a ^= c; a -= mixin (jansson.lookup3.rot!(\"" ~ c ~ "\", \"4\")); b ^= a; b -= mixin (jansson.lookup3.rot!(\"" ~ a ~ "\", \"14\")); c ^= b; c -= mixin (jansson.lookup3.rot!(\"" ~ b ~ "\", \"24\")); }";
+	enum final_ = "{ " ~ c ~ " ^= " ~ b ~ "; " ~ c ~ " -= " ~ jansson.lookup3.rot!(b, "14") ~ "; " ~ a ~ " ^= " ~ c ~ "; " ~ a ~ " -= " ~ jansson.lookup3.rot!(c, "11") ~ "; " ~ b ~ " ^= " ~ a ~ "; " ~ b ~ " -= " ~ jansson.lookup3.rot!(a, "25") ~ "; " ~ c ~ " ^= " ~ b ~ "; " ~ c ~ " -= " ~ jansson.lookup3.rot!(b, "16") ~ "; " ~ a ~ " ^= " ~ c ~ "; " ~ a ~ " -= " ~ jansson.lookup3.rot!(c, "4") ~ "; " ~ b ~ " ^= " ~ a ~ "; " ~ b ~ " -= " ~ jansson.lookup3.rot!(a, "14") ~ "; " ~ c ~ " ^= " ~ b ~ "; " ~ c ~ " -= " ~ jansson.lookup3.rot!(b, "24") ~ "; }";
 }
 
 //#define final_(a, b, c) { c ^= b; c -= rot(b, 14); a ^= c; a -= rot(c, 11); b ^= a; b -= rot(a, 25); c ^= b; c -= rot(b, 16); a ^= c; a -= rot(c, 4); b ^= a; b -= rot(a, 14); c ^= b; c -= rot(b, 24); }

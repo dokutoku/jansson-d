@@ -55,7 +55,7 @@ private static immutable string[] type_names = ["object\0", "array\0", "string\0
 
 private template type_name(string x)
 {
-	enum type_name = "&(.type_names[mixin (jansson.jansson.json_typeof!(\"" ~ x ~ "\"))][0])";
+	enum type_name = "&(.type_names[" ~ jansson.jansson.json_typeof!(x) ~ "][0])";
 }
 
 private static immutable char[] unpack_value_starters = "{[siIbfFOon\0";

@@ -54,7 +54,7 @@ private template chaos_loop(string condition, string code, string cleanup)
 
 private template chaos_loop_new_value(string json, string initcall)
 {
-	enum chaos_loop_new_value = "mixin (.chaos_loop!(\"!" ~ json ~ "\", \"" ~ json ~" = " ~ initcall~ ";\", \"jansson.jansson.json_decref(" ~ json ~ "); " ~ json ~" = null;\"));";
+	enum chaos_loop_new_value = .chaos_loop!("!" ~ json, json ~ " = " ~ initcall~ ";", "jansson.jansson.json_decref(" ~ json ~ "); " ~ json ~" = null;");
 }
 
 private int test_unpack()

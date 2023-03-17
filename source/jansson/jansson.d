@@ -427,61 +427,61 @@ public template json_typeof(string json)
 ///Ditto
 public template json_is_object(string json)
 {
-	enum json_is_object = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_OBJECT))";
+	enum json_is_object = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_OBJECT))";
 }
 
 ///Ditto
 public template json_is_array(string json)
 {
-	enum json_is_array = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_ARRAY))";
+	enum json_is_array = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_ARRAY))";
 }
 
 ///Ditto
 public template json_is_string(string json)
 {
-	enum json_is_string = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_STRING))";
+	enum json_is_string = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_STRING))";
 }
 
 ///Ditto
 public template json_is_integer(string json)
 {
-	enum json_is_integer = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_INTEGER))";
+	enum json_is_integer = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_INTEGER))";
 }
 
 ///Ditto
 public template json_is_real(string json)
 {
-	enum json_is_real = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_REAL))";
+	enum json_is_real = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_REAL))";
 }
 
 ///Ditto
 public template json_is_number(string json)
 {
-	enum json_is_number = "((mixin (jansson.jansson.json_is_integer!(\"" ~ json ~ "\"))) || (mixin (jansson.jansson.json_is_real!(\"" ~ json ~ "\"))))";
+	enum json_is_number = "((" ~ jansson.jansson.json_is_integer!(json) ~ ") || (" ~ jansson.jansson.json_is_real!(json) ~ "))";
 }
 
 ///Ditto
 public template json_is_true(string json)
 {
-	enum json_is_true = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_TRUE))";
+	enum json_is_true = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_TRUE))";
 }
 
 ///Ditto
 public template json_is_false(string json)
 {
-	enum json_is_false = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_FALSE))";
+	enum json_is_false = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_FALSE))";
 }
 
 ///Ditto
 public template json_is_boolean(string json)
 {
-	enum json_is_boolean = "((mixin (jansson.jansson.json_is_true!(\"" ~ json ~ "\"))) || (mixin (jansson.jansson.json_is_false!(\"" ~ json ~ "\"))))";
+	enum json_is_boolean = "((" ~ jansson.jansson.json_is_true!(json) ~ ") || (" ~ jansson.jansson.json_is_false!(json) ~ "))";
 }
 
 ///Ditto
 public template json_is_null(string json)
 {
-	enum json_is_null = "((" ~ json ~ " != null) && (mixin (jansson.jansson.json_typeof!(\"" ~ json ~ "\")) == jansson.jansson.json_type.JSON_NULL))";
+	enum json_is_null = "((" ~ json ~ " != null) && (" ~ jansson.jansson.json_typeof!(json) ~ " == jansson.jansson.json_type.JSON_NULL))";
 }
 
 /* construction, destruction, reference counting */
