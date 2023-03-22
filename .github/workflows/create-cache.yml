@@ -1,22 +1,11 @@
-name: Cross-Compiling
+name: Create-cache
 
 on:
-    push:
-        branches:
-        - master
-
     workflow_dispatch:
 
 jobs:
     Windows:
-        runs-on: windows-2022
-
-        strategy:
-            matrix:
-                compiler: [dmd, ldc2]
-                dub-arch: [x86, x86_64]
-                build-type: [plain, debug, unittest, release-nobounds, docs, betterC-plain, betterC-debug, betterC-release-nobounds]
-                config: [library]
+        runs-on: windows-latest
 
         steps:
         - name: Start Time
@@ -25,18 +14,6 @@ jobs:
             $current_time = php -r "echo (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP');";
             echo $current_time;
             php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'start-time=${current_time}'.PHP_EOL, FILE_APPEND);";
-
-        - name: Set arch names
-          id: arch-name
-          run: |
-            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'vcvarsall-arch-name='.((strcmp('${{ matrix.dub-arch }}', 'x86_64') === 0) ? ('x64') : ('x86')).PHP_EOL, FILE_APPEND);";
-
-        - name: Set asset base name
-          id: init-asset-name
-          run: |
-            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.getenv('GITHUB_SHA').'-windows-${{ matrix.dub-arch }}-${{ matrix.build-type }}'.PHP_EOL, FILE_APPEND);";
-            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.getenv('GITHUB_SHA').'-windows-x86-${{ matrix.build-type }}'.PHP_EOL, FILE_APPEND);";
-            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86_64='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.getenv('GITHUB_SHA').'-windows-x86_64-${{ matrix.build-type }}'.PHP_EOL, FILE_APPEND);";
 
         - name: Init get-dlang
           run: |
@@ -97,66 +74,27 @@ jobs:
                 windows-dlang-${{ steps.dlang-versions.outputs.dlang_versions }}
 
         - name: Install dmd
-          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             cd ~/;
             Powershell -ExecutionPolicy Bypass -File get-dlang/template/powershell/install-dmd.ps1;
-            php -r "file_put_contents(getenv('GITHUB_PATH'), 'C:'.DIRECTORY_SEPARATOR.'D'.DIRECTORY_SEPARATOR.'dmd2'.DIRECTORY_SEPARATOR.'windows'.DIRECTORY_SEPARATOR.'bin'.PHP_EOL, FILE_APPEND);";
 
         - name: Show dmd versions
-          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
-            dmd --version
-            dub --version
+            C:\D\dmd2\windows\bin\dmd.exe --version
+            C:\D\dmd2\windows\bin\dub.exe --version
 
         - name: Install ldc2
-          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             cd ~/;
             Powershell -ExecutionPolicy Bypass -File get-dlang/template/powershell/install-ldc2.ps1;
-            php -r "file_put_contents(getenv('GITHUB_PATH'), 'C:'.DIRECTORY_SEPARATOR.'ldc2'.DIRECTORY_SEPARATOR.'bin'.PHP_EOL, FILE_APPEND);";
 
         - name: Show ldc2 versions
-          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
-            ldc2 --version
-            dub --version
-
-        - name: Checkout
-          uses: actions/checkout@v3
-
-        - name: Build
-          shell: cmd
-          run: |
-            set __VSCMD_ARG_NO_LOGO=1
-            call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ steps.arch-name.outputs.vcvarsall-arch-name }}
-            dub build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=${{ matrix.compiler }}
-
-        - name: Unittest
-          if: ${{ (matrix.build-type == 'unittest') }}
-          shell: cmd
-          run: |
-            set __VSCMD_ARG_NO_LOGO=1
-            call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ steps.arch-name.outputs.vcvarsall-arch-name }}
-            dub test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=${{ matrix.compiler }}
-
-        - name: Upload artifact
-          uses: actions/upload-artifact@v3
-          with:
-              name: ${{ steps.init-asset-name.outputs.asset_base_name }}
-              path: |
-                docs
-                lib
+            C:\ldc2\bin\ldc2.exe --version
+            C:\ldc2\bin\dub.exe --version
 
     MacOS:
         runs-on: macos-latest
-
-        strategy:
-            matrix:
-                compiler: [dmd, ldc2]
-                dub-arch: [x86_64]
-                build-type: [plain, debug, unittest, release-nobounds, docs, betterC-plain, betterC-debug, betterC-release-nobounds]
-                config: [library]
 
         steps:
         - name: Start Time
@@ -165,12 +103,6 @@ jobs:
             current_time=`php -r "echo (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP');"`;
             echo $current_time;
             php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'start-time=${current_time}'.PHP_EOL, FILE_APPEND);";
-
-        - name: Set asset base name
-          id: init-asset-name
-          run: |
-            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.getenv('GITHUB_SHA').'-osx-x86_64-${{ matrix.build-type }}'.PHP_EOL, FILE_APPEND);";
-            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86_64='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.getenv('GITHUB_SHA').'-osx-x86_64-${{ matrix.build-type }}'.PHP_EOL, FILE_APPEND);";
 
         - name: Init get-dlang
           run: |
@@ -231,59 +163,27 @@ jobs:
                 osx-dlang-${{ steps.dlang-versions.outputs.dlang_versions }}
 
         - name: Install dmd
-          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/install-dmd/install-dmd-osx-x86_64.sh;
 
         - name: Show dmd versions
-          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             dmd --version;
             dub --version;
 
         - name: Install ldc2
-          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-osx-x86_64.sh;
-            php -r "file_put_contents(getenv('GITHUB_PATH'), '/Users/runner/ldc2/bin'.PHP_EOL, FILE_APPEND);";
 
         - name: Show ldc2 versions
-          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
-            ldc2 --version;
-            dub --version;
-
-        - name: Checkout
-          uses: actions/checkout@v3
-
-        - name: Build
-          run: |
-            dub build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=${{ matrix.compiler }};
-
-        - name: Unittest
-          if: ${{ (matrix.build-type == 'unittest') }}
-          run: |
-            dub test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=${{ matrix.compiler }};
-
-        - name: Upload artifact
-          uses: actions/upload-artifact@v3
-          with:
-              name: ${{ steps.init-asset-name.outputs.asset_base_name }}
-              path: |
-                docs
-                lib
+            /Users/runner/ldc2/bin/ldc2 --version;
+            /Users/runner/ldc2/bin/dub --version;
 
     Other_Platforms:
         runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                compiler: [dmd, ldc2]
-                dub-arch: [x86_64]
-                build-type: [plain, debug, unittest, release-nobounds, docs, betterC-plain, betterC-debug, betterC-release-nobounds]
-                config: [library]
 
         steps:
         - name: Start Time
@@ -292,11 +192,6 @@ jobs:
             current_time=`php -r "echo (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP');"`;
             echo $current_time;
             php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'start-time=${current_time}'.PHP_EOL, FILE_APPEND);";
-
-        - name: Set asset base name
-          id: init-asset-name
-          run: |
-            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86_64='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.getenv('GITHUB_SHA').'-linux-x86_64-${{ matrix.build-type }}'.PHP_EOL, FILE_APPEND);";
 
         - name: Init get-dlang
           run: |
@@ -363,51 +258,25 @@ jobs:
                 other-platforms-dlang-${{ steps.dlang-versions.outputs.dlang_versions }}
 
         - name: Install dmd
-          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/install-dmd/install-dmd-ubuntu-x86_64.sh;
 
         - name: Show dmd versions
-          if: ${{ (matrix.compiler == 'dmd') }}
           run: |
             dmd --version;
             dub --version;
 
         - name: Install ldc2
-          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
             cd ~/;
             sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-linux-x86_64.sh;
-            php -r "file_put_contents(getenv('GITHUB_PATH'), '/home/runner/ldc2/bin'.PHP_EOL, FILE_APPEND);";
 
-        - name: Copy ldc2.conf
-          if: ${{ (matrix.compiler == 'ldc2') }}
+        - name: copy ldc2.conf
           run: |
             cp ~/get-dlang/template/ldc2-conf/ldc2-linux-x86_64.conf ~/ldc2/etc/ldc2.conf;
 
         - name: Show ldc2 version
-          if: ${{ (matrix.compiler == 'ldc2') }}
           run: |
-            ldc2 --version;
-            dub --version;
-
-        - name: Checkout
-          uses: actions/checkout@v3
-
-        - name: Build
-          run: |
-            dub build --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=${{ matrix.compiler }};
-
-        - name: Unittest
-          if: ${{ (matrix.build-type == 'unittest') }}
-          run: |
-            dub test --force --combined --build-mode=allAtOnce --config=${{ matrix.config }} --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=${{ matrix.compiler }};
-
-        - name: Upload artifact
-          uses: actions/upload-artifact@v3
-          with:
-              name: ${{ steps.init-asset-name.outputs.asset_base_name-x86_64 }}
-              path: |
-                docs
-                lib
+            /home/runner/ldc2/bin/ldc2 --version;
+            /home/runner/ldc2/bin/dub --version;

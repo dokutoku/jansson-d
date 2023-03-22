@@ -8,12 +8,12 @@ on:
 
 jobs:
     Windows:
-        runs-on: windows-2019
+        runs-on: windows-2022
 
         strategy:
             matrix:
                 dub-arch: [x86, x86_64]
-                build-type: [release-nobounds]
+                build-type: [betterC-release-nobounds]
 
         steps:
         - name: Start Time
@@ -21,16 +21,14 @@ jobs:
           run: |
             $current_time = php -r "echo (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP');"
             echo $current_time;
-            echo "::set-output name=start-time::$current_time";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'start-time=${current_time}'.PHP_EOL, FILE_APPEND);";
 
-        - name: set-asset_base_name
+        - name: Set asset base_name
           id: init-asset-name
           run: |
-            $project_name = $env:GITHUB_REPOSITORY -replace "^[^/]+/", "";
-            $release_version = $env:GITHUB_REF -replace "refs/tags/v", "";
-            echo "::set-output name=asset_base_name::$project_name-$release_version-windows-${{ matrix.dub-arch }}";
-            echo "::set-output name=asset_base_name-x86::$project_name-$release_version-windows-x86";
-            echo "::set-output name=asset_base_name-x86_64::$project_name-$release_version-windows-x86_64";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.str_replace('refs/tags/v', '', getenv('GITHUB_REF')).'-windows-${{ matrix.dub-arch }}'.PHP_EOL, FILE_APPEND);";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.str_replace('refs/tags/v', '', getenv('GITHUB_REF')).'-windows-x86'.PHP_EOL, FILE_APPEND);";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86_64='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.str_replace('refs/tags/v', '', getenv('GITHUB_REF')).'-windows-x86_64'.PHP_EOL, FILE_APPEND);";
 
         - name: Init get-dlang
           run: |
@@ -44,10 +42,10 @@ jobs:
         - name: Fetch get-dlang
           run: |
             cd ~/get-dlang;
-            echo '/ldc2-version.txt' >> .git/info/sparse-checkout;
-            echo '/template/powershell/install-ldc2.ps1' >> .git/info/sparse-checkout;
-            echo '/ldc2-version.txt.sig' >> .git/info/sparse-checkout;
-            echo '/template/powershell/install-ldc2.ps1.sig' >> .git/info/sparse-checkout;
+            echo '/ldc2-version.txt' >> '.git/info/sparse-checkout';
+            echo '/template/powershell/install-ldc2.ps1' >> '.git/info/sparse-checkout';
+            echo '/ldc2-version.txt.sig' >> '.git/info/sparse-checkout';
+            echo '/template/powershell/install-ldc2.ps1.sig' >> '.git/info/sparse-checkout';
             git fetch --depth=1 origin master;
 
         - name: Reset get-dlang
@@ -55,7 +53,7 @@ jobs:
             cd ~/get-dlang;
             git reset --hard origin/master;
 
-        - name: log get-dlang
+        - name: Show latest commit of get-dlang
           run: |
             cd ~/get-dlang;
             git log -1;
@@ -75,10 +73,10 @@ jobs:
           id: dlang-versions
           run: |
             cd ~/;
-            echo "::set-output name=dlang_versions::$(php -r "echo trim(file_get_contents('./get-dlang/ldc2-version.txt'));")";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'dlang_versions='.trim(file_get_contents('./get-dlang/ldc2-version.txt')).PHP_EOL, FILE_APPEND);";
 
-        - name: installer-cache
-          uses: actions/cache@v2
+        - name: Installer-cache
+          uses: actions/cache@v3
           with:
               path: |
                 C:\cache
@@ -91,35 +89,43 @@ jobs:
             cd ~/;
             Powershell -ExecutionPolicy Bypass -File get-dlang/template/powershell/install-ldc2.ps1;
 
+        - name: Set PATH
+          run: |
+            php -r "file_put_contents(getenv('GITHUB_PATH'), 'C:'.DIRECTORY_SEPARATOR.'ldc2'.DIRECTORY_SEPARATOR.'bin'.PHP_EOL, FILE_APPEND);";
+
         - name: Show ldc2 versions
           run: |
             C:\ldc2\bin\ldc2.exe --version
             C:\ldc2\bin\dub.exe --version
 
-        - name: checkout
-          uses: actions/checkout@v2
+        - name: Checkout
+          uses: actions/checkout@v3
 
         - name: x86 create .bat
-          if: ${{ (matrix.dub-arch == 'x86') || (matrix.dub-arch == 'x86_mscoff') }}
+          if: ${{ (matrix.dub-arch == 'x86') }}
           shell: cmd
           run: |
-            echo call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat" > vc_init.bat
+            echo call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86 > vc_init.bat
 
         - name: x64 create .bat
-          if: ${{ (matrix.dub-arch != 'x86') && (matrix.dub-arch != 'x86_mscoff') }}
+          if: ${{ (matrix.dub-arch != 'x86') }}
           shell: cmd
           run: |
-            echo call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" > vc_init.bat
+            echo call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" > vc_init.bat
 
         - name: ldc2 build library
           shell: cmd
           run: |
-            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
+            set __VSCMD_ARG_NO_LOGO=1
+            call vc_init.bat
+            dub build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=${{ matrix.build-type }} --compiler=C:\ldc2\bin\ldc2.exe
 
         - name: ldc2 build doc
           shell: cmd
           run: |
-            call vc_init.bat && C:\ldc2\bin\dub.exe build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=docs --compiler=C:\ldc2\bin\ldc2.exe
+            set __VSCMD_ARG_NO_LOGO=1
+            call vc_init.bat
+            dub build --force --combined --build-mode=allAtOnce --config=library --arch=${{ matrix.dub-arch }} --build=docs --compiler=C:\ldc2\bin\ldc2.exe
 
         - name: Create Windows archive
           run: |
@@ -135,7 +141,7 @@ jobs:
             7z a '${{ steps.init-asset-name.outputs.asset_base_name }}.zip' ${{ steps.init-asset-name.outputs.asset_base_name }};
 
         - name: Upload artifact
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               path: |
                 ${{ steps.init-asset-name.outputs.asset_base_name }}.zip
@@ -158,13 +164,13 @@ jobs:
           run: |
             current_time=`php -r "echo (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP');"`;
             echo $current_time;
-            echo "::set-output name=start-time::$current_time";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'start-time=${current_time}'.PHP_EOL, FILE_APPEND);";
 
-        - name: set-asset_base_name
+        - name: Set asset base name
           id: init-asset-name
           run: |
-            echo "::set-output name=asset_base_name::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-osx-${{ matrix.dub-arch }}";
-            echo "::set-output name=asset_base_name-x86_64::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-osx-x86_64";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.str_replace('refs/tags/v', '', getenv('GITHUB_REF')).'-osx-${{ matrix.dub-arch }}'.PHP_EOL, FILE_APPEND);";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86_64='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.str_replace('refs/tags/v', '', getenv('GITHUB_REF')).'-osx-x86_64'.PHP_EOL, FILE_APPEND);";
 
         - name: Init get-dlang
           run: |
@@ -178,10 +184,10 @@ jobs:
         - name: Fetch get-dlang
           run: |
             cd ~/get-dlang;
-            echo '/ldc2-version.txt' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-osx-${{ matrix.dub-arch }}.sh' >> .git/info/sparse-checkout;
-            echo '/ldc2-version.txt.sig' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-osx-${{ matrix.dub-arch }}.sh.sig' >> .git/info/sparse-checkout;
+            echo '/ldc2-version.txt' >> '.git/info/sparse-checkout';
+            echo '/template/shell/get-ldc2/get-ldc2-osx-${{ matrix.dub-arch }}.sh' >> '.git/info/sparse-checkout';
+            echo '/ldc2-version.txt.sig' >> '.git/info/sparse-checkout';
+            echo '/template/shell/get-ldc2/get-ldc2-osx-${{ matrix.dub-arch }}.sh.sig' >> '.git/info/sparse-checkout';
             git fetch --depth=1 origin master;
 
         - name: Reset get-dlang
@@ -189,7 +195,7 @@ jobs:
             cd ~/get-dlang;
             git reset --hard origin/master;
 
-        - name: log get-dlang
+        - name: Show latest commit of get-dlang
           run: |
             cd ~/get-dlang;
             git log -1;
@@ -209,10 +215,10 @@ jobs:
           id: dlang-versions
           run: |
             cd ~/;
-            echo "::set-output name=dlang_versions::$(php -r "echo trim(file_get_contents('./get-dlang/ldc2-version.txt'));")";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'dlang_versions='.trim(file_get_contents('./get-dlang/ldc2-version.txt')).PHP_EOL, FILE_APPEND);";
 
-        - name: installer-cache
-          uses: actions/cache@v2
+        - name: Installer-cache
+          uses: actions/cache@v3
           with:
               path: |
                 ~/cache
@@ -230,8 +236,8 @@ jobs:
             /Users/runner/ldc2/bin/ldc2 --version;
             /Users/runner/ldc2/bin/dub --version;
 
-        - name: checkout
-          uses: actions/checkout@v2
+        - name: Checkout
+          uses: actions/checkout@v3
 
         - name: ldc2 build library
           run: |
@@ -255,7 +261,7 @@ jobs:
             tar zcvf '${{ steps.init-asset-name.outputs.asset_base_name }}.tar.gz' '${{ steps.init-asset-name.outputs.asset_base_name }}/';
 
         - name: Upload artifact
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               path: |
                 ${{ steps.init-asset-name.outputs.asset_base_name }}.tar.gz
@@ -277,32 +283,32 @@ jobs:
           run: |
             current_time=`php -r "echo (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP');"`;
             echo $current_time;
-            echo "::set-output name=start-time::$current_time";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'start-time=${current_time}'.PHP_EOL, FILE_APPEND);";
 
-        - name: set-asset_base_name
+        - name: Set asset base name
           id: init-asset-name
           run: |
-            echo "::set-output name=asset_base_name::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-linux-${{ matrix.dub-arch }}";
-            echo "::set-output name=asset_base_name-x86_64::${GITHUB_REPOSITORY#*/}-${GITHUB_REF#refs/tags/v}-linux-x86_64";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.str_replace('refs/tags/v', '', getenv('GITHUB_REF')).'-linux-${{ matrix.dub-arch }}'.PHP_EOL, FILE_APPEND);";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'asset_base_name-x86_64='.preg_replace('/^[^\/]+\//u', '', getenv('GITHUB_REPOSITORY')).'-'.str_replace('refs/tags/v', '', getenv('GITHUB_REF')).'-linux-x86_64'.PHP_EOL, FILE_APPEND);";
 
         - name: Init get-dlang
           run: |
             mkdir ~/get-dlang;
             cd ~/get-dlang;
             git init;
-            git remote add origin https://gitlab.com/dokutoku/get-dlang.git;
+            git remote add origin 'https://gitlab.com/dokutoku/get-dlang.git';
             git config --local core.sparsecheckout true;
             git config --local core.autocrlf false;
 
         - name: Fetch get-dlang
           run: |
             cd ~/get-dlang;
-            echo '/ldc2-version.txt' >> .git/info/sparse-checkout;
-            echo '/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh' >> .git/info/sparse-checkout;
-            echo '/ldc2-version.txt.sig' >> .git/info/sparse-checkout;
-            echo '/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf.sig' >> .git/info/sparse-checkout;
-            echo '/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh.sig' >> .git/info/sparse-checkout;
+            echo '/ldc2-version.txt' >> '.git/info/sparse-checkout';
+            echo '/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf' >> '.git/info/sparse-checkout';
+            echo '/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh' >> '.git/info/sparse-checkout';
+            echo '/ldc2-version.txt.sig' >> '.git/info/sparse-checkout';
+            echo '/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf.sig' >> '.git/info/sparse-checkout';
+            echo '/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh.sig' >> '.git/info/sparse-checkout';
             git fetch --depth=1 origin master;
 
         - name: Reset get-dlang
@@ -310,7 +316,7 @@ jobs:
             cd ~/get-dlang;
             git reset --hard origin/master;
 
-        - name: log get-dlang
+        - name: Show latest commit of get-dlang
           run: |
             cd ~/get-dlang;
             git log -1;
@@ -330,10 +336,10 @@ jobs:
           id: dlang-versions
           run: |
             cd ~/;
-            echo "::set-output name=dlang_versions::$(php -r "echo trim(file_get_contents('./get-dlang/ldc2-version.txt'));")";
+            php -r "file_put_contents(getenv('GITHUB_OUTPUT'), 'dlang_versions='.trim(file_get_contents('./get-dlang/ldc2-version.txt')).PHP_EOL, FILE_APPEND);";
 
-        - name: installer-cache
-          uses: actions/cache@v2
+        - name: Installer-cache
+          uses: actions/cache@v3
           with:
               path: |
                 ~/cache
@@ -346,7 +352,7 @@ jobs:
             cd ~/;
             sh ~/get-dlang/template/shell/get-ldc2/get-ldc2-linux-${{ matrix.dub-arch }}.sh;
 
-        - name: copy ldc2.conf
+        - name: Copy ldc2.conf
           run: |
             cp ~/get-dlang/template/ldc2-conf/ldc2-linux-${{ matrix.dub-arch }}.conf ~/ldc2/etc/ldc2.conf;
 
@@ -355,8 +361,8 @@ jobs:
             /home/runner/ldc2/bin/ldc2 --version;
             /home/runner/ldc2/bin/dub --version;
 
-        - name: checkout
-          uses: actions/checkout@v2
+        - name: Checkout
+          uses: actions/checkout@v3
 
         - name: ldc2 build library
           run: |
@@ -381,7 +387,7 @@ jobs:
 
         - name: Upload artifact
           if: ${{ (matrix.dub-arch == 'x86_64') }}
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               path: |
                 ${{ steps.init-asset-name.outputs.asset_base_name }}.tar.gz
@@ -402,7 +408,7 @@ jobs:
             php -r "echo (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP');";
 
         - name: Download All artifacts
-          uses: actions/download-artifact@v2
+          uses: actions/download-artifact@v3
 
         - run: |
             ls './';
@@ -413,28 +419,28 @@ jobs:
         - run: |
             find './artifact' | grep -E ^\./artifact/ | xargs -I {}  mv {} ./;
 
-        - name: create SHA256SUMS
+        - name: Create SHA256SUMS
           run: |
             sha256sum ${{ needs.Windows.outputs.asset_name-x86 }} >> SHA256SUMS;
             sha256sum ${{ needs.Windows.outputs.asset_name-x86_64 }} >> SHA256SUMS;
             sha256sum ${{ needs.MacOS.outputs.asset_name-x86_64 }} >> SHA256SUMS;
             sha256sum ${{ needs.Other_Platforms.outputs.asset_name-x86_64 }} >> SHA256SUMS;
 
-        - name: create SHA512SUMS
+        - name: Create SHA512SUMS
           run: |
             sha512sum ${{ needs.Windows.outputs.asset_name-x86 }} >> SHA512SUMS;
             sha512sum ${{ needs.Windows.outputs.asset_name-x86_64 }} >> SHA512SUMS;
             sha512sum ${{ needs.MacOS.outputs.asset_name-x86_64 }} >> SHA512SUMS;
             sha512sum ${{ needs.Other_Platforms.outputs.asset_name-x86_64 }} >> SHA512SUMS;
 
-        - name: create SHA512SUMS
+        - name: Create SHA512SUMS
           run: |
             openssl sha3-256 ${{ needs.Windows.outputs.asset_name-x86 }} | grep -o -E [a-zA-Z0-9]+$ | xargs -I {} echo {} ' ${{ needs.Windows.outputs.asset_name-x86 }}' >> SHA3-256SUMS;
             openssl sha3-256 ${{ needs.Windows.outputs.asset_name-x86_64 }} | grep -o -E [a-zA-Z0-9]+$ | xargs -I {} echo {} ' ${{ needs.Windows.outputs.asset_name-x86_64 }}' >> SHA3-256SUMS;
             openssl sha3-256 ${{ needs.MacOS.outputs.asset_name-x86_64 }} | grep -o -E [a-zA-Z0-9]+$ | xargs -I {} echo {} ' ${{ needs.MacOS.outputs.asset_name-x86_64 }}' >> SHA3-256SUMS;
             openssl sha3-256 ${{ needs.Other_Platforms.outputs.asset_name-x86_64 }} | grep -o -E [a-zA-Z0-9]+$ | xargs -I {} echo {} ' ${{ needs.Other_Platforms.outputs.asset_name-x86_64 }}' >> SHA3-256SUMS;
 
-        - name: create SHA3-512SUMS
+        - name: Create SHA3-512SUMS
           run: |
             openssl sha3-512 ${{ needs.Windows.outputs.asset_name-x86 }} | grep -o -E [a-zA-Z0-9]+$ | xargs -I {} echo {} ' ${{ needs.Windows.outputs.asset_name-x86 }}' >> SHA3-512SUMS;
             openssl sha3-512 ${{ needs.Windows.outputs.asset_name-x86_64 }} | grep -o -E [a-zA-Z0-9]+$ | xargs -I {} echo {} ' ${{ needs.Windows.outputs.asset_name-x86_64 }}' >> SHA3-512SUMS;
@@ -442,7 +448,7 @@ jobs:
             openssl sha3-512 ${{ needs.Other_Platforms.outputs.asset_name-x86_64 }} | grep -o -E [a-zA-Z0-9]+$ | xargs -I {} echo {} ' ${{ needs.Other_Platforms.outputs.asset_name-x86_64 }}' >> SHA3-512SUMS;
 
         # If the tag name has dev in it, then prerelease
-        - name: is_prerelease
+        - name: Is prerelease
           id: is_prerelease
           run: |
             if (echo ${{ github.ref }} | grep -o -E [^0-9][\r\n]*$ >/dev/null 2>&1); then        echo '::set-output name=is_prerelease::true';    else        echo '::set-output name=is_prerelease::false';    fi
