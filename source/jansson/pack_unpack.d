@@ -22,6 +22,7 @@ private static import jansson.jansson_private;
 private static import jansson.strbuffer;
 private static import jansson.utf;
 private static import jansson.value;
+private import jansson.jansson: JANSSON_ATTRS;
 
 struct token_t
 {
@@ -975,6 +976,7 @@ private int unpack(scope .scanner_t* s, scope jansson.jansson.json_t* root, scop
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @nogc
@@ -1018,6 +1020,7 @@ public jansson.jansson.json_t* json_vpack_ex(scope jansson.jansson.json_error_t*
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @nogc
@@ -1034,6 +1037,7 @@ public jansson.jansson.json_t* json_pack_ex(scope jansson.jansson.json_error_t* 
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @nogc

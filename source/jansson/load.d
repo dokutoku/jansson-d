@@ -23,6 +23,7 @@ private static import jansson.jansson_private;
 private static import jansson.strbuffer;
 private static import jansson.utf;
 private static import jansson.value;
+private import jansson.jansson: JANSSON_ATTRS;
 
 enum STREAM_STATE_OK = 0;
 enum STREAM_STATE_EOF = -1;
@@ -1233,6 +1234,7 @@ private int string_get(scope void* data)
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc
@@ -1298,6 +1300,7 @@ private int buffer_get(scope void* data)
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc
@@ -1334,6 +1337,7 @@ public jansson.jansson.json_t* json_loadb(scope const char* buffer, size_t bufle
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc
@@ -1393,6 +1397,7 @@ private int fd_get_func(scope int* fd)
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @nogc @live
@@ -1434,6 +1439,7 @@ public jansson.jansson.json_t* json_loadfd(int input, size_t flags, scope jansso
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @nogc
@@ -1505,6 +1511,7 @@ private int callback_get(scope void* data)
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @nogc

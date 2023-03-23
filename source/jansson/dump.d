@@ -23,6 +23,7 @@ private static import jansson.jansson_private;
 private static import jansson.strbuffer;
 private static import jansson.utf;
 private static import jansson.value;
+private import jansson.jansson: JANSSON_ATTRS;
 
 enum MAX_INTEGER_STR_LENGTH = 100;
 enum MAX_REAL_STR_LENGTH = 100;
@@ -534,6 +535,7 @@ private int do_dump(scope const jansson.jansson.json_t* json, size_t flags, int 
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc @live

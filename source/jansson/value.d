@@ -21,6 +21,7 @@ private static import jansson.jansson;
 private static import jansson.jansson_private;
 private static import jansson.utf;
 private import jansson.jansson_config: JSON_INLINE;
+private import jansson.jansson: JANSSON_ATTRS;
 
 /* Work around nonstandard isnan() and isinf() implementations */
 static if (!__traits(compiles, core.stdc.math.isnan)) {
@@ -150,6 +151,7 @@ public size_t json_object_size(scope const jansson.jansson.json_t* json)
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc @live
@@ -165,6 +167,7 @@ public jansson.jansson.json_t* json_object_get(scope const jansson.jansson.json_
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc @live
@@ -690,6 +693,7 @@ public size_t json_array_size(scope const jansson.jansson.json_t* json)
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 extern (C)
 pure nothrow @trusted @nogc @live
 public jansson.jansson.json_t* json_array_get(scope const jansson.jansson.json_t* json, size_t index)
@@ -1646,6 +1650,7 @@ public int json_equal(scope const jansson.jansson.json_t* json1, scope const jan
 /* copying */
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc
@@ -1684,6 +1689,7 @@ public jansson.jansson.json_t* json_copy(return scope jansson.jansson.json_t* js
 	}
 
 ///
+//JANSSON_ATTRS((warn_unused_result))
 //nodiscard
 extern (C)
 nothrow @trusted @nogc
