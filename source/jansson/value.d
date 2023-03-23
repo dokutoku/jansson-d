@@ -1331,6 +1331,7 @@ public jansson.jansson.json_t* json_vsprintf(scope const char* fmt, core.stdc.st
 ///
 //JANSSON_ATTRS((warn_unused_result, format(printf, 1, 2)))
 //nodiscard
+pragma(printf)
 extern (C)
 nothrow @nogc
 public jansson.jansson.json_t* json_sprintf(scope const char* fmt, ...)
