@@ -12,6 +12,7 @@ module jansson.jansson;
 
 private static import core.stdc.config;
 private static import core.stdc.stdio;
+private static import core.stdc.string;
 private static import jansson.dump;
 private static import jansson.hashtable_seed;
 private static import jansson.jansson_config;
@@ -259,6 +260,62 @@ public:
 		do
 		{
 			return this.json_array_foreach(operations, &this);
+		}
+
+	extern (D)
+	nothrow @safe @nogc @live
+	bool opEquals()(auto const ref .json_t input) const
+
+		do
+		{
+			return .json_equal(&this, &input) == 1;
+		}
+
+	extern (D)
+	pure nothrow @trusted @nogc @live
+	bool opEquals(.json_type input) const
+
+		do
+		{
+			return input == this.type;
+		}
+
+	extern (D)
+	pure nothrow @trusted @nogc @live
+	bool opEquals(bool input) const
+
+		do
+		{
+			return (input) ? (this.type == .json_type.JSON_TRUE) : (this.type == .json_type.JSON_FALSE);
+		}
+
+	extern (D)
+	pure nothrow @trusted @nogc @live
+	bool opEquals(scope const char* input) const
+
+		do
+		{
+			if (input == null) {
+				return this.type == .json_type.JSON_NULL;
+			}
+
+			if (this.type != .json_type.JSON_STRING) {
+				return false;
+			}
+
+			size_t length_ = core.stdc.string.strlen(input);
+
+			return (length_ == .json_string_length(&this)) && (core.stdc.string.memcmp(input, .json_string_value(&this), length_) == 0);
+		}
+
+	extern (D)
+	pure nothrow @safe @nogc @live
+	bool opEquals(INTEGER)(INTEGER input) const
+		if ((is(INTEGER: .json_int_t)) || is(INTEGER: double))
+
+		do
+		{
+			return ((this.type == .json_type.JSON_INTEGER) || (this.type == .json_type.JSON_REAL)) && (input == .json_number_value(&this));
 		}
 }
 
