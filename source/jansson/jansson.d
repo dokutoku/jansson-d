@@ -1299,7 +1299,7 @@ public auto json_object_keylen_foreach_safe(.json_t* object_)
 ///Ditto
 pragma(inline, true)
 pure nothrow @trusted @nogc @live
-public auto json_array_foreach(const .json_t* array)
+public auto json_array_foreach(.json_t* array)
 
 	do
 	{
