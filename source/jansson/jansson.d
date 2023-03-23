@@ -226,9 +226,7 @@ public:
 
 		do
 		{
-			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
-
-			return this.json_object_foreach(operations, object_);
+			return this.json_object_foreach(operations, &this);
 		}
 
 	extern (D)
@@ -236,9 +234,7 @@ public:
 
 		do
 		{
-			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
-
-			return this.json_object_keylen_foreach(operations, object_);
+			return this.json_object_keylen_foreach(operations, &this);
 		}
 
 	extern (D)
@@ -246,9 +242,7 @@ public:
 
 		do
 		{
-			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
-
-			return this.json_object_foreach_safe(operations, object_);
+			return this.json_object_foreach_safe(operations, &this);
 		}
 
 	extern (D)
@@ -256,9 +250,7 @@ public:
 
 		do
 		{
-			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
-
-			return this.json_object_keylen_foreach_safe(operations, object_);
+			return this.json_object_keylen_foreach_safe(operations, &this);
 		}
 
 	extern (D)
@@ -266,9 +258,7 @@ public:
 
 		do
 		{
-			.json_t* object_ = cast(.json_t*)(cast(void*)(&(this.type)) - .json_t.type.offsetof);
-
-			return this.json_array_foreach(operations, object_);
+			return this.json_array_foreach(operations, &this);
 		}
 }
 
