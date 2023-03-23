@@ -26,6 +26,8 @@ version (GNU) {
 	private static import gcc.attributes;
 }
 
+private import jansson.jansson_config: JSON_INLINE;
+
 /* version */
 
 ///
@@ -558,6 +560,7 @@ static if (jansson.jansson_config.JSON_HAVE_ATOMIC_BUILTINS) {
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 pure nothrow @trusted @nogc @live
 public .json_t* json_incref(return scope .json_t* json)
 
@@ -575,6 +578,7 @@ public alias json_delete = jansson.value.json_delete;
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public void json_decref(scope .json_t* json)
 
@@ -592,6 +596,7 @@ public void json_decref(scope .json_t* json)
 //#if (defined(__GNUC__)) || (defined(__clang__))
 version (all) {
 	pragma(inline, true)
+	@JSON_INLINE
 	nothrow @trusted @nogc
 	void json_decrefp(scope .json_t** json)
 
@@ -675,6 +680,7 @@ public enum
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 pure nothrow @trusted @nogc @live
 public .json_error_code_t json_error_code(scope const .json_error_t* e)
 
@@ -1364,6 +1370,7 @@ public auto json_array_foreach(const ref .json_t* array, ref size_t index, ref .
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_set(scope .json_t* object_, scope const char* key, scope .json_t* value)
 
@@ -1374,6 +1381,7 @@ public int json_object_set(scope .json_t* object_, scope const char* key, scope 
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_setn(scope .json_t* object_, scope const char* key, size_t key_len, scope .json_t* value)
 
@@ -1384,6 +1392,7 @@ public int json_object_setn(scope .json_t* object_, scope const char* key, size_
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_set_nocheck(scope .json_t* object_, scope const char* key, scope .json_t* value)
 
@@ -1394,6 +1403,7 @@ public int json_object_set_nocheck(scope .json_t* object_, scope const char* key
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_setn_nocheck(scope .json_t* object_, scope const char* key, size_t key_len, scope .json_t* value)
 
@@ -1404,6 +1414,7 @@ public int json_object_setn_nocheck(scope .json_t* object_, scope const char* ke
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_iter_set(scope .json_t* object_, scope void* iter, scope .json_t* value)
 
@@ -1414,6 +1425,7 @@ public int json_object_iter_set(scope .json_t* object_, scope void* iter, scope 
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_update_new(scope .json_t* object_, scope .json_t* other)
 
@@ -1427,6 +1439,7 @@ public int json_object_update_new(scope .json_t* object_, scope .json_t* other)
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_update_existing_new(scope .json_t* object_, scope .json_t* other)
 
@@ -1440,6 +1453,7 @@ public int json_object_update_existing_new(scope .json_t* object_, scope .json_t
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_object_update_missing_new(scope .json_t* object_, scope .json_t* other)
 
@@ -1477,6 +1491,7 @@ public alias json_array_extend = jansson.value.json_array_extend;
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_array_set(scope .json_t* array, size_t ind, scope .json_t* value)
 
@@ -1487,6 +1502,7 @@ public int json_array_set(scope .json_t* array, size_t ind, scope .json_t* value
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_array_append(scope .json_t* array, scope .json_t* value)
 
@@ -1497,6 +1513,7 @@ public int json_array_append(scope .json_t* array, scope .json_t* value)
 
 ///
 pragma(inline, true)
+@JSON_INLINE
 nothrow @trusted @nogc
 public int json_array_insert(scope .json_t* array, size_t ind, scope .json_t* value)
 

@@ -24,12 +24,12 @@ private static import core.stdc.config;
 private static import core.stdc.locale;
 private static import core.stdc.stdlib;
 
-/*
+/**
  * If your compiler supports the inline keyword in C, JSON_INLINE is
  * defined to `inline', otherwise empty. In C++, the inline is always
  * supported.
  */
-//#define JSON_INLINE inline
+enum JSON_INLINE;
 
 /**
  * If your compiler supports the `core.stdc.config.cpp_longlong` type and the core.stdc.stdlib.strtoll()

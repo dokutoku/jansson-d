@@ -17,6 +17,7 @@ private static import jansson.hashtable_seed;
 private static import jansson.jansson;
 private static import jansson.jansson_private;
 private static import jansson.lookup3;
+private import jansson.jansson_config: JSON_INLINE;
 
 enum INITIAL_HASHTABLE_ORDER = 3;
 
@@ -88,6 +89,7 @@ template hash_str(string key, string len)
 }
 
 pragma(inline, true)
+@JSON_INLINE
 pure nothrow @trusted @nogc @live
 private void list_init(scope .list_t* list)
 
@@ -103,6 +105,7 @@ private void list_init(scope .list_t* list)
 	}
 
 pragma(inline, true)
+@JSON_INLINE
 pure nothrow @trusted @nogc @live
 private void list_insert(scope .list_t* list, scope .list_t* node)
 
@@ -121,6 +124,7 @@ private void list_insert(scope .list_t* list, scope .list_t* node)
 	}
 
 pragma(inline, true)
+@JSON_INLINE
 pure nothrow @trusted @nogc @live
 private void list_remove(scope .list_t* list)
 
@@ -136,6 +140,7 @@ private void list_remove(scope .list_t* list)
 	}
 
 pragma(inline, true)
+@JSON_INLINE
 pure nothrow @trusted @nogc @live
 private int bucket_is_empty(scope .hashtable_t* hashtable_, scope .bucket_t* bucket)
 

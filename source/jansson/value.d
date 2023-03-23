@@ -20,12 +20,14 @@ private static import jansson.hashtable_seed;
 private static import jansson.jansson;
 private static import jansson.jansson_private;
 private static import jansson.utf;
+private import jansson.jansson_config: JSON_INLINE;
 
 /* Work around nonstandard isnan() and isinf() implementations */
 static if (!__traits(compiles, core.stdc.math.isnan)) {
 	//version (Solaris) {
 	//} else {
 		pragma(inline, true)
+		@JSON_INLINE
 		pure nothrow @safe @nogc @live
 		private int isnan(double x)
 
@@ -40,6 +42,7 @@ static if (!__traits(compiles, core.stdc.math.isnan)) {
 
 static if (!__traits(compiles, core.stdc.math.isinf)) {
 	pragma(inline, true)
+	@JSON_INLINE
 	pure nothrow @safe @nogc @live
 	private int isinf(double x)
 
@@ -52,6 +55,7 @@ static if (!__traits(compiles, core.stdc.math.isinf)) {
 }
 
 pragma(inline, true)
+@JSON_INLINE
 pure nothrow @trusted @nogc @live
 private void json_init(scope jansson.jansson.json_t* json, jansson.jansson.json_type type)
 
