@@ -21,6 +21,7 @@ private static import jansson.memory;
 private static import jansson.pack_unpack;
 private static import jansson.value;
 private static import jansson.version_;
+private static import std.traits;
 private static import std.typecons;
 
 version (GNU) {
@@ -28,6 +29,11 @@ version (GNU) {
 }
 
 private import jansson.jansson_config: JSON_INLINE;
+
+version (D_BetterC) {
+} else {
+	version = JANSSON_D_NOT_BETTER_C;
+}
 
 /* version */
 
@@ -260,6 +266,54 @@ public:
 		do
 		{
 			return this.json_array_foreach(operations, &this);
+		}
+
+	version (JANSSON_D_NOT_BETTER_C)
+	extern (D)
+	static json_t* opCall(A)(A input)
+		if (std.traits.isDynamicArray!(A))
+
+		do
+		{
+			if (input.length != 0) {
+				throw new JanssonException("Initialization of non-empty arrays is not yet supported");
+			}
+
+			return .json_array();
+		}
+
+	extern (D)
+	nothrow @trusted @nogc
+	static json_t* opCall(const (char)* input)
+
+		do
+		{
+			return (input != null) ? (.json_string(input)) : (.json_null());
+		}
+
+	extern (D)
+	nothrow @trusted @nogc
+	static json_t* opCall(scope const char* input, size_t flags, scope jansson.jansson.json_error_t* error)
+
+		do
+		{
+			return .json_loads(input, flags, error);
+		}
+
+	extern (D)
+	nothrow @trusted @nogc
+	static json_t* opCall(I)(I input)
+		if ((is(I == bool)) || (is(I: .json_int_t)) || (is(I: double)))
+
+		do
+		{
+			static if (is(I == bool)) {
+				return (input) ? (.json_true()) : (.json_false());
+			} else static if ((is(I: .json_int_t)) && (.json_int_t.max >= I.max)) {
+				return .json_integer(input);
+			} else {
+				return .json_real(input);
+			}
 		}
 
 	extern (D)
