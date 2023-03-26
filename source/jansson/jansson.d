@@ -324,6 +324,26 @@ public:
 			}
 		}
 
+	version (JANSSON_D_NOT_BETTER_C)
+	extern (D)
+	pure @safe
+	double opCmp(I)(I input) const
+		if ((is(I: .json_int_t)) || (is(I: double)))
+
+		do
+		{
+			switch (this.type) {
+				case .json_type.JSON_INTEGER:
+					return .json_integer_value(&this) - input;
+
+				case .json_type.JSON_REAL:
+					return .json_real_value(&this) - input;
+
+				default:
+					throw new JanssonException("The type you are trying to compare is neither JSON_INTEGER nor JSON_REAL");
+			}
+		}
+
 	extern (D)
 	nothrow @safe @nogc @live
 	bool opEquals()(auto const ref .json_t input) const
