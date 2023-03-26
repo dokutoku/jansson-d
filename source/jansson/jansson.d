@@ -237,6 +237,24 @@ private:
 
 public:
 	extern (D)
+	pure nothrow @safe @nogc @live @property
+	size_t length() const
+
+		do
+		{
+			switch (this.type) {
+				case .json_type.JSON_ARRAY:
+					return .json_array_size(&this);
+
+				case json_type.JSON_STRING:
+					return .json_string_length(&this);
+
+				default:
+					return 0;
+			}
+		}
+
+	extern (D)
 	int opApply(int delegate (ref const (char)* key, ref .json_t* value) operations)
 
 		do
