@@ -33,6 +33,14 @@ private import jansson.jansson_config: JSON_INLINE;
 version (D_BetterC) {
 } else {
 	version = JANSSON_D_NOT_BETTER_C;
+
+	private static import std.exception;
+}
+
+version (JANSSON_D_NOT_BETTER_C)
+public class JanssonException : std.exception.Exception
+{
+	mixin std.exception.basicExceptionCtors!();
 }
 
 /* version */
