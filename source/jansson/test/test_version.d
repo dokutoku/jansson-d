@@ -19,7 +19,7 @@ private static import jansson.version_;
 unittest
 {
 	jansson.test.util.init_unittest();
-	assert(!core.stdc.string.strcmp(jansson.version_.jansson_version_str(), jansson.jansson.JANSSON_VERSION), "jansson_version_str returned invalid version string");
+	assert(core.stdc.string.strcmp(jansson.version_.jansson_version_str(), jansson.jansson.JANSSON_VERSION) == 0, "jansson_version_str returned invalid version string");
 }
 
 //test_version_cmp

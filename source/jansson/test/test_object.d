@@ -427,13 +427,13 @@ unittest
 
 		assert(iter != null, "json_object_iter_at() fails for an existing key");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_object_iter_key(iter), "b"), "iterating failed: wrong key");
+		assert(core.stdc.string.strcmp(jansson.value.json_object_iter_key(iter), "b") == 0, "iterating failed: wrong key");
 
 		assert(jansson.value.json_object_iter_value(iter) == bar, "iterating failed: wrong value");
 
 		assert(!jansson.jansson.json_object_iter_set(object_, iter, baz), "unable to set value at iterator");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_object_iter_key(iter), "b"), "json_object_iter_key() fails after json_object_iter_set()");
+		assert(core.stdc.string.strcmp(jansson.value.json_object_iter_key(iter), "b") == 0, "json_object_iter_key() fails after json_object_iter_set()");
 
 		assert(jansson.value.json_object_iter_value(iter) == baz, "json_object_iter_value() fails after json_object_iter_set()");
 	}

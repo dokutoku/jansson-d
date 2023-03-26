@@ -25,7 +25,7 @@ unittest
 
 		assert(mixin (jansson.jansson.json_is_string!("s")), "json_sprintf didn't return a JSON string");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_string_value(s), "foo bar 42"), "json_sprintf generated an unexpected string");
+		assert(core.stdc.string.strcmp(jansson.value.json_string_value(s), "foo bar 42") == 0, "json_sprintf generated an unexpected string");
 	}
 
 	{

@@ -145,35 +145,35 @@ private void read_conf(core.stdc.stdio.FILE* conffile)
 
 			*val++ = '\0';
 
-			if (!core.stdc.string.strcmp(line, "JSON_INDENT")) {
+			if (core.stdc.string.strcmp(line, "JSON_INDENT") == 0) {
 				.conf.indent = core.stdc.stdlib.atoi(val);
 			}
 
-			if (!core.stdc.string.strcmp(line, "JSON_COMPACT")) {
+			if (core.stdc.string.strcmp(line, "JSON_COMPACT") == 0) {
 				.conf.compact = core.stdc.stdlib.atoi(val);
 			}
 
-			if (!core.stdc.string.strcmp(line, "JSON_ENSURE_ASCII")) {
+			if (core.stdc.string.strcmp(line, "JSON_ENSURE_ASCII") == 0) {
 				.conf.ensure_ascii = core.stdc.stdlib.atoi(val);
 			}
 
-			if (!core.stdc.string.strcmp(line, "JSON_PRESERVE_ORDER")) {
+			if (core.stdc.string.strcmp(line, "JSON_PRESERVE_ORDER") == 0) {
 				.conf.preserve_order = core.stdc.stdlib.atoi(val);
 			}
 
-			if (!core.stdc.string.strcmp(line, "JSON_SORT_KEYS")) {
+			if (core.stdc.string.strcmp(line, "JSON_SORT_KEYS") == 0) {
 				.conf.sort_keys = core.stdc.stdlib.atoi(val);
 			}
 
-			if (!core.stdc.string.strcmp(line, "JSON_REAL_PRECISION")) {
+			if (core.stdc.string.strcmp(line, "JSON_REAL_PRECISION") == 0) {
 				.conf.precision = core.stdc.stdlib.atoi(val);
 			}
 
-			if (!core.stdc.string.strcmp(line, "STRIP")) {
+			if (core.stdc.string.strcmp(line, "STRIP") == 0) {
 				.conf.strip = core.stdc.stdlib.atoi(val);
 			}
 
-			if (!core.stdc.string.strcmp(line, "HASHSEED")) {
+			if (core.stdc.string.strcmp(line, "HASHSEED") == 0) {
 				.conf.have_hashseed = 1;
 				.conf.hashseed = core.stdc.stdlib.atoi(val);
 			} else {
@@ -492,9 +492,9 @@ int main(string[] argv)
 		}
 
 		for (int i = 1; i < argv.length; i++) {
-			if (!core.stdc.string.strcmp(std.string.toStringz(argv[i]), "--strip")) {
+			if (core.stdc.string.strcmp(std.string.toStringz(argv[i]), "--strip") == 0) {
 				.conf.strip = 1;
-			} else if (!core.stdc.string.strcmp(std.string.toStringz(argv[i]), "--env")) {
+			} else if (core.stdc.string.strcmp(std.string.toStringz(argv[i]), "--env") == 0) {
 				.conf.use_env = 1;
 			} else {
 				test_path = std.string.toStringz(argv[i]);

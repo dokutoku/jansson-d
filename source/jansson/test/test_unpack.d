@@ -127,7 +127,7 @@ unittest
 		char* s = void;
 		int rv = jansson.pack_unpack.json_unpack(j, "s", &s);
 
-		assert((!rv) && (!core.stdc.string.strcmp(s, "foo")), "json_unpack string failed");
+		assert((!rv) && (core.stdc.string.strcmp(s, "foo") == 0), "json_unpack string failed");
 	}
 
 	{
@@ -142,7 +142,7 @@ unittest
 		char* s = void;
 		int rv = jansson.pack_unpack.json_unpack(j, "s%", &s, &z);
 
-		assert((!rv) && (!core.stdc.string.strcmp(s, "foo")) && (z == 3), "json_unpack string with length (size_t) failed");
+		assert((!rv) && (core.stdc.string.strcmp(s, "foo") == 0) && (z == 3), "json_unpack string with length (size_t) failed");
 	}
 
 	{

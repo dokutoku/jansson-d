@@ -80,7 +80,7 @@ private int test_unpack()
 			goto out_;
 		}
 
-		if (core.stdc.string.strcmp(&(error.text[0]), "2 object item(s) left unpacked: n3, n4")) {
+		if (core.stdc.string.strcmp(&(error.text[0]), "2 object item(s) left unpacked: n3, n4") != 0) {
 			goto out_;
 		}
 

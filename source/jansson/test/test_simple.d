@@ -138,13 +138,13 @@ unittest
 
 		assert(value != null, "json_string failed");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_string_value(value), "foo"), "invalid string value");
+		assert(core.stdc.string.strcmp(jansson.value.json_string_value(value), "foo") == 0, "invalid string value");
 
 		assert(jansson.value.json_string_length(value) == 3, "invalid string length");
 
 		assert(!jansson.value.json_string_set(value, "barr"), "json_string_set failed");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_string_value(value), "barr"), "invalid string value");
+		assert(core.stdc.string.strcmp(jansson.value.json_string_value(value), "barr") == 0, "invalid string value");
 
 		assert(jansson.value.json_string_length(value) == 4, "invalid string length");
 
@@ -177,13 +177,13 @@ unittest
 
 		assert(value != null, "json_string_nocheck failed");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_string_value(value), "foo"), "invalid string value");
+		assert(core.stdc.string.strcmp(jansson.value.json_string_value(value), "foo") == 0, "invalid string value");
 
 		assert(jansson.value.json_string_length(value) == 3, "invalid string length");
 
 		assert(!jansson.value.json_string_set_nocheck(value, "barr"), "json_string_set_nocheck failed");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_string_value(value), "barr"), "invalid string value");
+		assert(core.stdc.string.strcmp(jansson.value.json_string_value(value), "barr") == 0, "invalid string value");
 
 		assert(jansson.value.json_string_length(value) == 4, "invalid string length");
 
@@ -204,13 +204,13 @@ unittest
 
 		assert(value != null, "json_string_nocheck failed");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_string_value(value), "qu\xff"), "invalid string value");
+		assert(core.stdc.string.strcmp(jansson.value.json_string_value(value), "qu\xff") == 0, "invalid string value");
 
 		assert(jansson.value.json_string_length(value) == 3, "invalid string length");
 
 		assert(!jansson.value.json_string_set_nocheck(value, "\xfd\xfe\xff"), "json_string_set_nocheck failed");
 
-		assert(!core.stdc.string.strcmp(jansson.value.json_string_value(value), "\xfd\xfe\xff"), "invalid string value");
+		assert(core.stdc.string.strcmp(jansson.value.json_string_value(value), "\xfd\xfe\xff") == 0, "invalid string value");
 
 		assert(jansson.value.json_string_length(value) == 3, "invalid string length");
 	}

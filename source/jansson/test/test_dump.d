@@ -76,7 +76,7 @@ unittest
 				jansson.jansson_private.jsonp_free(result);
 			}
 
-			assert((result != null) && (!core.stdc.string.strcmp(result, "{}")), "json_dumps failed");
+			assert((result != null) && (core.stdc.string.strcmp(result, "{}") == 0), "json_dumps failed");
 		}
 
 		jansson.value.json_object_set_new(json, "foo", jansson.value.json_integer(5));
@@ -88,7 +88,7 @@ unittest
 				jansson.jansson_private.jsonp_free(result);
 			}
 
-			assert((result != null) && (!core.stdc.string.strcmp(result, "{\"foo\": 5}")), "json_dumps failed");
+			assert((result != null) && (core.stdc.string.strcmp(result, "{\"foo\": 5}") == 0), "json_dumps failed");
 		}
 	}
 
@@ -106,7 +106,7 @@ unittest
 				jansson.jansson_private.jsonp_free(result);
 			}
 
-			assert((result != null) && (!core.stdc.string.strcmp(result, "[]")), "json_dumps failed");
+			assert((result != null) && (core.stdc.string.strcmp(result, "[]") == 0), "json_dumps failed");
 		}
 
 		jansson.value.json_array_append_new(json, jansson.value.json_integer(5));
@@ -118,7 +118,7 @@ unittest
 				jansson.jansson_private.jsonp_free(result);
 			}
 
-			assert((result != null) && (!core.stdc.string.strcmp(result, "[5]")), "json_dumps failed");
+			assert((result != null) && (core.stdc.string.strcmp(result, "[5]") == 0), "json_dumps failed");
 		}
 	}
 }
@@ -158,7 +158,7 @@ unittest
 			jansson.jansson_private.jsonp_free(result);
 		}
 
-		assert((result != null) && (!core.stdc.string.strcmp(result, "{\"a\": {\"b\": {}}}")), "json_dumps failed!");
+		assert((result != null) && (core.stdc.string.strcmp(result, "{\"a\": {\"b\": {}}}") == 0), "json_dumps failed!");
 	}
 
 	{
@@ -182,7 +182,7 @@ unittest
 			jansson.jansson_private.jsonp_free(result);
 		}
 
-		assert((result != null) && (!core.stdc.string.strcmp(result, "[[[]]]")), "json_dumps failed!");
+		assert((result != null) && (core.stdc.string.strcmp(result, "[[[]]]") == 0), "json_dumps failed!");
 	}
 }
 
@@ -262,7 +262,7 @@ unittest
 			jansson.jansson_private.jsonp_free(result);
 		}
 
-		assert((result != null) && (!core.stdc.string.strcmp(result, "{\"url\": \"https://github.com/akheron/jansson\"}")), "json_dumps failed to not escape slashes");
+		assert((result != null) && (core.stdc.string.strcmp(result, "{\"url\": \"https://github.com/akheron/jansson\"}") == 0), "json_dumps failed to not escape slashes");
 	}
 
 	{
@@ -272,7 +272,7 @@ unittest
 			jansson.jansson_private.jsonp_free(result);
 		}
 
-		assert((result != null) && (!core.stdc.string.strcmp(result, "{\"url\": \"https:\\/\\/github.com\\/akheron\\/jansson\"}")), "json_dumps failed to escape slashes");
+		assert((result != null) && (core.stdc.string.strcmp(result, "{\"url\": \"https:\\/\\/github.com\\/akheron\\/jansson\"}") == 0), "json_dumps failed to escape slashes");
 	}
 }
 
@@ -336,7 +336,7 @@ unittest
 		char[2] buf = void;
 		size_t size = jansson.dump.json_dumpb(obj, &(buf[0]), buf.length, 0);
 
-		assert((size == 2) && (!core.stdc.string.strncmp(&(buf[0]), "{}", 2)), "json_dumpb failed");
+		assert((size == 2) && (core.stdc.string.strncmp(&(buf[0]), "{}", 2) == 0), "json_dumpb failed");
 	}
 
 	{

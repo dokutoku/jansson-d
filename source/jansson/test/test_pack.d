@@ -149,7 +149,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson.value.json_string_value(value))), "json_pack string failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("test", jansson.value.json_string_value(value)) == 0), "json_pack string failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string refcount failed");
 	}
@@ -162,7 +162,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson.value.json_string_value(value))), "json_pack nullable string (defined case) failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("test", jansson.value.json_string_value(value)) == 0), "json_pack nullable string (defined case) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack nullable string (defined case) refcount failed");
 	}
@@ -204,7 +204,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson.value.json_string_value(value))), "json_pack string and length failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("test", jansson.value.json_string_value(value)) == 0), "json_pack string and length failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length refcount failed");
 	}
@@ -217,7 +217,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson.value.json_string_value(value))), "json_pack string and length failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("test", jansson.value.json_string_value(value)) == 0), "json_pack string and length failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length refcount failed");
 	}
@@ -231,7 +231,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson.value.json_string_value(value))), "json_pack string and length (int) failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("test", jansson.value.json_string_value(value)) == 0), "json_pack string and length (int) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length (int) refcount failed");
 	}
@@ -245,7 +245,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson.value.json_string_value(value))), "json_pack string and length (size_t) failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("test", jansson.value.json_string_value(value)) == 0), "json_pack string and length (size_t) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string and length (size_t) refcount failed");
 	}
@@ -259,7 +259,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("testing", jansson.value.json_string_value(value))), "json_pack string concatenation failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("testing", jansson.value.json_string_value(value)) == 0), "json_pack string concatenation failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string concatenation refcount failed");
 	}
@@ -272,7 +272,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("ttetest", jansson.value.json_string_value(value))), "json_pack string concatenation and length (int) failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("ttetest", jansson.value.json_string_value(value)) == 0), "json_pack string concatenation and length (int) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string concatenation and length (int) refcount failed");
 	}
@@ -285,7 +285,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("ttetest", jansson.value.json_string_value(value))), "json_pack string concatenation and length (size_t) failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("ttetest", jansson.value.json_string_value(value)) == 0), "json_pack string concatenation and length (size_t) failed");
 
 		assert(value.refcount == cast(size_t)(1), "json_pack string concatenation and length (size_t) refcount failed");
 	}
@@ -533,7 +533,7 @@ unittest
 			jansson.jansson.json_decref(value);
 		}
 
-		assert((mixin (jansson.jansson.json_is_string!("value"))) && (!core.stdc.string.strcmp("test", jansson.value.json_string_value(value))), "json_pack string (with whitespace) failed");
+		assert((mixin (jansson.jansson.json_is_string!("value"))) && (core.stdc.string.strcmp("test", jansson.value.json_string_value(value)) == 0), "json_pack string (with whitespace) failed");
 	}
 
 	/* Whitespace; empty array */
