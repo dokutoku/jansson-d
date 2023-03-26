@@ -282,15 +282,6 @@ public:
 
 	extern (D)
 	pure nothrow @trusted @nogc @live
-	bool opEquals(bool input) const
-
-		do
-		{
-			return (input) ? (this.type == .json_type.JSON_TRUE) : (this.type == .json_type.JSON_FALSE);
-		}
-
-	extern (D)
-	pure nothrow @trusted @nogc @live
 	bool opEquals(scope const char* input) const
 
 		do
@@ -310,12 +301,29 @@ public:
 
 	extern (D)
 	pure nothrow @safe @nogc @live
-	bool opEquals(INTEGER)(INTEGER input) const
-		if ((is(INTEGER: .json_int_t)) || is(INTEGER: double))
+	bool opEquals(I)(I input) const
+		if ((is(I == bool)) || (is(I: .json_int_t)) || (is(I: double)))
 
 		do
 		{
-			return ((this.type == .json_type.JSON_INTEGER) || (this.type == .json_type.JSON_REAL)) && (input == .json_number_value(&this));
+			switch (this.type) {
+				case .json_type.JSON_INTEGER:
+					return input == .json_integer_value(&this);
+
+				case .json_type.JSON_REAL:
+					return input == .json_real_value(&this);
+
+				default:
+					if (input == 0) {
+						return this.type == .json_type.JSON_FALSE;
+					}
+
+					if (input == 1) {
+						return this.type == .json_type.JSON_TRUE;
+					}
+
+					return false;
+			}
 		}
 }
 
