@@ -206,6 +206,7 @@ int main(string[] argv)
 
 			if (!mixin (jansson.jansson.json_is_string!("sha"))) {
 				core.stdc.stdio.fprintf(core.stdc.stdio.stderr, "error: commit %d: sha is not a string\n", cast(int)(i + 1));
+				jansson.jansson.json_decref(root);
 
 				return 1;
 			}
