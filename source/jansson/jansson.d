@@ -278,6 +278,68 @@ public:
 
 	version (JANSSON_D_NOT_BETTER_C)
 	extern (D)
+	void opAssign(scope const char* input)
+
+		do
+		{
+			if (input == null) {
+				throw new JanssonException("Assignment of null is not supported");
+			}
+
+			if (this.type != .json_type.JSON_STRING) {
+				throw new JanssonException("You cannot assign a string to a type that is not JSON_STRING");
+			}
+
+			if (.json_string_set(&this, input) != 0) {
+				throw new JanssonException("Failed to execute json_string_set()");
+			}
+		}
+
+	version (JANSSON_D_NOT_BETTER_C)
+	extern (D)
+	void opAssign(I)(I input)
+		if ((is(I: .json_int_t)) || (is(I: double)))
+
+		do
+		{
+			switch (this.type) {
+				case .json_type.JSON_FALSE:
+				case .json_type.JSON_TRUE:
+					if (input == 0) {
+						this.type = .json_type.JSON_FALSE;
+					} else if (input == 1) {
+						this.type = .json_type.JSON_TRUE;
+					} else {
+						throw new JanssonException("A value that is neither 0 nor 1 was attempted to be assigned to the bool type");
+					}
+
+					return;
+
+				case .json_type.JSON_INTEGER:
+					static if (!((is(I: .json_int_t)) && (.json_int_t.max >= I.max))) {
+						throw new JanssonException("A non-conforming type was passed to JSON_INTEGER");
+					} else {
+						if (.json_integer_set(&this, input) != 0) {
+							throw new JanssonException("Execution of json_integer_set() failed");
+						}
+
+						return;
+					}
+
+				case .json_type.JSON_REAL:
+					if (.json_real_set(&this, input) != 0) {
+						throw new JanssonException("Execution of json_real_set() failed");
+					}
+
+					return;
+
+				default:
+					throw new JanssonException("Unsupported input type");
+			}
+		}
+
+	version (JANSSON_D_NOT_BETTER_C)
+	extern (D)
 	static json_t* opCall(A)(A input)
 		if (std.traits.isDynamicArray!(A))
 
